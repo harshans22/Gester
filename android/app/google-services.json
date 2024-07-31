@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "753744578346",
+    "firebase_url": "https://gester-ae70f-default-rtdb.firebaseio.com",
+    "project_id": "gester-ae70f",
+    "storage_bucket": "gester-ae70f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:753744578346:android:1b00c926b2854aa1b50053",
+        "android_client_info": {
+          "package_name": "com.example.gester"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "753744578346-co12hcrlfpdsttdjkmq301pbo4psp932.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.gester",
+            "certificate_hash": "535de75156a1f7e09521af7258a5592dc7e421ac"
+          }
+        },
+        {
+          "client_id": "753744578346-cjhfguf1dunrga96cus92vi9kg1n3f4c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAVlS9eYUmpV44r0o29TIR_Cp-whWDlPPA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "753744578346-cjhfguf1dunrga96cus92vi9kg1n3f4c.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
