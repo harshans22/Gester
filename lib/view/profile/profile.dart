@@ -3,13 +3,12 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:gap/gap.dart';
-import 'package:gester/models/all_meal_details.dart';
+import 'package:gester/main.dart';
 import 'package:gester/provider/user_provider.dart';
 import 'package:gester/resources/color.dart';
 import 'package:gester/resources/dimensions.dart';
 import 'package:gester/utils/utilities.dart';
 import 'package:gester/utils/widgets/activebutton.dart';
-import 'package:gester/utils/widgets/popup.dart';
 import 'package:gester/view/auth/screens/sign_in_screen.dart';
 import 'package:gester/view/home/screens/QuickAcessScreens/MenuCustomizationScreen.dart';
 import 'package:gester/view/home/screens/QuickAcessScreens/meal_history_screen.dart';
@@ -179,7 +178,7 @@ class ProfileScreen extends StatelessWidget {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => AboutUs()));
+                                    builder: (context) =>const AboutUs()));
                             //Utils.flushbarErrorMessage("login", context);
                           },
                           content: "About us",
@@ -200,18 +199,18 @@ class ProfileScreen extends StatelessWidget {
                               //google logout for web
                               try {
                                 await GoogleSignIn().signOut();
-                                FirebaseAuth.instance.signOut();
+                               await FirebaseAuth.instance.signOut();
                               } catch (e) {
                                 Logger().i(e.toString());
                               }
                             } else {
                               await GoogleSignIn().signOut();
-                              FirebaseAuth.instance.signOut();
+                             await FirebaseAuth.instance.signOut();
                             }
 
                             Navigator.of(context).pushAndRemoveUntil(
                               MaterialPageRoute(
-                                  builder: (context) => const SignInScreen()),
+                                  builder: (context) => const MyApp()),
                               (Route<dynamic> route) => false,
                             );
                              }
