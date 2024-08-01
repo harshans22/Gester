@@ -27,6 +27,7 @@ class _SignInScreenState extends State<SignInScreen> {
           "assets/images/sign_in_page/Cover image.png",
           width: double.infinity,
           fit: BoxFit.fitWidth,
+         height: MediaQuery.of(context).size.height*0.8,
         ),
         Align(
           alignment: Alignment.bottomCenter,
