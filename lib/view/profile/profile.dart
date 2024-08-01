@@ -50,18 +50,19 @@ class ProfileScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 GestureDetector(
-                  onTap: (){
-                       Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (_) =>
-                                                  const ProfileSetting()));
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (_) => const ProfileSetting()));
                   },
                   child: Container(
-                    padding: const EdgeInsets.all(Dimensions.paddingSizeDefault),
+                    padding:
+                        const EdgeInsets.all(Dimensions.paddingSizeDefault),
                     decoration: BoxDecoration(
                       color: AppColor.WHITE,
-                      borderRadius: BorderRadius.circular(Dimensions.radiusLarge),
+                      borderRadius:
+                          BorderRadius.circular(Dimensions.radiusLarge),
                     ),
                     child: Row(
                       children: [
@@ -85,12 +86,14 @@ class ProfileScreen extends StatelessWidget {
                             children: [
                               Row(
                                 mainAxisSize: MainAxisSize.max,
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
                                     "${user.fname} ${user.lname}",
-                                    style:
-                                        Theme.of(context).textTheme.displayLarge,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .displayLarge,
                                   ),
                                   const Icon(Icons.chevron_right)
                                 ],
@@ -178,7 +181,7 @@ class ProfileScreen extends StatelessWidget {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) =>const AboutUs()));
+                                    builder: (context) => const AboutUs()));
                             //Utils.flushbarErrorMessage("login", context);
                           },
                           content: "About us",
@@ -191,31 +194,31 @@ class ProfileScreen extends StatelessWidget {
                           onTap: () {
                             //print("called");
                             Utils().show(
-                              context,
-                              "You are about to logout",
-                             "Are you sure you want to log out?",
-                             ()async{
-                                if (kIsWeb) {
-                              //google logout for web
-                              try {
-                                await GoogleSignIn().signOut();
-                               await FirebaseAuth.instance.signOut();
-                              } catch (e) {
-                                Logger().i(e.toString());
-                              }
-                            } else {
-                              await GoogleSignIn().signOut();
-                             await FirebaseAuth.instance.signOut();
-                            }
+                                context,
+                                "You are about to logout",
+                                "Are you sure you want to log out?",
+                                () async {
+                                  try {
+      if (kIsWeb) {
+        // Google logout for web
+        await FirebaseAuth.instance.signOut();
+      } else {
+        // Google logout for mobile
+        await GoogleSignIn().signOut();
+        await FirebaseAuth.instance.signOut();
+      }
 
-                            Navigator.of(context).pushAndRemoveUntil(
-                              MaterialPageRoute(
-                                  builder: (context) => const MyApp()),
-                              (Route<dynamic> route) => false,
-                            );
-                             }
-                            );//popUP
-                          
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => const MyApp()),
+        (Route<dynamic> route) => false,
+      );
+    } catch (e) {
+        final Logger logger = Logger();
+
+      logger.e("Sign-out failed: ${e.toString()}");
+    }
+  }
+                              ); //popUP
                           },
                           content: "Log out",
                           image: "assets/images/profile/logout.svg"),

@@ -21,8 +21,6 @@ class AuthMethods {
     } catch (e) {
       logger.e(e.toString());
     }
-    // await _firestoreMethods
-    //     .createUserSubscriptionDetails();
   }
 
   Future<void> googleloginweb() async {
