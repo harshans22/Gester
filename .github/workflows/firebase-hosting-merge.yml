@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: flutter --classic && flutter channel beta && flutter config --enable-web &&
+      - run: flutter channel beta && flutter config --enable-web &&
           flutter build web
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
