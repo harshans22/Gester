@@ -10,10 +10,25 @@ jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - run: flutter --classic && flutter channel beta && flutter config --enable-web &&
-          flutter build web
-      - uses: FirebaseExtended/action-hosting-deploy@v0
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 'stable' # Use the version you need, like 'beta' if you're targeting beta channel
+          cache: true
+
+      - name: Configure Flutter
+        run: |
+          flutter channel beta
+          flutter config --enable-web
+
+      - name: Build the web app
+        run: flutter build web
+
+      - name: Deploy to Firebase Hosting
+        uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_GESTER_AE70F }}
