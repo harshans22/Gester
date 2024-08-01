@@ -62,6 +62,7 @@ class _MyAppState extends State<MyApp> {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: AppTheme.getAppTheme(),
+        title: "Gester",
         home: isLogin ? const NavigationScreen() : const SignInScreen(),
       ),
     );

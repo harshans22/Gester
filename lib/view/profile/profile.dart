@@ -9,7 +9,6 @@ import 'package:gester/resources/color.dart';
 import 'package:gester/resources/dimensions.dart';
 import 'package:gester/utils/utilities.dart';
 import 'package:gester/utils/widgets/activebutton.dart';
-import 'package:gester/view/auth/screens/sign_in_screen.dart';
 import 'package:gester/view/home/screens/QuickAcessScreens/MenuCustomizationScreen.dart';
 import 'package:gester/view/home/screens/QuickAcessScreens/meal_history_screen.dart';
 import 'package:gester/view/profile/aboutUs.dart';
@@ -207,14 +206,12 @@ class ProfileScreen extends StatelessWidget {
         await GoogleSignIn().signOut();
         await FirebaseAuth.instance.signOut();
       }
-
       Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (context) => const MyApp()),
         (Route<dynamic> route) => false,
       );
     } catch (e) {
-        final Logger logger = Logger();
-
+      final Logger logger = Logger();
       logger.e("Sign-out failed: ${e.toString()}");
     }
   }
