@@ -73,7 +73,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     padding:
                         const EdgeInsets.all(Dimensions.paddingSizeDefault),
                     decoration: BoxDecoration(
-                      color: Colors.red,
+                      color: Colors.white,
                       borderRadius:
                           BorderRadius.circular(Dimensions.radiusLarge),
                       boxShadow: [
