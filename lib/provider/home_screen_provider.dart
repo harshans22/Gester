@@ -14,9 +14,6 @@ class HomeScreenProvider with ChangeNotifier {
   bool _showEveningTimer = false;
   bool get showEveningTimer => _showEveningTimer;
 
-
-
-
   setmealoptloader(bool value) {
     _mealoptloader = value;
     notifyListeners();
