@@ -18,8 +18,7 @@ class MenuProvider with ChangeNotifier {
     }
   }
 
-  List<String> getTodaysMenu() {
-    DateTime dateTime = DateTime.now();
+  List<String> getTodaysMenu(DateTime dateTime) {
     int weekday = dateTime.weekday;
     String day = Utils.getDayName(weekday);
     return menu!.weeklyMenu[day]!;

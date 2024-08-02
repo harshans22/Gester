@@ -27,7 +27,7 @@ class _SignInScreenState extends State<SignInScreen> {
           "assets/images/sign_in_page/Cover image.jpg",
           width: double.infinity,
           fit: BoxFit.cover,
-         height: MediaQuery.of(context).size.height*0.8,
+          height: MediaQuery.of(context).size.height * 0.8,
         ),
         Align(
           alignment: Alignment.bottomCenter,
@@ -50,7 +50,6 @@ class _SignInScreenState extends State<SignInScreen> {
                 GestureDetector(
                   onTap: () async {
                     if (kIsWeb) {
-                      print("googgle");
                       // Create a new provider
                       await AuthMethods().googleloginweb();
                       Navigator.pushReplacement(
@@ -58,8 +57,7 @@ class _SignInScreenState extends State<SignInScreen> {
                         MaterialPageRoute(
                             builder: (context) => const NavigationScreen()),
                       );
-
-                      // Or use signInWithRedirect
+                      // Or use sign;InWithRedirect
                       // return await FirebaseAuth.instance.signInWithRedirect(googleProvider);
                     } else {
                       await AuthMethods().googleLogin();
@@ -109,8 +107,6 @@ class _SignInScreenState extends State<SignInScreen> {
                     ),
                   ),
                 ),
-        
-              
                 const Gap(30),
                 const Text(
                   "By continuing you agree to our",

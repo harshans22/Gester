@@ -7,12 +7,13 @@ import 'package:gester/resources/dimensions.dart';
 import 'package:provider/provider.dart';
 
 class MenuWidget extends StatelessWidget {
-  const MenuWidget({super.key});
+  final DateTime dateTime;
+  const MenuWidget({super.key,required this.dateTime});
 
   @override
   Widget build(BuildContext context) {
     final List<String> todaysMenu =
-        Provider.of<MenuProvider>(context, listen: true).getTodaysMenu();
+        Provider.of<MenuProvider>(context, listen: true).getTodaysMenu(dateTime);
     return Container(
       padding: const EdgeInsets.symmetric(
           vertical: Dimensions.paddingSizeDefault,
@@ -41,8 +42,7 @@ class MenuWidget extends StatelessWidget {
           ),
           const Gap(5),
           Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
                 "Lunch",
@@ -68,7 +68,7 @@ class MenuWidget extends StatelessWidget {
               const Gap(38),
               Expanded(
                 child: Text(
-                todaysMenu[2],
+                  todaysMenu[2],
                   style: const TextStyle(fontSize: 13),
                 ),
               ),

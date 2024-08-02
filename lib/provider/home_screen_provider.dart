@@ -2,11 +2,12 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:gester/firebase_methods/firestore_methods.dart';
+import 'package:gester/models/stay_model.dart';
 import 'package:gester/utils/utilities.dart';
 
 class HomeScreenProvider with ChangeNotifier {
   DateTime? _dateTime;
-  DateTime? get dateTime => _dateTime!;
+  DateTime get dateTime => _dateTime!;
   bool _mealoptloader = false;
   bool get mealoptloader => _mealoptloader;
   bool _showMorningTimer = false;
@@ -19,30 +20,34 @@ class HomeScreenProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> updatemealOpt(int breakfast, int lunch, int dinner,
-      String userId, String pgNumber, String username,Map<String,dynamic> morning,Map<String,dynamic> evening) async {
+  Future<void> updatemealOpt(
+      int breakfast,
+      int lunch,
+      int dinner,
+      String userId,
+      String pgNumber,
+      String username,
+      Map<String, dynamic> morning,
+      Map<String, dynamic> evening) async {
     setmealoptloader(true);
     try {
       await FireStoreMethods()
-          .updateMealOpt(breakfast, lunch, dinner, _dateTime!,userId);
-      await FireStoreMethods().updatekitchendata(
-          userId, pgNumber, username, breakfast, lunch, dinner, _dateTime!,morning,evening);
+          .updateMealOpt(breakfast, lunch, dinner, _dateTime!, userId);
+      await FireStoreMethods().updatekitchendata(userId, pgNumber, username,
+          breakfast, lunch, dinner, _dateTime!, morning, evening);
       notifyListeners();
     } catch (e) {
-      Utils.toastMessage("Failed to update meal", Colors.red);
-      print(e.toString());
+      logger.e(e.toString());
     }
     setmealoptloader(false);
   }
 
   Future<void> fetchTimeFromServer() async {
     try {
-      await FireStoreMethods().fetchTime().then((value) {
-        _dateTime = value;
-        notifyListeners();
-      });
+      _dateTime = await FireStoreMethods().fetchTime();
+      notifyListeners();
     } catch (e) {
-      Utils.toastMessage(e.toString(), Colors.red);
+       logger.e(e.toString());
     }
   }
 
@@ -54,7 +59,7 @@ class HomeScreenProvider with ChangeNotifier {
       } else {
         _showMorningTimer = false;
       }
-      if (_dateTime!.hour <17  && _dateTime!.hour >= 16) {
+      if (_dateTime!.hour < 17 && _dateTime!.hour >= 16) {
         _showEveningTimer = true;
       } else {
         _showEveningTimer = false;

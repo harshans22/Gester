@@ -85,13 +85,19 @@ class FireStoreMethods {
 
   //get PG id
   Future<PGDetails> getPGDetails(String pgNumber) async {
-    QuerySnapshot querySnapshot = await _firestore
-        .collection("PG")
-        .where("pgNumber", isEqualTo: pgNumber)
-        .get();
-    DocumentSnapshot snapshot = querySnapshot.docs.first;
-    Map<String, dynamic> snapshotdata = snapshot.data() as Map<String, dynamic>;
-    return PGDetails.fromMap(snapshotdata);
+    try {
+      QuerySnapshot querySnapshot = await _firestore
+          .collection("PG")
+          .where("pgNumber", isEqualTo: pgNumber)
+          .get();
+      DocumentSnapshot snapshot = querySnapshot.docs.first;
+      Map<String, dynamic> snapshotdata =
+          snapshot.data() as Map<String, dynamic>;
+      return PGDetails.fromMap(snapshotdata);
+    } catch (e) {
+      logger.e(e.toString());
+      throw Exception(e.toString());
+    }
   }
 
   Future<void> checkMealOptexists(String userdocid) async {
@@ -188,7 +194,7 @@ class FireStoreMethods {
   Future<UserData> getuserdata() async {
     String docId = await getUserDocId();
     try {
-      DateTime dateTime = await fetchTime();
+      DateTime dateTime = await fetchTime(); //to-do make it fetch from api
       int hour = dateTime.hour;
 
       if (hour >= 21) {
@@ -218,10 +224,10 @@ class FireStoreMethods {
           docId,
           (mealoptSnapshot.data() == null)
               ? {
-                "breakfast":0,
-                "lunch":0,
-                "dinner":0,
-              }
+                  "breakfast": 0,
+                  "lunch": 0,
+                  "dinner": 0,
+                }
               : mealoptSnapshot.data() as Map<String, dynamic>,
           (kycdata.data() == null)
               ? {}
@@ -229,8 +235,8 @@ class FireStoreMethods {
       return user;
     } catch (e) {
       logger.e(e.toString());
+      throw Exception(e.toString());
     }
-    return UserData.fromjson({}, docId, {}, {});
   }
 
   //updating kitchen data
@@ -328,55 +334,57 @@ class FireStoreMethods {
         } else {
           totaldinner -= (oldDinner - newdinner);
         }
-        totalsukhiSabjiMorning +=
-           (newlunch)*(morning['sukhiSabji'] ? 1 : 0) - (oldLunch)*(oldMorningsukhiSabji ? 1 : 0);
-        totalraitaMorning +=
-           (newlunch)* (morning['raita'] ? 1 : 0) -(oldLunch)* (oldMorningraita ? 1 : 0);
-        totalDaalMorning +=
-            (newlunch)*(morning['daal'] ? 1 : 0) - (oldLunch)*(oldMorningdaal ? 1 : 0);
-        totalsaladMorning +=
-           (newlunch)* (morning['salad'] ? 1 : 0) - (oldLunch)*(oldMorningsalad ? 1 : 0);
+        totalsukhiSabjiMorning += (newlunch) * (morning['sukhiSabji'] ? 1 : 0) -
+            (oldLunch) * (oldMorningsukhiSabji ? 1 : 0);
+        totalraitaMorning += (newlunch) * (morning['raita'] ? 1 : 0) -
+            (oldLunch) * (oldMorningraita ? 1 : 0);
+        totalDaalMorning += (newlunch) * (morning['daal'] ? 1 : 0) -
+            (oldLunch) * (oldMorningdaal ? 1 : 0);
+        totalsaladMorning += (newlunch) * (morning['salad'] ? 1 : 0) -
+            (oldLunch) * (oldMorningsalad ? 1 : 0);
         totalsukhiSabjiEvening +=
-           (newdinner) *(evening['sukhiSabji'] ? 1 : 0) - (oldDinner)*(oldEveningsukhiSabji ? 1 : 0);
-        totalraitaEvening +=
-           (newdinner) * (evening['raita'] ? 1 : 0) - (oldDinner)*(oldEveningraita ? 1 : 0);
-        totalDaalEvening +=
-           (newdinner) * (evening['daal'] ? 1 : 0) - (oldDinner)* (oldEveningdaal ? 1 : 0);
-        totalsaladEvening +=
-           (newdinner) * (evening['salad'] ? 1 : 0) - (oldDinner)* (oldEveningsalad ? 1 : 0);
+            (newdinner) * (evening['sukhiSabji'] ? 1 : 0) -
+                (oldDinner) * (oldEveningsukhiSabji ? 1 : 0);
+        totalraitaEvening += (newdinner) * (evening['raita'] ? 1 : 0) -
+            (oldDinner) * (oldEveningraita ? 1 : 0);
+        totalDaalEvening += (newdinner) * (evening['daal'] ? 1 : 0) -
+            (oldDinner) * (oldEveningdaal ? 1 : 0);
+        totalsaladEvening += (newdinner) * (evening['salad'] ? 1 : 0) -
+            (oldDinner) * (oldEveningsalad ? 1 : 0);
 
         if (numberOfRotiMorning < morning['numberofRoti']) {
           numberOfRotiMorning +=
-              ((newlunch)*(morning['numberofRoti'] as int) - (oldLunch)*oldmorningRoti);
+              ((newlunch) * (morning['numberofRoti'] as int) -
+                  (oldLunch) * oldmorningRoti);
         } else {
-          numberOfRotiMorning -=
-              ((oldLunch)*oldmorningRoti - (newlunch)*(morning['numberofRoti'] as int));
+          numberOfRotiMorning -= ((oldLunch) * oldmorningRoti -
+              (newlunch) * (morning['numberofRoti'] as int));
         }
         if (riceQuantityMorning < morning['riceQuantity']) {
           riceQuantityMorning +=
-              ((newlunch)*(morning['riceQuantity'] as double) - (oldLunch)*oldmorningRice);
+              ((newlunch) * (morning['riceQuantity'] as double) -
+                  (oldLunch) * oldmorningRice);
         } else {
-          riceQuantityMorning -=
-              ((oldLunch)*oldmorningRice - (newlunch)*(morning['riceQuantity'] as double));
+          riceQuantityMorning -= ((oldLunch) * oldmorningRice -
+              (newlunch) * (morning['riceQuantity'] as double));
         }
         if (numberOfRotiEvening < evening['numberofRoti']) {
           numberOfRotiEvening +=
-              ((newdinner)*(evening['numberofRoti'] as int) - (oldDinner)* oldeveningRoti);
+              ((newdinner) * (evening['numberofRoti'] as int) -
+                  (oldDinner) * oldeveningRoti);
         } else {
-          numberOfRotiEvening -=
-              ((oldDinner)*oldeveningRoti -(newdinner)* (evening['numberofRoti'] as int));
+          numberOfRotiEvening -= ((oldDinner) * oldeveningRoti -
+              (newdinner) * (evening['numberofRoti'] as int));
         }
         if (riceQuantityEvening < evening['riceQuantity']) {
           riceQuantityEvening +=
-              ((newdinner)*(evening['riceQuantity'] as double) -  (oldDinner)*oldeveningRice);
+              ((newdinner) * (evening['riceQuantity'] as double) -
+                  (oldDinner) * oldeveningRice);
         } else {
-          riceQuantityEvening -=
-              ( (oldDinner)*oldeveningRice -(newdinner)* (evening['riceQuantity'] as double));
+          riceQuantityEvening -= ((oldDinner) * oldeveningRice -
+              (newdinner) * (evening['riceQuantity'] as double));
         }
-        await _firestore
-            .collection("Kitchen")
-            .doc(date)
-            .set(
+        await _firestore.collection("Kitchen").doc(date).set(
           {
             "allBreakfast": totalbreakfast,
             "allLunch": totallunch,
@@ -457,22 +465,32 @@ class FireStoreMethods {
             "allLunch": (totallunch + newlunch),
             "allDinner": (totaldinner + newdinner),
             "Morning": {
-              "total_sukhiSabji":
-                  totalsukhiSabjiMorning + (newlunch)*(morning['sukhiSabji'] ? 1 : 0),
-              "total_raita": totalraitaMorning + (newlunch)*(morning['raita'] ? 1 : 0),
-              "total_daal": totalDaalMorning + (newlunch)*(morning['daal'] ? 1 : 0),
-              "total_salad": totalsaladMorning + (newlunch)*(morning['salad'] ? 1 : 0),
-              "total_roties": numberOfRotiMorning + (newlunch)*morning['numberofRoti'],
-              "total_rice": riceQuantityMorning + (newlunch)*morning['riceQuantity'],
+              "total_sukhiSabji": totalsukhiSabjiMorning +
+                  (newlunch) * (morning['sukhiSabji'] ? 1 : 0),
+              "total_raita":
+                  totalraitaMorning + (newlunch) * (morning['raita'] ? 1 : 0),
+              "total_daal":
+                  totalDaalMorning + (newlunch) * (morning['daal'] ? 1 : 0),
+              "total_salad":
+                  totalsaladMorning + (newlunch) * (morning['salad'] ? 1 : 0),
+              "total_roties":
+                  numberOfRotiMorning + (newlunch) * morning['numberofRoti'],
+              "total_rice":
+                  riceQuantityMorning + (newlunch) * morning['riceQuantity'],
             },
             "Evening": {
-              "total_sukhiSabji":
-                  totalsukhiSabjiEvening + (newdinner)*(evening['sukhiSabji'] ? 1 : 0),
-              "total_raita": totalraitaEvening + (newdinner)*(evening['raita'] ? 1 : 0),
-              "total_daal": totalDaalEvening + (newdinner)*(evening['daal'] ? 1 : 0),
-              "total_salad": totalsaladEvening + (newdinner)*(evening['salad'] ? 1 : 0),
-              "total_roties": numberOfRotiEvening + (newdinner)*evening['numberofRoti'],
-              "total_rice": riceQuantityEvening + (newdinner)*evening['riceQuantity'],
+              "total_sukhiSabji": totalsukhiSabjiEvening +
+                  (newdinner) * (evening['sukhiSabji'] ? 1 : 0),
+              "total_raita":
+                  totalraitaEvening + (newdinner) * (evening['raita'] ? 1 : 0),
+              "total_daal":
+                  totalDaalEvening + (newdinner) * (evening['daal'] ? 1 : 0),
+              "total_salad":
+                  totalsaladEvening + (newdinner) * (evening['salad'] ? 1 : 0),
+              "total_roties":
+                  numberOfRotiEvening + (newdinner) * evening['numberofRoti'],
+              "total_rice":
+                  riceQuantityEvening + (newdinner) * evening['riceQuantity'],
             },
           },
         );
@@ -506,8 +524,8 @@ class FireStoreMethods {
       return Menu(weeklyMenu: weeklymenu, weekPeriod: weekperiod["weekPeriod"]);
     } catch (e) {
       logger.e(e.toString());
+      throw Exception(e.toString());
     }
-    return Menu(weeklyMenu: {}, weekPeriod: "");
   }
 
   //get stay details
@@ -530,8 +548,8 @@ class FireStoreMethods {
                   as Map<String, dynamic>)["Accommodation"]);
     } catch (e) {
       logger.e(e.toString());
+      throw Exception(e.toString());
     }
-    return StayModel.fromJson({}, {});
   }
 
 //fetching real time
@@ -544,12 +562,13 @@ class FireStoreMethods {
         final DateTime dateTime = DateTime.parse(data['datetime']).toLocal();
         return dateTime;
       } else {
-        logger.e(response.toString());
+        logger.e(response);
+        throw Exception(response);
       }
     } catch (e) {
       logger.e(e.toString());
+      throw Exception(e.toString());
     }
-    return DateTime.now();
   }
 
   //get all mealopt from collection of mealopt by monthly basis
@@ -662,6 +681,4 @@ class FireStoreMethods {
     }
     return MealCustomizationData();
   }
-
-
 }

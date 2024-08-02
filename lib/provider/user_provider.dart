@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:gester/firebase_methods/firestore_methods.dart';
 import 'package:gester/models/stay_model.dart';
@@ -21,6 +23,8 @@ class UserDataProvider with ChangeNotifier {
   int _totalMealopt = 0;
   int get totalMealopt => _totalMealopt;
 
+
+
   setoldMealtype(int breakfast, int lunch, int dinner) {
     _totalMealopt = breakfast + lunch + dinner;
     _oldbreakfast = _user!.breakfast;
@@ -39,7 +43,6 @@ class UserDataProvider with ChangeNotifier {
       notifyListeners();
     } catch (e) {
       logger.e(e);
-      //print(e.toString());
     }
   }
 

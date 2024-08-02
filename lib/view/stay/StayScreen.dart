@@ -22,7 +22,7 @@ class _StayScreenState extends State<StayScreen> {
   @override
   Widget build(BuildContext context) {
     final stayDetails = Provider.of<UserDataProvider>(context).stayDetails;
-    final userData = Provider.of<UserDataProvider>(context).user;
+ 
     final pgdetails = Provider.of<UserDataProvider>(context).pgDetails;
     return Column(
       mainAxisSize: MainAxisSize.max,

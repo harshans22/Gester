@@ -14,6 +14,7 @@ import 'package:gester/view/home/widgets/QuickAccessContainer.dart';
 import 'package:gester/view/home/widgets/counterbox.dart';
 import 'package:gester/view/home/widgets/menuwidget.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:svg_flutter/svg.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -59,7 +60,7 @@ class _HomeScreenState extends State<HomeScreen> {
         Provider.of<HomeScreenProvider>(context, listen: true);
     final user = Provider.of<UserDataProvider>(context).user;
     final userprovider = Provider.of<UserDataProvider>(context);
-    DateTime datetime = homescreenprovider.dateTime!;
+    DateTime datetime = homescreenprovider.dateTime;
     int hour = datetime.hour;
     String timeRefrence = "Today";
     if (hour >= 21) {
@@ -91,10 +92,12 @@ class _HomeScreenState extends State<HomeScreen> {
       }
     }
 
+
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const ProfileContainer(),
+       const ProfileContainer(),
         const Gap(10),
         Expanded(
           child: SingleChildScrollView(
@@ -165,7 +168,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   color: const Color(0xFFFAA139),
                                 ),
                                 child: Text(
-                                    "  Meal opt closing at 5 PM. Order within ${Utils.getTimeinMinSec(homescreenprovider.dateTime!)} mins  ",
+                                    "  Meal opt closing at 5 PM. Order within ${Utils.getTimeinMinSec(homescreenprovider.dateTime)} mins  ",
                                     style: Theme.of(context)
                                         .textTheme
                                         .titleSmall!
@@ -183,7 +186,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   color: const Color(0xFFFAA139),
                                 ),
                                 child: Text(
-                                  "  Meal opt closing at 5 AM. Order within ${Utils.getTimeinMinSec(homescreenprovider.dateTime!)} mins  ",
+                                  "  Meal opt closing at 5 AM. Order within ${Utils.getTimeinMinSec(homescreenprovider.dateTime)} mins  ",
                                   style: Theme.of(context)
                                       .textTheme
                                       .titleSmall!
@@ -273,7 +276,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         fontWeight: FontWeight.w700,
                       )),
                   const Gap(20),
-                  const MenuWidget(),
+                  MenuWidget(dateTime: datetime,),
                   const Gap(20),
                   const Text(
                     "Quick Access",

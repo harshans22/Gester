@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:gester/firebase_methods/firestore_methods.dart';
+import 'package:flutter/widgets.dart';
 import 'package:gester/provider/menu_provider.dart';
 import 'package:gester/provider/user_provider.dart';
 import 'package:gester/resources/color.dart';
 import 'package:gester/resources/dimensions.dart';
 import 'package:gester/provider/home_screen_provider.dart';
 import 'package:gester/view/home/screens/homescreen.dart';
+import 'package:gester/view/home/screens/skeleton_home.dart';
 import 'package:gester/view/stay/StayScreen.dart';
+import 'package:logger/logger.dart';
 
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:svg_flutter/svg_flutter.dart';
 
@@ -20,12 +23,14 @@ class NavigationScreen extends StatefulWidget {
 }
 
 class _NavgationScreenState extends State<NavigationScreen> {
-  static const List<Widget> _widgetOptions = <Widget>[
+ 
+
+  int _selectedIndex = 0;
+  bool _isloading = true;
+   static const List<Widget> _widgetOptions = <Widget>[
     HomeScreen(),
     StayScreen()
   ];
-
-  int _selectedIndex = 0;
 
   @override
   void initState() {
@@ -34,19 +39,30 @@ class _NavgationScreenState extends State<NavigationScreen> {
   }
 
   updateProvider() async {
-    
-
-   await Provider.of<UserDataProvider>(context, listen: false).updateUser();
-    await Provider.of<UserDataProvider>(context, listen: false)
-        .getStayDetails();
-        await Provider.of<UserDataProvider>(context, listen: false)
-        .getPGDetails();
-    await Provider.of<MenuProvider>(context, listen: false).getMenu();
-    await Provider.of<HomeScreenProvider>(context,listen: false).fetchTimeFromServer();
-    Provider.of<HomeScreenProvider>(context,listen: false).startLocalClock();
+    try {
+      await Provider.of<UserDataProvider>(context, listen: false).updateUser();
+      if (!mounted) return;
+      await Provider.of<UserDataProvider>(context, listen: false)
+          .getStayDetails();
+      if (!mounted) return;
+      await Provider.of<UserDataProvider>(context, listen: false)
+          .getPGDetails();
+      if (!mounted) return;
+      await Provider.of<MenuProvider>(context, listen: false).getMenu();
+      if (!mounted) return;
+      await Provider.of<HomeScreenProvider>(context, listen: false)
+          .fetchTimeFromServer();
+      if (!mounted) return;
+      Provider.of<HomeScreenProvider>(context, listen: false).startLocalClock();
+    } catch (e) {
+      var logger = Logger();
+      logger.e(e.toString());
+    } finally {
+      setState(() {
+        _isloading = false;
+      });
+    }
   }
-
- 
 
   @override
   Widget build(BuildContext context) {
@@ -54,11 +70,11 @@ class _NavgationScreenState extends State<NavigationScreen> {
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 400),
         child: Scaffold(
-          body: Center(child: _widgetOptions[_selectedIndex]),
+          body:_isloading?const SkeletonHome() :Center(child: _widgetOptions[_selectedIndex]),
           bottomNavigationBar: Container(
-            padding: const EdgeInsets.symmetric(
-                horizontal: Dimensions.paddingSizeDefault,
-                vertical: Dimensions.paddingSizeDefault),
+            // padding: const EdgeInsets.symmetric(
+            //     horizontal: Dimensions.paddingSizeDefault,
+            //     vertical: Dimensions.paddingSizeDefault),
             decoration: BoxDecoration(
               color: AppColor.WHITE,
               boxShadow: [
@@ -71,38 +87,42 @@ class _NavgationScreenState extends State<NavigationScreen> {
               ],
             ),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+             //mainAxisAlignment: MainAxisAlignment.spaceBetween,
               mainAxisSize: MainAxisSize.max,
               children: [
-                GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      _selectedIndex = 0;
-                    });
-                  },
-                  child: Container(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        SvgPicture.asset(
-                          "assets/images/navigation/myfood.svg",
-                          color: _selectedIndex == 0
-                              ? const Color(0xFF1D2036)
-                              : Colors.grey,
-                          height: 22,
-                        ),
-                        Text(
-                          "My food",
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyLarge!
-                              .copyWith(
-                                  fontWeight: FontWeight.w600,
-                                  color: _selectedIndex == 0
-                                      ? const Color(0xFF1D2036)
-                                      : Colors.grey),
-                        ),
-                      ],
+                Expanded(
+                  child: InkWell(
+                    onTap: () {
+                      setState(() {
+                        _selectedIndex = 0;
+                      });
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                                   horizontal: Dimensions.paddingSizeDefault,
+                                     vertical: Dimensions.paddingSizeDefault),                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          SvgPicture.asset(
+                            "assets/images/navigation/myfood.svg",
+                            color: _selectedIndex == 0
+                                ? const Color(0xFF1D2036)
+                                : Colors.grey,
+                            height: 22,
+                          ),
+                          Text(
+                            "My food",
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyLarge!
+                                .copyWith(
+                                    fontWeight: FontWeight.w600,
+                                    color: _selectedIndex == 0
+                                        ? const Color(0xFF1D2036)
+                                        : Colors.grey),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -115,32 +135,37 @@ class _NavgationScreenState extends State<NavigationScreen> {
                   ),
                   child: const SizedBox(),
                 ),
-                GestureDetector(
-                  onTap: () async {
-                    setState(() {
-                      _selectedIndex = 1;
-                    });
-                  },
-                  child: Container(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        SvgPicture.asset(
-                          "assets/images/navigation/mystay.svg",
-                          color: _selectedIndex == 1
-                              ? const Color(0xFF1D2036)
-                              : Colors.grey,
-                        ),
-                        Text("My Stay",
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyLarge!
-                                .copyWith(
-                                    fontWeight: FontWeight.w600,
-                                    color: _selectedIndex == 1
-                                        ? const Color(0xFF1D2036)
-                                        : Colors.grey)),
-                      ],
+                Expanded(
+                  child: InkWell(
+                    onTap: () async {
+                      setState(() {
+                        _selectedIndex = 1;
+                      });
+                    },
+                    child: Container(
+                       padding: const EdgeInsets.symmetric(
+                                   horizontal: Dimensions.paddingSizeDefault,
+                                     vertical: Dimensions.paddingSizeDefault),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          SvgPicture.asset(
+                            "assets/images/navigation/mystay.svg",
+                            color: _selectedIndex == 1
+                                ? const Color(0xFF1D2036)
+                                : Colors.grey,
+                          ),
+                          Text("My Stay",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyLarge!
+                                  .copyWith(
+                                      fontWeight: FontWeight.w600,
+                                      color: _selectedIndex == 1
+                                          ? const Color(0xFF1D2036)
+                                          : Colors.grey)),
+                        ],
+                      ),
                     ),
                   ),
                 ),
