@@ -24,7 +24,7 @@ class _SignInScreenState extends State<SignInScreen> {
     return Stack(
       children: [
         Image.asset(
-          "assets/images/sign_in_page/Cover image.png",
+          "assets/images/sign_in_page/Cover image.jpg",
           width: double.infinity,
           fit: BoxFit.cover,
          height: MediaQuery.of(context).size.height*0.8,
@@ -89,8 +89,8 @@ class _SignInScreenState extends State<SignInScreen> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Image.asset(
-                          "assets/images/google.png",
+                        SvgPicture.asset(
+                          "assets/images/sign_in_page/google.svg",
                           height: 25,
                           width: 25,
                           fit: BoxFit.fill,
@@ -109,19 +109,8 @@ class _SignInScreenState extends State<SignInScreen> {
                     ),
                   ),
                 ),
-                const Gap(20),
-                GestureDetector(
-                  onTap: () {},
-                  child: const Text(
-                    "or continue without login",
-                    style: TextStyle(
-                        color: Color(
-                          0xFF1D2036,
-                        ),
-                        fontSize: 17,
-                        fontWeight: FontWeight.w600),
-                  ),
-                ),
+        
+              
                 const Gap(30),
                 const Text(
                   "By continuing you agree to our",
