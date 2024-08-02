@@ -668,7 +668,7 @@ class FireStoreMethods {
       await _firestore
           .collection("User")
           .doc(userdocid)
-          .collection("MealOpt")
+          .collection("MealCustomization")
           .doc(dateTime.year.toString())
           .collection(Utils.getMonthName(dateTime.month))
           .doc(date)
