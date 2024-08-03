@@ -193,11 +193,11 @@ class ProfileScreen extends StatelessWidget {
                       ContainerWithPadding(
                           onTap: () {
                             //print("called");
-                            Utils().show(
+                            Utils.showWithDoubleButton(
                                 context,
                                 "You are about to logout",
                                 "Are you sure you want to log out?",
-                                () async {
+                               onYes:  () async {
                                   try {
       if (kIsWeb) {
         // Google logout for web

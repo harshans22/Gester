@@ -35,10 +35,17 @@ class _NavgationScreenState extends State<NavigationScreen> {
   @override
   void initState() {
     super.initState();
-    updateProvider();
   }
 
-  updateProvider() async {
+  @override
+  void didChangeDependencies() async {
+    super.didChangeDependencies();
+    if(_isloading){
+     await updateProvider();
+    }
+  }
+
+ Future<void> updateProvider() async {
     try {
       await Provider.of<UserDataProvider>(context, listen: false).updateUser();
       if (!mounted) return;
@@ -63,6 +70,9 @@ class _NavgationScreenState extends State<NavigationScreen> {
       });
     }
   }
+
+
+  
 
   @override
   Widget build(BuildContext context) {

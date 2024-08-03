@@ -59,7 +59,8 @@ class _SignInScreenState extends State<SignInScreen> {
                     } else {
                       await AuthMethods().googleLogin();
                     }
-                    FireStoreMethods().createMealCustomization();
+                    await FireStoreMethods().createMealCustomization();
+                    if (!mounted) return;
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(

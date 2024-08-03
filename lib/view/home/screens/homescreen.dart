@@ -84,6 +84,7 @@ class _HomeScreenState extends State<HomeScreen> {
       }
       if (user.dinner != userprovider.olddinner) {
         if (datetime.hour < 21) {
+          //when user is on app ex-8:59 he is on app and saves some value to reset at 9:01
           showSaveChangesButton = true;
         } else {
           userprovider.resetMealOpt();
@@ -226,7 +227,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>
-                                                    MenuCustomizationScreen(weekday: datetime.weekday,)));
+                                                    MenuCustomizationScreen(
+                                                      weekday: datetime.weekday,
+                                                    )));
                                       },
                                       paddingvertical:
                                           Dimensions.paddingSizeSmall,
@@ -256,6 +259,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             user.lunch,
                                             user.dinner);
                                         if (!homescreenprovider.mealoptloader) {
+                                          if (!context.mounted) return;
                                           show(context);
                                         }
                                       },

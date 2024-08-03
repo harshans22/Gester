@@ -1,8 +1,6 @@
 import 'package:another_flushbar/flushbar.dart';
 import 'package:another_flushbar/flushbar_route.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gap/gap.dart';
 import 'package:gester/resources/color.dart';
@@ -13,12 +11,12 @@ import 'package:svg_flutter/svg.dart';
 
 class Utils {
   pickImage(ImageSource source) async {
-    final ImagePicker _imagepicker = ImagePicker();
-    XFile? _file = await _imagepicker.pickImage(source: source);
-    if (_file != null) {
-      return await _file.readAsBytes();
+    final ImagePicker imagepicker = ImagePicker();
+    XFile? file = await imagepicker.pickImage(source: source);
+    if (file != null) {
+      return await file.readAsBytes();
     }
-    print("No Image selected");
+   // print("No Image selected");
   }
 
   static void fieldFocusChange(
@@ -44,7 +42,7 @@ class Utils {
       flushbar: Flushbar(
         backgroundColor: Colors.red,
         message: message,
-        duration: Duration(seconds: 2),
+        duration: const Duration(seconds: 2),
       )..show(context),
     );
   }
@@ -139,7 +137,9 @@ class Utils {
 // // Return the UUID to be used in Retool
 // return uuid;
 
-  show(BuildContext context, String title, String content, VoidCallback onYes) {
+  static showWithDoubleButton(
+      BuildContext context, String title, String content,
+      {required VoidCallback onYes}) {
     showDialog(
         context: context,
         builder: (context) => Center(
@@ -183,12 +183,14 @@ class Utils {
                                   .copyWith(
                                       color: AppColor.GREY_COLOR_LIGHT,
                                       fontWeight: FontWeight.w400),
+                              textAlign: TextAlign.center,
                             ),
                             const Gap(10),
                             Row(
                               children: [
                                 Expanded(
                                     child: TextCommonButton(
+                                  paddingvertical: Dimensions.paddingSizeSmall,
                                   title: "No",
                                   color: Colors.transparent,
                                   textColor: AppColor.PRIMARY,
@@ -200,6 +202,7 @@ class Utils {
                                 const Gap(5),
                                 Expanded(
                                     child: TextCommonButton(
+                                  paddingvertical: Dimensions.paddingSizeSmall,
                                   title: "Yes",
                                   color: AppColor.PRIMARY,
                                   textColor: AppColor.WHITE,
@@ -215,11 +218,69 @@ class Utils {
             ));
   }
 
+  //single button pop up
+  static showWithSingleButton(BuildContext context, String content,
+      {required VoidCallback onTap, required String buttonTitle}) {
+    showDialog(
+        //  traversalEdgeBehavior: TraversalEdgeBehavior.leaveFlutterView,
+        context: context,
+        builder: (context) => Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 400),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: Dimensions.paddingSizeExtraOverLarge),
+                  child: Dialog(
+                      insetPadding: const EdgeInsets.symmetric(
+                          vertical: Dimensions.paddingSizeExtraLarge),
+                      backgroundColor: AppColor.WHITE,
+                      surfaceTintColor: AppColor.WHITE,
+                      child: Container(
+                        // margin:const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeDefault),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: Dimensions.paddingSizeDefault,
+                            vertical: Dimensions.paddingSizeExtraLarge),
+                        //alignment: Alignment.center,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            SvgPicture.asset(
+                                "assets/images/homepage/alert icon.svg"),
+                            const Gap(10),
+                            Text(
+                              content,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleLarge!
+                                  .copyWith(
+                                    color: AppColor.GREY_COLOR_LIGHT,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                  textAlign: TextAlign.center,
+                            ),
+                            const Gap(20),
+                            SizedBox(
+                              width: 120,
+                              child: TextCommonButton(
+                                paddingvertical: Dimensions.paddingSizeSmall,
+                                title: buttonTitle,
+                                color: AppColor.PRIMARY,
+                                textColor: AppColor.WHITE,
+                                onTap: onTap,
+                                fontWeight: FontWeight.w300,
+                        
+                              ),
+                            )
+                          ],
+                        ),
+                      )),
+                ),
+              ),
+            ));
+  }
 
-    //get date functon from firebaseString Date
+  //get date functon from firebaseString Date
   static DateTime getDateFromFirebase(String dateString) {
-
-
     // Replace the timezone offset to match Dart's expected format
     dateString = dateString.replaceFirstMapped(
       RegExp(r'([+-]\d{2})(\d{2})$'),
