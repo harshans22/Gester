@@ -72,6 +72,49 @@ class FireStoreMethods {
     return querySnapshot.docs.isNotEmpty;
   }
 
+  //create Pg User MealCustomization
+  Future<void> createMealCustomization() async {
+    //TO-Do handle it in such a way that if user is logging for the first time so there might be some meal customization present so don't create it on login
+    String userdocid = await getUserDocId();
+    try {
+      final batch = _firestore.batch();
+
+      // Create a reference to the collection
+      final collectionRef = _firestore
+          .collection("User")
+          .doc(userdocid)
+          .collection("MealCustomization");
+
+      // Prepare the meal customization data
+      final mealCustomizationData = MealCustomizationData(
+          numberofRoti: 4,
+          riceQuantity: 0.2,
+          salad: true,
+          raita: true,
+          sukhiSabji: true,
+          daal: true);
+      final data = {
+        "Morning": mealCustomizationData.toJson(),
+        "Evening": mealCustomizationData.toJson(),
+      };
+
+      // Loop through the days of the week
+      for (int i = 1; i <= 7; i++) {
+        final dayName = Utils.getDayName(i);
+        final docRef = collectionRef.doc(dayName);
+
+        // Check if the document exists
+
+        // Add the set operation to the batch only if the document does not exist
+        batch.set(docRef, data);
+      }
+      await batch.commit();
+    } catch (e) {
+      print("Error creating meal customization: $e");
+      throw Exception(e);
+    }
+  }
+
 //get current userdocid
 
   Future<String> getUserDocId() async {
@@ -134,22 +177,6 @@ class FireStoreMethods {
           "breakfast": 0,
           "lunch": 0,
           "dinner": 0,
-          "Morning": MealCustomizationData(
-                  numberofRoti: 4,
-                  riceQuantity: 0.2,
-                  salad: true,
-                  raita: true,
-                  sukhiSabji: true,
-                  daal: true)
-              .toJson(),
-          "Evening": MealCustomizationData(
-                  numberofRoti: 4,
-                  riceQuantity: 0.2,
-                  salad: true,
-                  raita: true,
-                  sukhiSabji: true,
-                  daal: true)
-              .toJson(),
         });
       }
     } catch (e) {
@@ -205,6 +232,12 @@ class FireStoreMethods {
           "${dateTime.day < 10 ? '0${dateTime.day}' : dateTime.day}-${dateTime.month < 10 ? '0${dateTime.month}' : dateTime.month}-${dateTime.year}";
       DocumentSnapshot snapshot =
           await _firestore.collection("User").doc(docId).get();
+      DocumentSnapshot mealcustomization = await _firestore
+          .collection("User")
+          .doc(docId)
+          .collection("MealCustomization")
+          .doc(Utils.getDayName(dateTime.weekday))
+          .get();
       DocumentSnapshot mealoptSnapshot = await _firestore
           .collection("User")
           .doc(docId)
@@ -231,7 +264,8 @@ class FireStoreMethods {
               : mealoptSnapshot.data() as Map<String, dynamic>,
           (kycdata.data() == null)
               ? {}
-              : kycdata.data() as Map<String, dynamic>);
+              : kycdata.data() as Map<String, dynamic>,
+          mealcustomization.data() as Map<String, dynamic>);
       return user;
     } catch (e) {
       logger.e(e.toString());
@@ -624,60 +658,128 @@ class FireStoreMethods {
   }
 
   //update meal customization
-  Future<void> singleDaycustomizationMeal(Map<String, dynamic> morning,
-      Map<String, dynamic> evening, String userdocid) async {
-    DateTime dateTime = await fetchTime();
-    int hour = dateTime.hour;
+  // Future<void> singleDaycustomizationMeal(Map<String, dynamic> morning,
+  //     Map<String, dynamic> evening, String userdocid) async {
+  //   DateTime dateTime = await fetchTime();
+  //   int hour = dateTime.hour;
 
-    if (hour >= 21) {
-      dateTime = dateTime.add(const Duration(days: 1)); //adding date after 9 PM
-    }
-    String date =
-        "${dateTime.day < 10 ? '0${dateTime.day}' : dateTime.day}-${dateTime.month < 10 ? '0${dateTime.month}' : dateTime.month}-${dateTime.year}";
-    try {
-      await _firestore
-          .collection("User")
-          .doc(userdocid)
-          .collection("MealOpt")
-          .doc(dateTime.year.toString())
-          .collection(Utils.getMonthName(dateTime.month))
-          .doc(date)
-          .set({
-        "Morning": morning,
-        "Evening": evening,
-      }, SetOptions(merge: true));
-    } catch (e) {
-      logger.e(e.toString());
-    }
-  }
+  //   if (hour >= 21) {
+  //     dateTime = dateTime.add(const Duration(days: 1)); //adding date after 9 PM
+  //   }
+  //   String date =
+  //       "${dateTime.day < 10 ? '0${dateTime.day}' : dateTime.day}-${dateTime.month < 10 ? '0${dateTime.month}' : dateTime.month}-${dateTime.year}";
+  //   try {
+  //     await _firestore
+  //         .collection("User")
+  //         .doc(userdocid)
+  //         .collection("MealOpt")
+  //         .doc(dateTime.year.toString())
+  //         .collection(Utils.getMonthName(dateTime.month))
+  //         .doc(date)
+  //         .set({
+  //       "Morning": morning,
+  //       "Evening": evening,
+  //     }, SetOptions(merge: true));
+  //   } catch (e) {
+  //     logger.e(e.toString());
+  //   }
+  // }
 
   //get meal customization data
   Future<MealCustomizationData> updateMealCustomization(
       String userdocid,
       Map<String, dynamic> morning,
       Map<String, dynamic> evening,
-      DateTime dateTime) async {
-    int hour = dateTime.hour;
-
-    if (hour >= 21) {
-      dateTime = dateTime.add(const Duration(days: 1)); //adding date after 9 PM
-    }
-    String date =
-        "${dateTime.day < 10 ? '0${dateTime.day}' : dateTime.day}-${dateTime.month < 10 ? '0${dateTime.month}' : dateTime.month}-${dateTime.year}";
+      bool sameforEvening,
+      bool sameforMorning,
+      int weekday) async {
     try {
-      await _firestore
-          .collection("User")
-          .doc(userdocid)
-          .collection("MealCustomization")
-          .doc(dateTime.year.toString())
-          .collection(Utils.getMonthName(dateTime.month))
-          .doc(date)
-          .set({
-        "Morning": morning,
-        "Evening": evening,
-      }, SetOptions(merge: true));
+
+      
+      if (sameforMorning && !sameforEvening) {
+          await  _firestore
+              .collection("User")
+              .doc(userdocid)
+              .collection("MealCustomization")
+              .doc(Utils.getDayName(weekday))
+              .set({
+            "Evening": evening,
+              },SetOptions(merge: true));
+        final collectionRef = _firestore
+            .collection("User")
+            .doc(userdocid)
+            .collection("MealCustomization");
+
+        final data = {
+          "Morning": morning,
+        };
+        final batch = _firestore.batch();
+
+        // Loop through the days of the week
+        for (int i = 1; i <= 7; i++) {
+          final dayName = Utils.getDayName(i);
+          final docRef = collectionRef.doc(dayName);
+
+          // Add the set operation to the batch only if the document does not exist
+          batch.set(docRef, data, SetOptions(merge: true));
+
+        }
+        await batch.commit();
+     
+      } else if (!sameforMorning && sameforEvening) {
+        final collectionRef = _firestore
+            .collection("User")
+            .doc(userdocid)
+            .collection("MealCustomization");
+
+        final data = {
+          "Evening": evening,
+        };
+        final batch = _firestore.batch();
+
+        // Loop through the days of the week
+        for (int i = 1; i <= 7; i++) {
+           await _firestore
+              .collection("User")
+              .doc(userdocid)
+              .collection("MealCustomization")
+              .doc(Utils.getDayName(weekday))
+              .set({
+            "Morning": morning,
+              },SetOptions(merge: true));
+          final dayName = Utils.getDayName(i);
+          final docRef = collectionRef.doc(dayName);
+
+          // Add the set operation to the batch only if the document does not exist
+          batch.set(docRef, data, SetOptions(merge: true));
+
+        
+        }
+          await batch.commit();
+      } else {
+        final collectionRef = _firestore
+            .collection("User")
+            .doc(userdocid)
+            .collection("MealCustomization");
+
+        final data = {
+          "Morning": morning,
+          "Evening": evening,
+        };
+        final batch = _firestore.batch();
+        // Loop through the days of the week
+        for (int i = 1; i <= 7; i++) {
+          final dayName = Utils.getDayName(i);
+          final docRef = collectionRef.doc(dayName);
+
+          // Add the set operation to the batch only if the document does not exist
+          batch.set(docRef, data, SetOptions(merge: true));
+
+        }
+         await batch.commit();
+      }
     } catch (e) {
-      logger.e(e.toString());
+      throw Exception(e);
     }
     return MealCustomizationData();
   }

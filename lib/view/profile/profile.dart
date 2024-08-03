@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:gap/gap.dart';
 import 'package:gester/main.dart';
+import 'package:gester/provider/home_screen_provider.dart';
 import 'package:gester/provider/user_provider.dart';
 import 'package:gester/resources/color.dart';
 import 'package:gester/resources/dimensions.dart';
@@ -25,7 +26,7 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<UserDataProvider>(context, listen: true).user;
-
+    final int weekday=  Provider.of<HomeScreenProvider>(context).dateTime.weekday;
     return Center(
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 400),
@@ -131,7 +132,7 @@ class ProfileScreen extends StatelessWidget {
                                 context,
                                 MaterialPageRoute(
                                     builder: (_) =>
-                                        const MenuCustomizationScreen()));
+                                         MenuCustomizationScreen(weekday: weekday,)));
                           },
                           content: "Meal Customization",
                           image:

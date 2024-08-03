@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:gester/provider/home_screen_provider.dart';
 import 'package:gester/provider/meal_customization_provider.dart';
 import 'package:gester/provider/user_provider.dart';
 import 'package:gester/resources/color.dart';
@@ -11,7 +10,8 @@ import 'package:provider/provider.dart';
 import 'package:svg_flutter/svg.dart';
 
 class MenuCustomizationScreen extends StatefulWidget {
-  const MenuCustomizationScreen({super.key});
+  final int weekday;
+  const MenuCustomizationScreen({super.key, required this.weekday});
 
   @override
   State<MenuCustomizationScreen> createState() =>
@@ -46,6 +46,14 @@ class _MenuCustomizationScreenState extends State<MenuCustomizationScreen> {
   };
 
   int _dayselectedIndex = 0;
+  @override
+  void initState() {
+
+    // TODO: implement initState
+    super.initState();
+    _dayselectedIndex = widget.weekday - 1;
+  }
+
   bool _sameformorning = false;
   bool _sameforevening = false;
   @override
@@ -55,7 +63,6 @@ class _MenuCustomizationScreenState extends State<MenuCustomizationScreen> {
         Provider.of<UserDataProvider>(context).user.morning;
     final eveningmealcustomization =
         Provider.of<UserDataProvider>(context).user.evening;
-    final homescreenprovider=Provider.of<HomeScreenProvider>(context);    
     return Center(
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 400),
@@ -356,15 +363,19 @@ class _MenuCustomizationScreenState extends State<MenuCustomizationScreen> {
                   ),
                   const Gap(40),
                   Consumer<MealCustomizationProvider>(
-                    builder: (context, value, child) =>
-                     TextCommonButton(
+                    builder: (context, value, child) => TextCommonButton(
                       title: "Save & continue",
                       color: AppColor.PRIMARY,
                       textColor: AppColor.WHITE,
                       isloader: value.getLoader,
                       onTap: () {
                         value.updateMealCustomization(
-                            userprovider.user.userId, morningmealcustomization.toJson(), eveningmealcustomization.toJson(), homescreenprovider.dateTime!);
+                            userprovider.user.userId,
+                            morningmealcustomization.toJson(),
+                            eveningmealcustomization.toJson(),
+                            _sameformorning,
+                            _sameforevening,
+                            _dayselectedIndex);
                       },
                     ),
                   ),

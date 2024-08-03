@@ -92,12 +92,10 @@ class _HomeScreenState extends State<HomeScreen> {
       }
     }
 
-
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-       const ProfileContainer(),
+        const ProfileContainer(),
         const Gap(10),
         Expanded(
           child: SingleChildScrollView(
@@ -137,7 +135,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               paddingHorizontal: Dimensions.paddingSizeSmall,
                               fontWeight: FontWeight.w400,
                             ),
-                           // Expanded(child: Container()),
+                            // Expanded(child: Container()),
                             // GestureDetector(
                             //     onTap: () {
                             //       Navigator.push(
@@ -223,7 +221,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                 children: [
                                   Expanded(
                                     child: TextCommonButton(
-                                      onTap: () {},
+                                      onTap: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    MenuCustomizationScreen(weekday: datetime.weekday,)));
+                                      },
                                       paddingvertical:
                                           Dimensions.paddingSizeSmall,
                                       title: "Customize meal",
@@ -244,7 +248,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                             user.dinner,
                                             user.userId,
                                             user.pgNumber,
-                                            user.fname,user.morning.toJson(),user.evening.toJson());
+                                            user.fname,
+                                            user.morning.toJson(),
+                                            user.evening.toJson());
                                         userprovider.setoldMealtype(
                                             user.breakfast,
                                             user.lunch,
@@ -276,7 +282,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         fontWeight: FontWeight.w700,
                       )),
                   const Gap(20),
-                  MenuWidget(dateTime: datetime,),
+                  MenuWidget(
+                    dateTime: datetime,
+                  ),
                   const Gap(20),
                   const Text(
                     "Quick Access",
@@ -307,8 +315,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) =>
-                                      const MenuCustomizationScreen()));
+                                  builder: (context) => MenuCustomizationScreen(
+                                        weekday: datetime.weekday,
+                                      )));
                         },
                       ),
                       QuickAccessContainer(

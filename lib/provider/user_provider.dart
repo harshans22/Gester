@@ -46,6 +46,8 @@ class UserDataProvider with ChangeNotifier {
     }
   }
 
+
+
   //get PG Details
   Future<void> getPGDetails() async {
     try {
@@ -102,6 +104,8 @@ class UserDataProvider with ChangeNotifier {
     }
     notifyListeners();
   }
+
+
 
   //reset to default if not opted within time
   void resetMealOpt() {

@@ -16,11 +16,12 @@ class MealCustomizationProvider with ChangeNotifier {
       String userdocid,
       Map<String, dynamic> morning,
       Map<String, dynamic> evening,
-      DateTime dateTime) async {
+      bool sameforMorning,
+      bool sameforEvening,int weekday) async {
     setloader(true);
     try {
     await FireStoreMethods()
-          .updateMealCustomization(userdocid, morning, evening, dateTime);
+          .updateMealCustomization(userdocid, morning, evening,sameforEvening,sameforMorning,weekday);
     } catch (e) {
       logger.i(e.toString());
     }

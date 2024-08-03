@@ -61,7 +61,7 @@ class UserData {
 
 
   factory UserData.fromjson(Map<String, dynamic> json, String docId,
-          Map<String, dynamic> mealOptjson, Map<String, dynamic> kycdatajson) =>
+          Map<String, dynamic> mealOptjson, Map<String, dynamic> kycdatajson,Map<String,dynamic> mealCustomization) =>
       UserData(
         userId: docId,
         accomodation:
@@ -86,8 +86,8 @@ class UserData {
         pgNumber: kycdatajson.isEmpty
             ? ""
             : kycdatajson['Accommodation_details']['PG_number'],
-            morning: MealCustomizationData.fromMap(mealOptjson["Morning"]??{}),
-            evening:  MealCustomizationData.fromMap(mealOptjson["Evening"]??{}),
+            morning: MealCustomizationData.fromMap(mealCustomization["Morning"]??{}),
+            evening:  MealCustomizationData.fromMap(mealCustomization["Evening"]??{}),
       );
 
   Map<String, dynamic> toJson() => {

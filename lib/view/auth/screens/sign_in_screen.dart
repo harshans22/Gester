@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:gester/firebase_methods/auth_methods.dart';
+import 'package:gester/firebase_methods/firestore_methods.dart';
 import 'package:gester/resources/dimensions.dart';
 import 'package:gester/view/navigationbar/naviagation.dart';
 import 'package:svg_flutter/svg.dart';
@@ -52,21 +53,18 @@ class _SignInScreenState extends State<SignInScreen> {
                     if (kIsWeb) {
                       // Create a new provider
                       await AuthMethods().googleloginweb();
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const NavigationScreen()),
-                      );
+
                       // Or use sign;InWithRedirect
                       // return await FirebaseAuth.instance.signInWithRedirect(googleProvider);
                     } else {
                       await AuthMethods().googleLogin();
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const NavigationScreen()),
-                      );
                     }
+                    FireStoreMethods().createMealCustomization();
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const NavigationScreen()),
+                    );
                   },
                   child: Container(
                     padding:
