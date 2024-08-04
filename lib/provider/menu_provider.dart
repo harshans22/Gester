@@ -15,6 +15,7 @@ class MenuProvider with ChangeNotifier {
       notifyListeners();
     } catch (e) {
       logger.e(e.toString());
+      throw Exception(e);
     }
   }
 

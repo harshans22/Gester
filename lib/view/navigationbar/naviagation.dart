@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:gester/provider/menu_provider.dart';
 import 'package:gester/provider/user_provider.dart';
 import 'package:gester/resources/color.dart';
@@ -12,7 +11,6 @@ import 'package:gester/view/stay/StayScreen.dart';
 import 'package:logger/logger.dart';
 
 import 'package:provider/provider.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:svg_flutter/svg_flutter.dart';
 

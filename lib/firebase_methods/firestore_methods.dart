@@ -143,16 +143,17 @@ class FireStoreMethods {
   }
 
   Future<void> checkMealOptexists(String userdocid) async {
-    DateTime dateTime = await fetchTime();
-    int hour = dateTime.hour;
-
-    if (hour >= 21) {
-      dateTime = dateTime.add(const Duration(days: 1)); //adding date after 9 PM
-    }
-    String date =
-        "${dateTime.day < 10 ? '0${dateTime.day}' : dateTime.day}-${dateTime.month < 10 ? '0${dateTime.month}' : dateTime.month}-${dateTime.year}";
-
     try {
+      DateTime dateTime = await fetchTime();
+      int hour = dateTime.hour;
+
+      if (hour >= 21) {
+        dateTime =
+            dateTime.add(const Duration(days: 1)); //adding date after 9 PM
+      }
+      String date =
+          "${dateTime.day < 10 ? '0${dateTime.day}' : dateTime.day}-${dateTime.month < 10 ? '0${dateTime.month}' : dateTime.month}-${dateTime.year}";
+
       DocumentSnapshot snapshot = await _firestore
           .collection("User")
           .doc(userdocid)
@@ -180,6 +181,7 @@ class FireStoreMethods {
       }
     } catch (e) {
       logger.e(e.toString());
+      throw Exception(e);
     }
   }
 
@@ -699,8 +701,8 @@ class FireStoreMethods {
       DateTime dateTime) async {
     try {
       if (currentbreakfast > 0 || currentLunch > 0 || currrentDinner > 0) {
-        updatekitchendata(userdocid, pgNumber, fname, currentbreakfast, currentLunch,
-            currrentDinner, dateTime, morning, evening);
+        updatekitchendata(userdocid, pgNumber, fname, currentbreakfast,
+            currentLunch, currrentDinner, dateTime, morning, evening);
       }
       if (sameforMorning && !sameforEvening) {
         await _firestore

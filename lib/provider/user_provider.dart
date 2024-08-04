@@ -23,8 +23,6 @@ class UserDataProvider with ChangeNotifier {
   int _totalMealopt = 0;
   int get totalMealopt => _totalMealopt;
 
-
-
   setoldMealtype(int breakfast, int lunch, int dinner) {
     _totalMealopt = breakfast + lunch + dinner;
     _oldbreakfast = _user!.breakfast;
@@ -42,11 +40,9 @@ class UserDataProvider with ChangeNotifier {
       setoldMealtype(_user!.breakfast, _user!.lunch, _user!.dinner);
       notifyListeners();
     } catch (e) {
-      logger.e(e);
+      throw Exception(e);
     }
   }
-
-
 
   //get PG Details
   Future<void> getPGDetails() async {
@@ -55,6 +51,7 @@ class UserDataProvider with ChangeNotifier {
       notifyListeners();
     } catch (e) {
       logger.e(e.toString());
+      throw Exception(e);
     }
   }
 
@@ -63,7 +60,8 @@ class UserDataProvider with ChangeNotifier {
       _stayDetails = await FireStoreMethods().getStayDetails(_user!.userId);
       notifyListeners();
     } catch (e) {
-      logger.e(e);
+      logger.e(e.toString());
+      throw Exception(e);
     }
   }
 
@@ -104,8 +102,6 @@ class UserDataProvider with ChangeNotifier {
     }
     notifyListeners();
   }
-
-
 
   //reset to default if not opted within time
   void resetMealOpt() {

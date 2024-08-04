@@ -47,7 +47,7 @@ class HomeScreenProvider with ChangeNotifier {
       _dateTime = await FireStoreMethods().fetchTime();
       notifyListeners();
     } catch (e) {
-       logger.e(e.toString());
+      throw Exception(e);
     }
   }
 
