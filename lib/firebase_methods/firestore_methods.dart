@@ -42,6 +42,7 @@ class FireStoreMethods {
                   status: "InActive",
                   subscriptionCode: "0000"),
               userType: "AppUser",
+              dietaryPreference: "",
               pgNumber: "",
               userId: "",
               fname: "",
@@ -279,6 +280,7 @@ class FireStoreMethods {
       String userid,
       String pgNumber,
       String fname,
+      String dietaryPrefrence,
       int newbreakfast,
       int newlunch,
       int newdinner,
@@ -455,7 +457,10 @@ class FireStoreMethods {
           "fname": fname,
           "dropname": pgNumber,
           "Morning": morning,
-          "Evening": evening
+          "Evening": evening,
+          "Dietary_preference":dietaryPrefrence,//TODO-change the hard core data
+          "morningStatus":"Meal opted",
+          "eveningStatus":"Meal opted",
         });
         DocumentSnapshot totalmealOptsnapshot =
             await _firestore.collection("Kitchen").doc(date).get();
@@ -691,6 +696,7 @@ class FireStoreMethods {
       String userdocid,
       String pgNumber,
       String fname,
+      String dietaryPrefrence,
       Map<String, dynamic> morning,
       Map<String, dynamic> evening,
       bool sameforEvening,
@@ -702,7 +708,7 @@ class FireStoreMethods {
       DateTime dateTime) async {
     try {
       if (currentbreakfast > 0 || currentLunch > 0 || currrentDinner > 0) {
-        updatekitchendata(userdocid, pgNumber, fname, currentbreakfast,
+        updatekitchendata(userdocid, pgNumber, fname, dietaryPrefrence,currentbreakfast,
             currentLunch, currrentDinner, dateTime, morning, evening);
       }
       if (sameforMorning && !sameforEvening) {

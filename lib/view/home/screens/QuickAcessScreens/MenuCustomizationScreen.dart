@@ -396,6 +396,7 @@ class _MenuCustomizationScreenState extends State<MenuCustomizationScreen> {
                                 userprovider.user.userId,
                                 userprovider.user.pgNumber,
                                 userprovider.user.fname,
+                                userprovider.user.dietaryPreference,
                                 morningmealcustomization.toJson(),
                                 eveningmealcustomization.toJson(),
                                 _sameformorning,

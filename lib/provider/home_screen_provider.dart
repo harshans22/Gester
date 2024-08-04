@@ -27,14 +27,24 @@ class HomeScreenProvider with ChangeNotifier {
       String userId,
       String pgNumber,
       String username,
+      String dietaryPrefrence,
       Map<String, dynamic> morning,
       Map<String, dynamic> evening) async {
     setmealoptloader(true);
     try {
       await FireStoreMethods()
           .updateMealOpt(breakfast, lunch, dinner, _dateTime!, userId);
-      await FireStoreMethods().updatekitchendata(userId, pgNumber, username,
-          breakfast, lunch, dinner, _dateTime!, morning, evening);
+      await FireStoreMethods().updatekitchendata(
+          userId,
+          pgNumber,
+          username,
+          dietaryPrefrence,
+          breakfast,
+          lunch,
+          dinner,
+          _dateTime!,
+          morning,
+          evening);
       notifyListeners();
     } catch (e) {
       logger.e(e.toString());

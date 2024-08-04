@@ -29,7 +29,7 @@ class _CheckBoxWigdetState extends State<CounterBox> {
   @override
   Widget build(BuildContext context) {
     DateTime dateTime =
-        Provider.of<HomeScreenProvider>(context, listen: false).dateTime;
+        Provider.of<HomeScreenProvider>(context).dateTime;
     return Consumer<UserDataProvider>(builder: (context, userprovider, child) {
       bool canbeAddedPGUser = (userprovider.user.userType == "PGUser")
           ? ((userprovider.totalMealopt >= 3) ? false : true)
@@ -190,7 +190,15 @@ class _CheckBoxWigdetState extends State<CounterBox> {
                                 widget.islunch,
                                 widget.isdinner,
                                 userprovider.user.userType);
-                          } else {
+                          } else if(canbeChanged && !canbeAddedPGUser){
+                            Utils.showWithSingleButton(
+                                      context,
+                                      "You cannot opt more than a total of 3 meals in a day",
+                                      onTap: () {
+                                    Navigator.pop(context);
+                                  }, buttonTitle: "Okay, Got it!");
+                          }
+                          else {
                             Utils.showWithSingleButton(
                                       context,
                                       "Your ${widget.name} is Locked. Cannot be changed after ${(widget.isbrekfast || widget.islunch)? '5 AM' :'5 PM'}",

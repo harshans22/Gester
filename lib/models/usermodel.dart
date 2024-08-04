@@ -10,6 +10,7 @@ class UserData {
   final String photoUrl;
   final String username;
   final String dateOfbirth;
+  final String dietaryPreference;
   final String password;
   final String phoneNumber;
   final Subscription subscription;
@@ -37,31 +38,37 @@ class UserData {
     required this.dateOfbirth,
     required this.password,
     required this.phoneNumber,
+    required this.dietaryPreference,
     this.breakfast = 0,
     this.lunch = 0,
     this.dinner = 0,
     MealCustomizationData? morning,
     MealCustomizationData? evening,
-  })  : morning = morning ?? MealCustomizationData(
-          numberofRoti: 4,
-          riceQuantity: 0.2,
-          daal: true,
-          salad: true,
-          sukhiSabji: true,
-          raita: true,
-        ),
-        evening = evening ?? MealCustomizationData(
-          numberofRoti: 4,
-          riceQuantity: 0.2,
-          daal: true,
-          salad: true,
-          sukhiSabji: true,
-          raita: true,
-        );
+  })  : morning = morning ??
+            MealCustomizationData(
+              numberofRoti: 4,
+              riceQuantity: 0.2,
+              daal: true,
+              salad: true,
+              sukhiSabji: true,
+              raita: true,
+            ),
+        evening = evening ??
+            MealCustomizationData(
+              numberofRoti: 4,
+              riceQuantity: 0.2,
+              daal: true,
+              salad: true,
+              sukhiSabji: true,
+              raita: true,
+            );
 
-
-  factory UserData.fromjson(Map<String, dynamic> json, String docId,
-          Map<String, dynamic> mealOptjson, Map<String, dynamic> kycdatajson,Map<String,dynamic> mealCustomization) =>
+  factory UserData.fromjson(
+          Map<String, dynamic> json,
+          String docId,
+          Map<String, dynamic> mealOptjson,
+          Map<String, dynamic> kycdatajson,
+          Map<String, dynamic> mealCustomization) =>
       UserData(
         userId: docId,
         accomodation:
@@ -76,6 +83,7 @@ class UserData {
         dateOfbirth: json['DateOfBirth'] ?? "",
         password: json['Password'] ?? "",
         phoneNumber: json['phoneNumber'] ?? "",
+        dietaryPreference: json["Dietary_preference"] ?? "",
         subscription: Subscription.fromjson(json.isEmpty
             ? {}
             : json[
@@ -86,8 +94,10 @@ class UserData {
         pgNumber: kycdatajson.isEmpty
             ? ""
             : kycdatajson['Accommodation_details']['PG_number'],
-            morning: MealCustomizationData.fromMap(mealCustomization["Morning"]??{}),
-            evening:  MealCustomizationData.fromMap(mealCustomization["Evening"]??{}),
+        morning:
+            MealCustomizationData.fromMap(mealCustomization["Morning"] ?? {}),
+        evening:
+            MealCustomizationData.fromMap(mealCustomization["Evening"] ?? {}),
       );
 
   Map<String, dynamic> toJson() => {

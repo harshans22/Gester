@@ -32,15 +32,16 @@ class _NavgationScreenState extends State<NavigationScreen> {
   @override
   void initState() {
     super.initState();
+    Future.microtask(() => updateProvider());
   }
 
-  @override
-  void didChangeDependencies() async {
-    super.didChangeDependencies();
-    if (_isloading) {
-      await updateProvider();
-    }
-  }
+  // @override
+  // void didChangeDependencies() {
+  //   super.didChangeDependencies();
+  //   if (_isloading) {
+  //     Future.microtask(() => updateProvider());
+  //   }
+  // }
 
   Future<void> updateProvider() async {
     try {
@@ -63,9 +64,11 @@ class _NavgationScreenState extends State<NavigationScreen> {
       logger.e(e.toString());
       Utils.toastMessage(e.toString(), Colors.red);
     } finally {
-      setState(() {
-        _isloading = false;
-      });
+      if (mounted) {
+        setState(() {
+          _isloading = false;
+        });
+      }
     }
   }
 

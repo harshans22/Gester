@@ -57,7 +57,6 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final homescreenprovider =
         Provider.of<HomeScreenProvider>(context, listen: true);
-    final user = Provider.of<UserDataProvider>(context).user;
     final userprovider = Provider.of<UserDataProvider>(context);
     DateTime datetime = homescreenprovider.dateTime;
     int hour = datetime.hour;
@@ -69,11 +68,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
     //show save changes button
     bool showSaveChangesButton = false;
-    if (user.breakfast != userprovider.oldbreakfast ||
-        user.lunch != userprovider.oldlunch ||
-        user.dinner != userprovider.olddinner) {
-      if (user.breakfast != userprovider.oldbreakfast ||
-          user.lunch != userprovider.oldlunch) {
+    if (userprovider.user.breakfast != userprovider.oldbreakfast ||
+        userprovider.user.lunch != userprovider.oldlunch ||
+        userprovider.user.dinner != userprovider.olddinner) {
+      if (userprovider.user.breakfast != userprovider.oldbreakfast ||
+          userprovider.user.lunch != userprovider.oldlunch) {
         if (datetime.hour < 5) {
           showSaveChangesButton = true;
         } else {
@@ -81,7 +80,7 @@ class _HomeScreenState extends State<HomeScreen> {
           showSaveChangesButton = false;
         }
       }
-      if (user.dinner != userprovider.olddinner) {
+      if (userprovider.user.dinner != userprovider.olddinner) {
         if (datetime.hour < 21) {
           //when user is on app ex-8:59 he is on app and saves some value to reset at 9:01
           showSaveChangesButton = true;
@@ -245,18 +244,19 @@ class _HomeScreenState extends State<HomeScreen> {
                                     child: TextCommonButton(
                                       onTap: () async {
                                         await homescreenprovider.updatemealOpt(
-                                            user.breakfast,
-                                            user.lunch,
-                                            user.dinner,
-                                            user.userId,
-                                            user.pgNumber,
-                                            user.fname,
-                                            user.morning.toJson(),
-                                            user.evening.toJson());
+                                            userprovider.user.breakfast,
+                                            userprovider.user.lunch,
+                                            userprovider.user.dinner,
+                                            userprovider.user.userId,
+                                            userprovider.user.pgNumber,
+                                            userprovider.user.fname,
+                                            userprovider.user.dietaryPreference,
+                                            userprovider.user.morning.toJson(),
+                                            userprovider.user.evening.toJson());
                                         userprovider.setoldMealtype(
-                                            user.breakfast,
-                                            user.lunch,
-                                            user.dinner);
+                                            userprovider.user.breakfast,
+                                            userprovider.user.lunch,
+                                            userprovider.user.dinner);
                                         if (!homescreenprovider.mealoptloader) {
                                           if (!context.mounted) return;
                                           show(context);
@@ -332,7 +332,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) => MealHistoryScreen(
-                                        userId: user.userId,
+                                        userId: userprovider.user.userId,
                                       )));
                         },
                       ),
