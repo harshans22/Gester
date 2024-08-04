@@ -110,7 +110,6 @@ class FireStoreMethods {
       }
       await batch.commit();
     } catch (e) {
-      print("Error creating meal customization: $e");
       throw Exception(e);
     }
   }

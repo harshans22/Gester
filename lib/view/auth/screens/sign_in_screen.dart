@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:gester/firebase_methods/auth_methods.dart';
 import 'package:gester/firebase_methods/firestore_methods.dart';
+import 'package:gester/models/stay_model.dart';
 import 'package:gester/resources/dimensions.dart';
+import 'package:gester/utils/utilities.dart';
 import 'package:gester/view/navigationbar/naviagation.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:svg_flutter/svg_flutter.dart';
@@ -50,16 +52,20 @@ class _SignInScreenState extends State<SignInScreen> {
                 const Gap(30),
                 GestureDetector(
                   onTap: () async {
-                    if (kIsWeb) {
-                      // Create a new provider
-                      await AuthMethods().googleloginweb();
-
-                      // Or use sign;InWithRedirect
-                      // return await FirebaseAuth.instance.signInWithRedirect(googleProvider);
-                    } else {
-                      await AuthMethods().googleLogin();
+                    try {
+                      if (kIsWeb) {
+                        // Create a new provider
+                        await AuthMethods().googleloginweb();
+                        // Or use sign;InWithRedirect
+                        // return await FirebaseAuth.instance.signInWithRedirect(googleProvider);
+                      } else {
+                        await AuthMethods().googleLogin();
+                      }
+                      await FireStoreMethods().createMealCustomization();
+                    } catch (e) {
+                      Utils.toastMessage(e.toString(), Colors.red);
                     }
-                    await FireStoreMethods().createMealCustomization();
+                    
                     if (!mounted) return;
                     Navigator.pushReplacement(
                       context,

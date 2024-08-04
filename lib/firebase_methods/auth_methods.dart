@@ -19,7 +19,7 @@ class AuthMethods {
       await _firestoreMethods.updateUserDataFirebase(
           googleUser!.photoUrl, googleUser.email); //updating userphotoUrl
     } catch (e) {
-      logger.e(e.toString());
+      throw Exception(e);
     }
   }
 
@@ -31,7 +31,7 @@ class AuthMethods {
       await _firestoreMethods.updateUserDataFirebase(
           user!.photoURL, user.email); // Update user photo URL
     } catch (e) {
-      logger.e(e.toString());
+      throw Exception(e);
     }
   }
 }

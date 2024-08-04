@@ -5,6 +5,7 @@ import 'package:gester/provider/user_provider.dart';
 import 'package:gester/resources/color.dart';
 import 'package:gester/resources/dimensions.dart';
 import 'package:gester/provider/home_screen_provider.dart';
+import 'package:gester/utils/utilities.dart';
 import 'package:gester/view/home/screens/homescreen.dart';
 import 'package:gester/view/home/screens/skeleton_home.dart';
 import 'package:gester/view/stay/StayScreen.dart';
@@ -23,11 +24,9 @@ class NavigationScreen extends StatefulWidget {
 }
 
 class _NavgationScreenState extends State<NavigationScreen> {
- 
-
   int _selectedIndex = 0;
   bool _isloading = true;
-   static const List<Widget> _widgetOptions = <Widget>[
+  static const List<Widget> _widgetOptions = <Widget>[
     HomeScreen(),
     StayScreen()
   ];
@@ -40,12 +39,12 @@ class _NavgationScreenState extends State<NavigationScreen> {
   @override
   void didChangeDependencies() async {
     super.didChangeDependencies();
-    if(_isloading){
-     await updateProvider();
+    if (_isloading) {
+      await updateProvider();
     }
   }
 
- Future<void> updateProvider() async {
+  Future<void> updateProvider() async {
     try {
       await Provider.of<UserDataProvider>(context, listen: false).updateUser();
       if (!mounted) return;
@@ -64,6 +63,7 @@ class _NavgationScreenState extends State<NavigationScreen> {
     } catch (e) {
       var logger = Logger();
       logger.e(e.toString());
+      Utils.toastMessage(e.toString(), Colors.red);
     } finally {
       setState(() {
         _isloading = false;
@@ -71,16 +71,15 @@ class _NavgationScreenState extends State<NavigationScreen> {
     }
   }
 
-
-  
-
   @override
   Widget build(BuildContext context) {
     return Center(
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 400),
         child: Scaffold(
-          body:_isloading?const SkeletonHome() :Center(child: _widgetOptions[_selectedIndex]),
+          body: _isloading
+              ? const SkeletonHome()
+              : Center(child: _widgetOptions[_selectedIndex]),
           bottomNavigationBar: Container(
             // padding: const EdgeInsets.symmetric(
             //     horizontal: Dimensions.paddingSizeDefault,
@@ -97,7 +96,7 @@ class _NavgationScreenState extends State<NavigationScreen> {
               ],
             ),
             child: Row(
-             //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //mainAxisAlignment: MainAxisAlignment.spaceBetween,
               mainAxisSize: MainAxisSize.max,
               children: [
                 Expanded(
@@ -109,8 +108,9 @@ class _NavgationScreenState extends State<NavigationScreen> {
                     },
                     child: Container(
                       padding: const EdgeInsets.symmetric(
-                                   horizontal: Dimensions.paddingSizeDefault,
-                                     vertical: Dimensions.paddingSizeDefault),                      child: Column(
+                          horizontal: Dimensions.paddingSizeDefault,
+                          vertical: Dimensions.paddingSizeDefault),
+                      child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           SvgPicture.asset(
@@ -153,9 +153,9 @@ class _NavgationScreenState extends State<NavigationScreen> {
                       });
                     },
                     child: Container(
-                       padding: const EdgeInsets.symmetric(
-                                   horizontal: Dimensions.paddingSizeDefault,
-                                     vertical: Dimensions.paddingSizeDefault),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: Dimensions.paddingSizeDefault,
+                          vertical: Dimensions.paddingSizeDefault),
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
