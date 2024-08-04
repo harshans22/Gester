@@ -589,7 +589,7 @@ class FireStoreMethods {
 
 //fetching real time
   Future<DateTime> fetchTime() async {
-    const url = 'http://worldtimeapi.org/api/timezone/Asia/Kolkata';
+    const url = 'https://worldtimeapi.org/api/timezone/Asia/Kolkata';
     try {
       final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
