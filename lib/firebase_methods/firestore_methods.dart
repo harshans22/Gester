@@ -591,15 +591,16 @@ class FireStoreMethods {
   Future<DateTime> fetchTime() async {
     const url = 'https://worldtimeapi.org/api/timezone/Asia/Kolkata';
     try {
-      final response = await http.get(Uri.parse(url));
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        final DateTime dateTime = DateTime.parse(data['datetime']).toLocal();
-        return dateTime;
-      } else {
-        logger.e(response);
-        throw Exception(response);
-      }
+     // final response = await http.get(Uri.parse(url));
+      return DateTime.now();
+      // if (response.statusCode == 200) {
+      //   final data = jsonDecode(response.body);
+      //   final DateTime dateTime = DateTime.parse(data['datetime']).toLocal();
+      //   return dateTime;
+      // } else {
+      //   logger.e(response);
+      //   throw Exception(response);
+      // }
     } catch (e) {
       logger.e(e.toString());
       throw Exception(e.toString());
