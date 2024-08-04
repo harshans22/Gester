@@ -33,8 +33,9 @@ class TextCommonButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
+      
       child: Container(
-      // width: double.infinity,
+    
         padding: EdgeInsets.symmetric(vertical: paddingvertical,horizontal: paddingHorizontal),
         decoration: BoxDecoration(
           color: color,
@@ -45,7 +46,7 @@ class TextCommonButton extends StatelessWidget {
         child: isloader
             ? SpinKitWave(
                 color: loaderColor,
-                size: 20.0,
+                size: 16.0,
               )
             : Text(
                 title,

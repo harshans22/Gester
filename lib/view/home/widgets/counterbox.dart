@@ -35,7 +35,7 @@ class _CheckBoxWigdetState extends State<CounterBox> {
           ? ((userprovider.totalMealopt >= 3) ? false : true)
           : true;
       bool canbeChanged = (widget.isbrekfast || widget.islunch)
-          ? ((dateTime.hour < 0 || dateTime.hour >= 21) ? true : false)
+          ? ((dateTime.hour < 5 || dateTime.hour >= 21) ? true : false)
           : ((dateTime.hour < 17 || dateTime.hour >= 21) ? true : false);
       bool containsMeal = widget.isbrekfast // to show ADD or (- 1 +)
           ? userprovider.user.breakfast > 0
@@ -99,11 +99,11 @@ class _CheckBoxWigdetState extends State<CounterBox> {
                         children: [
                           InkWell(
                               onTap: () {
-                                if (canbeChanged) {
+                                if (currentValue==1) {
                                   Utils.showWithDoubleButton(
                                       context,
                                       "You are about to cancel a meal",
-                                      "Are you sure you want to cancel your breakfast. This Action can be undone before ${(widget.isbrekfast || widget.islunch)? '5 AM' :'5 PM'}",
+                                      "Are you sure you want to cancel your ${widget.name}. This Action can be undone before ${(widget.isbrekfast || widget.islunch)? '5 AM' :'5 PM'}",
                                       onYes: () {
                                         userprovider.updateMealOpt(
                                       currentValue - 1,
@@ -115,7 +115,7 @@ class _CheckBoxWigdetState extends State<CounterBox> {
                                         Navigator.pop(context);
                                       });
                                   
-                                } else {
+                                } else if(!canbeChanged){
                                      Utils.showWithSingleButton(
                                       context,
                                       "Your ${widget.name} is Locked. Cannot be changed after ${(widget.isbrekfast || widget.islunch)? '5 AM' :'5 PM'}",
@@ -123,6 +123,14 @@ class _CheckBoxWigdetState extends State<CounterBox> {
                                       onTap: () {
                                         Navigator.pop(context);
                                       });
+                                }else{
+                                    userprovider.updateMealOpt(
+                                      currentValue - 1,
+                                      widget.isbrekfast,
+                                      widget.islunch,
+                                      widget.isdinner,
+                                      userprovider.user.userType,
+                                      true);
                                 }
                               },
                               child: Icon(Icons.remove,

@@ -14,7 +14,6 @@ import 'package:gester/view/home/widgets/QuickAccessContainer.dart';
 import 'package:gester/view/home/widgets/counterbox.dart';
 import 'package:gester/view/home/widgets/menuwidget.dart';
 import 'package:provider/provider.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:svg_flutter/svg.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -228,7 +227,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             MaterialPageRoute(
                                                 builder: (context) =>
                                                     MenuCustomizationScreen(
-                                                      weekday: datetime.weekday,
+                                                      datetime: datetime,
                                                     )));
                                       },
                                       paddingvertical:
@@ -320,7 +319,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) => MenuCustomizationScreen(
-                                        weekday: datetime.weekday,
+                                        datetime: datetime,
                                       )));
                         },
                       ),

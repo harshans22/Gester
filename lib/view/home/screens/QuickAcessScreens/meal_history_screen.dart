@@ -59,7 +59,7 @@ class MealHistoryScreen extends StatelessWidget {
                               child: CircularProgressIndicator(),
                             );
                           }
-                          List<String> months = snapshot.data!.keys.toList();
+                          List<String> months = snapshot.data!.keys.toList().reversed.toList();
                           return ListView.builder(
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),

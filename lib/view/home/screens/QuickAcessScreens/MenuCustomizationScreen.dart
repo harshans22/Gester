@@ -10,8 +10,8 @@ import 'package:provider/provider.dart';
 import 'package:svg_flutter/svg.dart';
 
 class MenuCustomizationScreen extends StatefulWidget {
-  final int weekday;
-  const MenuCustomizationScreen({super.key, required this.weekday});
+  final DateTime datetime;
+  const MenuCustomizationScreen({super.key, required this.datetime});
 
   @override
   State<MenuCustomizationScreen> createState() =>
@@ -48,10 +48,8 @@ class _MenuCustomizationScreenState extends State<MenuCustomizationScreen> {
   int _dayselectedIndex = 0;
   @override
   void initState() {
-
-    // TODO: implement initState
     super.initState();
-    _dayselectedIndex = widget.weekday - 1;
+    _dayselectedIndex = widget.datetime.weekday - 1;
   }
 
   bool _sameformorning = false;
@@ -96,7 +94,7 @@ class _MenuCustomizationScreenState extends State<MenuCustomizationScreen> {
                                   });
                                 },
                                 child: Container(
-                                  height: 50,
+                                  height: 40,
                                   margin: const EdgeInsets.only(
                                     right: Dimensions.paddingSizeExtraSmall,
                                     left: Dimensions.paddingSizeExtraSmall,
@@ -361,24 +359,8 @@ class _MenuCustomizationScreenState extends State<MenuCustomizationScreen> {
                       ),
                     ],
                   ),
-                  const Gap(40),
-                  Consumer<MealCustomizationProvider>(
-                    builder: (context, value, child) => TextCommonButton(
-                      title: "Save & continue",
-                      color: AppColor.PRIMARY,
-                      textColor: AppColor.WHITE,
-                      isloader: value.getLoader,
-                      onTap: () {
-                        value.updateMealCustomization(
-                            userprovider.user.userId,
-                            morningmealcustomization.toJson(),
-                            eveningmealcustomization.toJson(),
-                            _sameformorning,
-                            _sameforevening,
-                            _dayselectedIndex);
-                      },
-                    ),
-                  ),
+           
+                 
                   SizedBox(
                     height: 200,
                     child: Center(
@@ -389,6 +371,41 @@ class _MenuCustomizationScreenState extends State<MenuCustomizationScreen> {
               ),
             ),
           ),
+          bottomNavigationBar: IntrinsicHeight(
+            child: Container(
+              padding:const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeDefault,vertical: Dimensions.paddingSizeDefault),
+              decoration: BoxDecoration(
+                color: AppColor.WHITE,
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColor.GREY_COLOR_LIGHT.withOpacity(0.3),
+                    spreadRadius: 1,
+                    blurRadius: 5,
+                    offset: const Offset(0, -1),
+                  ),
+                ],
+              ),
+              child: Consumer<MealCustomizationProvider>(
+                        builder: (context, value, child) => TextCommonButton(
+                          title: "Save & continue",
+                          color: AppColor.PRIMARY,
+                          textColor: AppColor.WHITE,
+                          isloader: value.getLoader,
+                          onTap: () {
+                            value.updateMealCustomization(
+                                userprovider.user.userId,
+                                userprovider.user.pgNumber,
+                                userprovider.user.fname,
+                                morningmealcustomization.toJson(),
+                                eveningmealcustomization.toJson(),
+                                _sameformorning,
+                                _sameforevening,
+                                _dayselectedIndex,userprovider.user.breakfast,userprovider.user.lunch,userprovider.user.dinner,widget.datetime);
+                          },
+                        ),
+                      ),
+            ),
+          ) ,
         ),
       ),
     );

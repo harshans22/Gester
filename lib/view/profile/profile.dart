@@ -26,7 +26,7 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<UserDataProvider>(context, listen: true).user;
-    final int weekday=  Provider.of<HomeScreenProvider>(context).dateTime.weekday;
+    final  dateTime=  Provider.of<HomeScreenProvider>(context).dateTime;
     return Center(
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 400),
@@ -132,7 +132,7 @@ class ProfileScreen extends StatelessWidget {
                                 context,
                                 MaterialPageRoute(
                                     builder: (_) =>
-                                         MenuCustomizationScreen(weekday: weekday,)));
+                                         MenuCustomizationScreen(datetime:dateTime ,)));
                           },
                           content: "Meal Customization",
                           image:

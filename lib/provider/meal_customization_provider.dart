@@ -14,14 +14,33 @@ class MealCustomizationProvider with ChangeNotifier {
 
   Future<void> updateMealCustomization(
       String userdocid,
+      String pgNumber,
+      String fname,
       Map<String, dynamic> morning,
       Map<String, dynamic> evening,
       bool sameforMorning,
-      bool sameforEvening,int weekday) async {
+      bool sameforEvening,
+      int weekday,
+      int currentbreakfast,
+      int currentLunch,
+      int currentDinner,DateTime dateTime) async {
     setloader(true);
     try {
-    await FireStoreMethods()
-          .updateMealCustomization(userdocid, morning, evening,sameforEvening,sameforMorning,weekday);
+      await FireStoreMethods().updateMealCustomization(
+          userdocid,
+          pgNumber,
+          fname,
+          morning,
+          evening,
+          sameforEvening,
+          sameforMorning,
+          weekday,
+          currentbreakfast,
+          currentLunch,
+          currentDinner,
+          dateTime);
+      await FireStoreMethods()
+          .singleDaycustomizationMeal(morning, evening, userdocid, dateTime);
     } catch (e) {
       logger.i(e.toString());
     }
