@@ -1,3 +1,5 @@
+import 'dart:html';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:gap/gap.dart';
@@ -5,6 +7,9 @@ import 'package:gester/provider/user_provider.dart';
 import 'package:gester/resources/dimensions.dart';
 import 'package:gester/utils/utilities.dart';
 import 'package:gester/utils/widgets/profile_container.dart';
+import 'package:gester/view/stay/documents_screens/kyc%20_agreement_screen.dart';
+import 'package:gester/view/stay/documents_screens/mydocuments.dart';
+import 'package:gester/view/stay/documents_screens/police_verification_screen.dart';
 import 'package:gester/view/stay/widgets/AccomodationContainer.dart';
 import 'package:gester/view/stay/widgets/DocumentsContainer.dart';
 import 'package:provider/provider.dart';
@@ -170,12 +175,24 @@ class _StayScreenState extends State<StayScreen> {
                     ),
                   ),
                   const Gap(10),
-                  const Row(
+                   Row(
                     children: [
+                       DocumentsContainer(
+                        onTap: (){
+                          Navigator.push(context, MaterialPageRoute(builder: ((context) =>const MyDocuments() )));
+                        },
+                          image: "assets/images/stay/mydocuments.svg",
+                          title: "My Documents"),
                       DocumentsContainer(
+                          onTap: (){
+                            Navigator.push(context, MaterialPageRoute(builder: ((context) =>const KYCAgreementScreen() )));
+                          },
                           image: "assets/images/stay/kyc icon.svg",
                           title: "View KYC & agreement"),
                       DocumentsContainer(
+                          onTap: (){
+                            Navigator.push(context, MaterialPageRoute(builder: ((context) =>const PoliceVerificationScreen() )));
+                          },
                           image: "assets/images/stay/police icon.svg",
                           title: "View police verification"),
                     ],
@@ -243,9 +260,9 @@ class _StayScreenState extends State<StayScreen> {
 
                   InkWell(
                     onTap: () async {
-                      final Uri _url = Uri.parse('https://wa.me/918882638903');
+                      final Uri url = Uri.parse('https://wa.me/918882638903');
                       try{
-                        await launchUrl(_url);
+                        await launchUrl(url);
                       }catch(e){
                         print(e);
                       }

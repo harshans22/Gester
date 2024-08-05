@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:gap/gap.dart';
 import 'package:gester/resources/color.dart';
 import 'package:gester/resources/dimensions.dart';
