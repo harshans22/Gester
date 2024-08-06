@@ -66,29 +66,33 @@ class _HomeScreenState extends State<HomeScreen> {
       timeRefrence = "Tomorrow";
     }
 
+    if (homescreenprovider.dateTime.hour == 21 && homescreenprovider.dateTime.minute == 0 && homescreenprovider.dateTime.second == 0) {
+      userprovider.resetMealOpt();
+    }
+
     //show save changes button
     bool showSaveChangesButton = false;
     if (userprovider.user.breakfast != userprovider.oldbreakfast ||
         userprovider.user.lunch != userprovider.oldlunch ||
         userprovider.user.dinner != userprovider.olddinner) {
-      if (userprovider.user.breakfast != userprovider.oldbreakfast ||
-          userprovider.user.lunch != userprovider.oldlunch) {
-        if (datetime.hour < 5) {
-          showSaveChangesButton = true;
-        } else {
-          userprovider.resetMealOpt();
-          showSaveChangesButton = false;
-        }
-      }
-      if (userprovider.user.dinner != userprovider.olddinner) {
-        if (datetime.hour < 21) {
-          //when user is on app ex-8:59 he is on app and saves some value to reset at 9:01
-          showSaveChangesButton = true;
-        } else {
-          userprovider.resetMealOpt();
-          showSaveChangesButton = false;
-        }
-      }
+      showSaveChangesButton = true;
+      // if (userprovider.user.breakfast != userprovider.oldbreakfast ||
+      //     userprovider.user.lunch != userprovider.oldlunch) {
+      //   if (datetime.hour < 5) {
+      //     showSaveChangesButton = true;
+      //   } else {
+
+      //     showSaveChangesButton = false;
+      //   }
+      // }
+      // if (userprovider.user.dinner != userprovider.olddinner) {
+      //   if (datetime.hour < 21) {
+      //     //when user is on app ex-8:59 he is on app and saves some value to reset at 9:01
+      //     showSaveChangesButton = true;
+      //   } else {
+      //     showSaveChangesButton = false;
+      //   }
+      // }
     }
 
     return Column(
@@ -319,7 +323,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) => MenuCustomizationScreen(
-                                        datetime: datetime,
+                                        datetime: homescreenprovider.dateTime,
                                       )));
                         },
                       ),

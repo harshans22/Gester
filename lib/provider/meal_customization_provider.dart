@@ -41,8 +41,8 @@ class MealCustomizationProvider with ChangeNotifier {
           currentLunch,
           currentDinner,
           dateTime);
-      await FireStoreMethods()
-          .singleDaycustomizationMeal(morning, evening, userdocid, dateTime);
+      // await FireStoreMethods()
+      //     .singleDaycustomizationMeal(morning, evening, userdocid, dateTime);
     } catch (e) {
       logger.i(e.toString());
     }

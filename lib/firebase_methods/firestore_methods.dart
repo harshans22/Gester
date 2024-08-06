@@ -711,6 +711,7 @@ class FireStoreMethods {
         updatekitchendata(userdocid, pgNumber, fname, dietaryPrefrence,currentbreakfast,
             currentLunch, currrentDinner, dateTime, morning, evening);
       }
+    
       if (sameforMorning && !sameforEvening) {
         await _firestore
             .collection("User")
@@ -767,7 +768,7 @@ class FireStoreMethods {
           batch.set(docRef, data, SetOptions(merge: true));
         }
         await batch.commit();
-      } else {
+      } else if(sameforMorning && sameforEvening){
         final collectionRef = _firestore
             .collection("User")
             .doc(userdocid)
@@ -787,6 +788,16 @@ class FireStoreMethods {
           batch.set(docRef, data, SetOptions(merge: true));
         }
         await batch.commit();
+      }else{
+        await _firestore
+            .collection("User")
+            .doc(userdocid)
+            .collection("MealCustomization")
+            .doc(Utils.getDayName(weekday))
+            .set({
+          "Morning": morning,
+          "Evening": evening,
+        }, SetOptions(merge: true));
       }
     } catch (e) {
       throw Exception(e);

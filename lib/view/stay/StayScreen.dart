@@ -168,7 +168,7 @@ class _StayScreenState extends State<StayScreen> {
                   ]),
                   const Gap(20),
                   const Text(
-                    "Documents",
+                    "My Files",
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w700,
@@ -182,19 +182,22 @@ class _StayScreenState extends State<StayScreen> {
                           Navigator.push(context, MaterialPageRoute(builder: ((context) =>const MyDocuments() )));
                         },
                           image: "assets/images/stay/mydocuments.svg",
-                          title: "My Documents"),
+                          line1: "My",
+                          line2: "Documents",),
                       DocumentsContainer(
                           onTap: (){
                             Navigator.push(context, MaterialPageRoute(builder: ((context) =>const KYCAgreementScreen() )));
                           },
                           image: "assets/images/stay/kyc icon.svg",
-                          title: "View KYC & agreement"),
+                          line1: "View ",
+                          line2: "KYC",),
                       DocumentsContainer(
                           onTap: (){
                             Navigator.push(context, MaterialPageRoute(builder: ((context) =>const PoliceVerificationScreen() )));
                           },
                           image: "assets/images/stay/police icon.svg",
-                          title: "View police verification"),
+                          line1: "View",
+                          line2: "PCC",),
                     ],
                   ),
                   // const Gap(20),
