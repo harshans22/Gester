@@ -49,6 +49,9 @@ class _MenuCustomizationScreenState extends State<MenuCustomizationScreen> {
   @override
   void initState() {
     super.initState();
+    if(widget.datetime.hour>=21){
+      _dayselectedIndex = widget.datetime.weekday;
+    }
     _dayselectedIndex = widget.datetime.weekday - 1;
   }
 

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
 import 'package:gester/resources/color.dart';
-import 'package:lottie/lottie.dart';
 
 class KYCAgreementScreen extends StatelessWidget {
   const KYCAgreementScreen({super.key});
