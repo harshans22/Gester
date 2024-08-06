@@ -65,7 +65,7 @@ class _StayScreenState extends State<StayScreen> {
                            width: double.infinity,
                             errorBuilder: (BuildContext context, Object exception,
                                 StackTrace? stackTrace) {
-                              return Text('Failed to load image');
+                              return const Text('Failed to load image');
                             },
                           ),
                         ),
@@ -76,9 +76,9 @@ class _StayScreenState extends State<StayScreen> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text(
-                                  "H2H G03",
-                                  style: TextStyle(
+                                Text(
+                                  "H2H ${stayDetails.pgNumber}",
+                                  style:const TextStyle(
                                       color: Color(0xFF1D2036),
                                       fontSize: 18,
                                       fontWeight: FontWeight.w700),

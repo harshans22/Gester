@@ -12,7 +12,6 @@ class PoliceVerificationScreen extends StatelessWidget {
         constraints: const BoxConstraints(maxWidth: 400),
         child: Scaffold(
            appBar: AppBar(
-            
             title: Text(
               "Police Verification",
               style: Theme.of(context).textTheme.displayMedium,
@@ -29,7 +28,7 @@ class PoliceVerificationScreen extends StatelessWidget {
             children: [
               Text("No data available",style: Theme.of(context).textTheme.displayMedium,),
               Text("Please try again after sometime",style: Theme.of(context).textTheme.bodyMedium,),
-              LottieBuilder.asset("assets/images/no internet.json"),
+            //  LottieBuilder.asset("assets/images/no internet.json"),
             ],
           )),
         ),

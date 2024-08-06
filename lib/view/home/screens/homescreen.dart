@@ -62,7 +62,6 @@ class _HomeScreenState extends State<HomeScreen> {
     int hour = datetime.hour;
     String timeRefrence = "Today";
     if (hour >= 21) {
-      
       datetime = datetime.add(const Duration(days: 1)); //adding date after 9 PM
       timeRefrence = "Tomorrow";
     }
