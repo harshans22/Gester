@@ -59,7 +59,7 @@ class FireStoreMethods {
     } catch (e) {
       logger.e(e.toString());
       //  Utils.toastMessage(e.toString(),Colors.red);
-      print('Failed to update user fields: $e');
+      throw Exception(e);
     }
   }
 
@@ -75,7 +75,7 @@ class FireStoreMethods {
 
   //create Pg User MealCustomization
   Future<void> createMealCustomization() async {
-    //TO-Do handle it in such a way that if user is logging for the first time so there might be some meal customization present so don't create it on login
+    //TODO: handle it in such a way that if user is logging for the first time so there might be some meal customization present so don't create it on login
     String userdocid = await getUserDocId();
     try {
       final batch = _firestore.batch();
@@ -94,6 +94,7 @@ class FireStoreMethods {
           raita: true,
           sukhiSabji: true,
           daal: true);
+
       final data = {
         "Morning": mealCustomizationData.toJson(),
         "Evening": mealCustomizationData.toJson(),
@@ -111,7 +112,7 @@ class FireStoreMethods {
       }
       await batch.commit();
     } catch (e) {
-      throw Exception(e);
+      logger.e("Meal customization error ${e.toString()}");
     }
   }
 
@@ -138,8 +139,7 @@ class FireStoreMethods {
           snapshot.data() as Map<String, dynamic>;
       return PGDetails.fromMap(snapshotdata);
     } catch (e) {
-      logger.e(e.toString());
-      throw Exception(e.toString());
+      throw Exception("Error while fetching PgDetails$e");
     }
   }
 
@@ -181,8 +181,8 @@ class FireStoreMethods {
         });
       }
     } catch (e) {
-      logger.e(e.toString());
-      throw Exception(e);
+      // ignore: prefer_interpolation_to_compose_strings
+      throw Exception("Error while checking mealOpt exists$e");
     }
   }
 
@@ -216,7 +216,7 @@ class FireStoreMethods {
       }, SetOptions(merge: true));
     } catch (e) {
       // Utils.toastMessage(e.toString() +"from update subscription",Colors.red);
-      logger.e(e.toString());
+      throw Exception("Errow while Uploading Mealopt$e");
     }
   }
 
@@ -270,8 +270,7 @@ class FireStoreMethods {
           mealcustomization.data() as Map<String, dynamic>);
       return user;
     } catch (e) {
-      logger.e(e.toString());
-      throw Exception(e.toString());
+      throw Exception("Error while getting user data $e");
     }
   }
 
@@ -458,9 +457,10 @@ class FireStoreMethods {
           "dropname": pgNumber,
           "Morning": morning,
           "Evening": evening,
-          "Dietary_preference":dietaryPrefrence,//TODO-change the hard core data
-          "morningStatus":"Meal opted",
-          "eveningStatus":"Meal opted",
+          "Dietary_preference":
+              dietaryPrefrence, //TODO-change the hard core data
+          "morningStatus": "Meal opted",
+          "eveningStatus": "Meal opted",
         });
         DocumentSnapshot totalmealOptsnapshot =
             await _firestore.collection("Kitchen").doc(date).get();
@@ -536,7 +536,7 @@ class FireStoreMethods {
         );
       }
     } catch (e) {
-      logger.e(e.toString());
+      throw Exception("Error while updating kitchen data :$e");
     }
   }
 
@@ -563,8 +563,7 @@ class FireStoreMethods {
           weekperiodsnapshot.data() as Map<String, dynamic>;
       return Menu(weeklyMenu: weeklymenu, weekPeriod: weekperiod["weekPeriod"]);
     } catch (e) {
-      logger.e(e.toString());
-      throw Exception(e.toString());
+      throw Exception("Error while fetching daily menu :$e");
     }
   }
 
@@ -587,8 +586,7 @@ class FireStoreMethods {
               : (accomodationSnapshot.data()
                   as Map<String, dynamic>)["Accommodation"]);
     } catch (e) {
-      logger.e(e.toString());
-      throw Exception(e.toString());
+      throw Exception("Error while fetching stay details :$e");
     }
   }
 
@@ -596,7 +594,7 @@ class FireStoreMethods {
   Future<DateTime> fetchTime() async {
     const url = 'https://worldtimeapi.org/api/timezone/Asia/Kolkata';
     try {
-     // final response = await http.get(Uri.parse(url));
+      // final response = await http.get(Uri.parse(url));
       return DateTime.now();
       // if (response.statusCode == 200) {
       //   final data = jsonDecode(response.body);
@@ -607,8 +605,7 @@ class FireStoreMethods {
       //   throw Exception(response);
       // }
     } catch (e) {
-      logger.e(e.toString());
-      throw Exception(e.toString());
+      throw Exception("Error while getting time $e");
     }
   }
 
@@ -659,9 +656,9 @@ class FireStoreMethods {
 
       return monthlyData;
     } catch (e) {
-      logger.e(e.toString());
+      throw Exception("Error while getting user monthly meap opt :$e");
     }
-    return {};
+   // return {};
   }
 
   //update meal customization
@@ -708,10 +705,19 @@ class FireStoreMethods {
       DateTime dateTime) async {
     try {
       if (currentbreakfast > 0 || currentLunch > 0 || currrentDinner > 0) {
-        updatekitchendata(userdocid, pgNumber, fname, dietaryPrefrence,currentbreakfast,
-            currentLunch, currrentDinner, dateTime, morning, evening);
+        updatekitchendata(
+            userdocid,
+            pgNumber,
+            fname,
+            dietaryPrefrence,
+            currentbreakfast,
+            currentLunch,
+            currrentDinner,
+            dateTime,
+            morning,
+            evening);
       }
-    
+
       if (sameforMorning && !sameforEvening) {
         await _firestore
             .collection("User")
@@ -768,7 +774,7 @@ class FireStoreMethods {
           batch.set(docRef, data, SetOptions(merge: true));
         }
         await batch.commit();
-      } else if(sameforMorning && sameforEvening){
+      } else if (sameforMorning && sameforEvening) {
         final collectionRef = _firestore
             .collection("User")
             .doc(userdocid)
@@ -788,7 +794,7 @@ class FireStoreMethods {
           batch.set(docRef, data, SetOptions(merge: true));
         }
         await batch.commit();
-      }else{
+      } else {
         await _firestore
             .collection("User")
             .doc(userdocid)
@@ -800,7 +806,7 @@ class FireStoreMethods {
         }, SetOptions(merge: true));
       }
     } catch (e) {
-      throw Exception(e);
+      throw Exception("Error while Meal optimization : $e");
     }
     return MealCustomizationData();
   }

@@ -29,11 +29,12 @@ class _NavgationScreenState extends State<NavigationScreen> {
     StayScreen()
   ];
 
-  @override
-  void initState() {
-    super.initState();
-    Future.microtask(() => updateProvider());
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   Future.microtask(() => updateProvider());
+  // }
+
 
   // @override
   // void didChangeDependencies() {
@@ -71,6 +72,7 @@ class _NavgationScreenState extends State<NavigationScreen> {
       }
     }
   }
+  
 
   @override
   Widget build(BuildContext context) {

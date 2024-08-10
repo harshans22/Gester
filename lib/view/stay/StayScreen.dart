@@ -16,14 +16,9 @@ import 'package:provider/provider.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class StayScreen extends StatefulWidget {
+class StayScreen extends StatelessWidget {
   const StayScreen({super.key});
 
-  @override
-  State<StayScreen> createState() => _StayScreenState();
-}
-
-class _StayScreenState extends State<StayScreen> {
   @override
   Widget build(BuildContext context) {
     final stayDetails = Provider.of<UserDataProvider>(context).stayDetails;
