@@ -21,9 +21,7 @@ class _SignInScreenState extends State<SignInScreen> {
     super.initState();
   }
 
-  Future<void> delaytimmer() async {
-    await Future.delayed(const Duration(seconds: 5));
-  }
+ 
 
   Widget _buildBody() {
     return Stack(
@@ -67,7 +65,7 @@ class _SignInScreenState extends State<SignInScreen> {
                       var logger = Logger();
                       logger.e(e.toString());
                     }
-                    await delaytimmer();
+                  
                     if (!mounted) return;
                     Navigator.pushReplacement(
                       context,

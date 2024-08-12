@@ -45,7 +45,6 @@ class _NavgationScreenState extends State<NavigationScreen> {
 
   Future<void> updateProvider() async {
     try {
- 
       await Future.delayed(const Duration(seconds: 2));
       if (!mounted) return;
       await Provider.of<UserDataProvider>(context, listen: false).updateUser();
