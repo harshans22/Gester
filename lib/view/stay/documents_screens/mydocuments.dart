@@ -1,5 +1,4 @@
 import 'dart:typed_data';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -139,7 +138,7 @@ class _MyDocumentsState extends State<MyDocuments> {
                     const Gap(5),
                     FileUploadContainer(
                         image: "assets/images/stay/upload.svg",
-                        line1: "Upload Aadhaar Front",
+                        line1: "Upload Aadhaar Back",
                         line2: "",
                         onTap: () {}),
                   ],
@@ -174,15 +173,15 @@ class _MyDocumentsState extends State<MyDocuments> {
                         .bodyLarge!
                         .copyWith(fontWeight: FontWeight.w700)),
                 const Gap(20),
-                FractionallySizedBox(
-                  widthFactor: 0.5,
-                  child: IntrinsicHeight(
-                    child: FileUploadContainer(
+                Row(
+                  children: [
+                    FileUploadContainer(
                         image: "assets/images/stay/upload.svg",
                         line1: "Upload passport size photo",
                         line2: "Upload only .jpeg, jpg and png format",
                         onTap: () {}),
-                  ),
+                        Flexible(child: Container())
+                  ],
                 ),
               ],
             ),
