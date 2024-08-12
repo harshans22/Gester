@@ -107,7 +107,7 @@ class _MyDocumentsState extends State<MyDocuments> {
             centerTitle: true,
             elevation: 5,
           ),
-          //TODO: Try to load pdf in web itself
+          
           body: Padding(
             padding: const EdgeInsets.symmetric(
                 horizontal: Dimensions.paddingSizeSmall),
@@ -176,11 +176,13 @@ class _MyDocumentsState extends State<MyDocuments> {
                 const Gap(20),
                 FractionallySizedBox(
                   widthFactor: 0.5,
-                  child: FileUploadContainer(
-                      image: "assets/images/stay/upload.svg",
-                      line1: "Upload passport size photo",
-                      line2: "Upload only .jpeg, jpg and png format",
-                      onTap: () {}),
+                  child: IntrinsicHeight(
+                    child: FileUploadContainer(
+                        image: "assets/images/stay/upload.svg",
+                        line1: "Upload passport size photo",
+                        line2: "Upload only .jpeg, jpg and png format",
+                        onTap: () {}),
+                  ),
                 ),
               ],
             ),

@@ -164,6 +164,7 @@ class StayScreen extends StatelessWidget {
                     ),
                   ),
                   const Gap(10),
+                  //TODO: Try to load pdf in web itself
                   Row(
                     children: [
                       DocumentsContainer(

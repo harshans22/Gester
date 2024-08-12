@@ -66,6 +66,10 @@ class _MenuCustomizationScreenState extends State<MenuCustomizationScreen> {
         Provider.of<UserDataProvider>(context).user.morning;
     final eveningmealcustomization =
         Provider.of<UserDataProvider>(context).user.evening;
+    final showRaitaandSalad =
+        userprovider.user.subscription.subscriptionCode == "P004"
+            ? false
+            : true;
     return Center(
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 400),
@@ -209,7 +213,7 @@ class _MenuCustomizationScreenState extends State<MenuCustomizationScreen> {
                           color: AppColor.BG_COLOR,
                           height: 1,
                         ),
-                        DropDownMenuWidget(
+                       showRaitaandSalad? DropDownMenuWidget(
                             title: "Raita",
                             choosenvalue: (String value) {
                               morningmealcustomization.raita =
@@ -218,12 +222,12 @@ class _MenuCustomizationScreenState extends State<MenuCustomizationScreen> {
                             },
                             list: const ["Yes", "No"],
                             initialvalue:
-                                morningmealcustomization.raita ? "Yes" : "No"),
+                                morningmealcustomization.raita ? "Yes" : "No"):Container(),
                         const Divider(
                           color: AppColor.BG_COLOR,
                           height: 1,
                         ),
-                        DropDownMenuWidget(
+                        showRaitaandSalad?  DropDownMenuWidget(
                           title: "Salad",
                           choosenvalue: (String value) {
                             morningmealcustomization.salad =
@@ -233,7 +237,7 @@ class _MenuCustomizationScreenState extends State<MenuCustomizationScreen> {
                           list: const ["Yes", "No"],
                           initialvalue:
                               morningmealcustomization.salad ? "Yes" : "No",
-                        ),
+                        ):Container(),
                       ],
                     ),
                   ),
@@ -331,7 +335,7 @@ class _MenuCustomizationScreenState extends State<MenuCustomizationScreen> {
                           color: AppColor.BG_COLOR,
                           height: 1,
                         ),
-                        DropDownMenuWidget(
+                       showRaitaandSalad? DropDownMenuWidget(
                           title: "Raita",
                           choosenvalue: (String value) {
                             eveningmealcustomization.raita =
@@ -341,12 +345,12 @@ class _MenuCustomizationScreenState extends State<MenuCustomizationScreen> {
                           list: const ["Yes", "No"],
                           initialvalue:
                               eveningmealcustomization.raita ? "Yes" : "No",
-                        ),
+                        ):Container(),
                         const Divider(
                           color: AppColor.BG_COLOR,
                           height: 1,
                         ),
-                        DropDownMenuWidget(
+                       showRaitaandSalad? DropDownMenuWidget(
                           title: "Salad",
                           choosenvalue: (String value) {
                             eveningmealcustomization.salad =
@@ -356,7 +360,7 @@ class _MenuCustomizationScreenState extends State<MenuCustomizationScreen> {
                           list: const ["Yes", "No"],
                           initialvalue:
                               eveningmealcustomization.salad ? "Yes" : "No",
-                        ),
+                        ):Container(),
                       ],
                     ),
                   ),
