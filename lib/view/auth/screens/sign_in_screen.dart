@@ -2,11 +2,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:gester/firebase_methods/auth_methods.dart';
-import 'package:gester/firebase_methods/firestore_methods.dart';
-import 'package:gester/models/stay_model.dart';
 import 'package:gester/resources/dimensions.dart';
-import 'package:gester/utils/utilities.dart';
 import 'package:gester/view/navigationbar/naviagation.dart';
+import 'package:logger/logger.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:svg_flutter/svg_flutter.dart';
 
@@ -21,6 +19,10 @@ class _SignInScreenState extends State<SignInScreen> {
   @override
   void initState() {
     super.initState();
+  }
+
+  Future<void> delaytimmer() async {
+    await Future.delayed(Duration(seconds: 5));
   }
 
   Widget _buildBody() {
@@ -61,11 +63,11 @@ class _SignInScreenState extends State<SignInScreen> {
                       } else {
                         await AuthMethods().googleLogin();
                       }
-                      await FireStoreMethods().createMealCustomization();
                     } catch (e) {
-                      Utils.toastMessage(e.toString(), Colors.red);
+                      var logger = Logger();
+                      logger.e(e.toString());
                     }
-                    
+                    await delaytimmer();
                     if (!mounted) return;
                     Navigator.pushReplacement(
                       context,

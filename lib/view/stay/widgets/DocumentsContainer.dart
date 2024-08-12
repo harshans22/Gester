@@ -17,11 +17,10 @@ class DocumentsContainer extends StatelessWidget {
       child: GestureDetector(
         onTap:onTap ,
         child: Container(
-            margin:
-                const EdgeInsets.only(right: Dimensions.paddingSizeExtraSmall),
+            
             padding: const EdgeInsets.symmetric(
                 vertical: Dimensions.paddingSizeDefault,
-                horizontal: Dimensions.paddingSizeLarge),
+                horizontal: Dimensions.paddingSizeSmall),
             decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(Dimensions.radiusLarge)),
@@ -31,14 +30,14 @@ class DocumentsContainer extends StatelessWidget {
                 SvgPicture.asset(
                   image,
                 ),
-                const Gap(5),
+                const Gap(10),
                 Text(line1,
                     style:const TextStyle(
-                        fontWeight: FontWeight.w600, fontSize: 14, height: 1),
+                        fontWeight: FontWeight.w600, fontSize: 12, height: 1),
                     textAlign: TextAlign.center,),
                 Text(line2,
                     style:const TextStyle(
-                        fontWeight: FontWeight.w600, fontSize: 14, height: 1),
+                        fontWeight: FontWeight.w600, fontSize: 12, height: 1),
                     textAlign: TextAlign.center),
               ],
             )),

@@ -1,7 +1,5 @@
-import 'dart:html';
-
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:gap/gap.dart';
 import 'package:gester/provider/user_provider.dart';
 import 'package:gester/resources/dimensions.dart';
@@ -22,7 +20,7 @@ class StayScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final stayDetails = Provider.of<UserDataProvider>(context).stayDetails;
- 
+    final userdetails = Provider.of<UserDataProvider>(context).user;
     final pgdetails = Provider.of<UserDataProvider>(context).pgDetails;
     return Column(
       mainAxisSize: MainAxisSize.max,
@@ -52,84 +50,78 @@ class StayScreen extends StatelessWidget {
                         //   width: double.infinity,
                         // ),
                         ClipRRect(
-                          borderRadius:const BorderRadius.only(topLeft:Radius.circular(Dimensions.radiusLarge) ,topRight:Radius.circular(Dimensions.radiusLarge) ),
+                          borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(Dimensions.radiusLarge),
+                              topRight:
+                                  Radius.circular(Dimensions.radiusLarge)),
                           child: Image.network(
                             pgdetails.coverPhoto,
                             fit: BoxFit.fitWidth,
                             height: 200,
-                           width: double.infinity,
-                            errorBuilder: (BuildContext context, Object exception,
-                                StackTrace? stackTrace) {
-                              return const Text('Failed to load image');
+                            width: double.infinity,
+                            errorBuilder: (BuildContext context,
+                                Object exception, StackTrace? stackTrace) {
+                              return Image.network(
+                                "https://static.vecteezy.com/system/resources/previews/004/141/669/non_2x/no-photo-or-blank-image-icon-loading-images-or-missing-image-mark-image-not-available-or-image-coming-soon-sign-simple-nature-silhouette-in-frame-isolated-illustration-vector.jpg",
+                                height: 200,
+                                fit: BoxFit.fitWidth,
+                                width: double.infinity,
+                              );
                             },
                           ),
                         ),
-                        Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: Dimensions.paddingSizeSmall,
-                                vertical: Dimensions.paddingSizeSmall),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "H2H ${stayDetails.pgNumber}",
-                                  style:const TextStyle(
-                                      color: Color(0xFF1D2036),
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w700),
-                                ),
-                                Row(
+                        userdetails.userType == "PGUser"
+                            ? Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: Dimensions.paddingSizeSmall,
+                                    vertical: Dimensions.paddingSizeSmall),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    const Icon(
-                                      Icons.location_on_outlined,
-                                      size: 16,
-                                    ),
                                     Text(
-                                      pgdetails.pgAddress,
+                                      "H2H ${stayDetails.pgNumber}",
                                       style: const TextStyle(
                                           color: Color(0xFF1D2036),
-                                          fontSize: 10,
-                                          fontWeight: FontWeight.w400),
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w700),
+                                    ),
+                                    Row(
+                                      children: [
+                                        const Icon(
+                                          Icons.location_on_outlined,
+                                          size: 16,
+                                        ),
+                                        Text(
+                                          pgdetails.pgAddress,
+                                          style: const TextStyle(
+                                              color: Color(0xFF1D2036),
+                                              fontSize: 10,
+                                              fontWeight: FontWeight.w400),
+                                        ),
+                                      ],
+                                    ),
+                                    const Gap(10),
+                                    Row(
+                                      children: [
+                                        const Text("Stay ID :",
+                                            style: TextStyle(
+                                                color: Color(0xFF1D2036),
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w500,
+                                                height: 1)),
+                                        Text(
+                                          '${stayDetails.pgNumber}${stayDetails.room}0${stayDetails.bed}',
+                                          style: const TextStyle(
+                                              color: Color(0xFF1D2036),
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w500,
+                                              height: 1),
+                                        ),
+                                      ],
                                     ),
                                   ],
-                                ),
-                                const Gap(10),
-                                // Row(
-                                //   children: [
-                                //     const Text("User ID :",
-                                //         style: TextStyle(
-                                //             color: Color(0xFF1D2036),
-                                //             fontSize: 16,
-                                //             fontWeight: FontWeight.w500)),
-                                //     Text(
-                                //       userData.email,
-                                //       style: const TextStyle(
-                                //           color: Color(0xFF1D2036),
-                                //           fontSize: 16,
-                                //           fontWeight: FontWeight.w500),
-                                //     ),
-                                //   ],
-                                // ),
-                                Row(
-                                  children: [
-                                    const Text("Stay ID :",
-                                        style: TextStyle(
-                                            color: Color(0xFF1D2036),
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w500,
-                                            height: 1)),
-                                    Text(
-                                      '${stayDetails.pgNumber}${stayDetails.room}0${stayDetails.bed}',
-                                      style: const TextStyle(
-                                          color: Color(0xFF1D2036),
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w500,
-                                          height: 1),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ))
+                                ))
+                            : Container()
                       ],
                     ),
                   ),
@@ -159,7 +151,9 @@ class StayScreen extends StatelessWidget {
                         title: "Security Deposit",
                         content: '₹${stayDetails.securityDeposit}'),
                     AccomodationContainer(
-                        title: "Rent", content: '₹${stayDetails.rent.toString()}',)
+                      title: "Rent",
+                      content: '₹${stayDetails.rent.toString()}',
+                    )
                   ]),
                   const Gap(20),
                   const Text(
@@ -170,29 +164,80 @@ class StayScreen extends StatelessWidget {
                     ),
                   ),
                   const Gap(10),
-                   Row(
+                  Row(
                     children: [
-                       DocumentsContainer(
-                        onTap: (){
-                          Navigator.push(context, MaterialPageRoute(builder: ((context) =>const MyDocuments() )));
+                      DocumentsContainer(
+                        onTap: () {
+                          if (userdetails.userType != "PGUser") {
+                            Utils.showWithSingleButton(
+                                context, "This not accessible for you",
+                                onTap: () {
+                              Navigator.pop(context);
+                            }, buttonTitle: "Okay");
+                          } else {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: ((context) =>
+                                        const MyDocuments())));
+                          }
                         },
-                          image: "assets/images/stay/mydocuments.svg",
-                          line1: "My",
-                          line2: "Documents",),
+                        image: "assets/images/stay/mydocuments.svg",
+                        line1: "My",
+                        line2: "Documents",
+                      ),
+                      Gap(5),
                       DocumentsContainer(
-                          onTap: (){
-                            Navigator.push(context, MaterialPageRoute(builder: ((context) =>const KYCAgreementScreen() )));
-                          },
-                          image: "assets/images/stay/kyc icon.svg",
-                          line1: "View ",
-                          line2: "KYC",),
+                        onTap: () {
+                          if (userdetails.userType != "PGUser") {
+                            Utils.showWithSingleButton(
+                                context, "This not accessible for you",
+                                onTap: () {
+                              Navigator.pop(context);
+                            }, buttonTitle: "Okay");
+                          } else {
+                            if (kIsWeb) {
+                              launchUrl(Uri.parse(
+                                  "https://firebasestorage.googleapis.com/v0/b/gester-ae70f.appspot.com/o/User_documents%2Fgester_document.pdf?alt=media&token=df1424a8-0223-4184-987e-5a77e83f945b"));
+                            } else {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: ((context) =>
+                                          const KYCAgreementScreen())));
+                            }
+                          }
+                        },
+                        image: "assets/images/stay/kyc icon.svg",
+                        line1: "View KYC ",
+                        line2: "Documents",
+                      ),
+                      Gap(5),
                       DocumentsContainer(
-                          onTap: (){
-                            Navigator.push(context, MaterialPageRoute(builder: ((context) =>const PoliceVerificationScreen() )));
-                          },
-                          image: "assets/images/stay/police icon.svg",
-                          line1: "View",
-                          line2: "PCC",),
+                        onTap: () {
+                          if (userdetails.userType != "PGUser") {
+                            Utils.showWithSingleButton(
+                                context, "This not accessible for you",
+                                onTap: () {
+                              Navigator.pop(context);
+                            }, buttonTitle: "Okay");
+                          } else {
+                            if (kIsWeb) {
+                              launchUrl(Uri.parse(
+                                  "https://firebasestorage.googleapis.com/v0/b/gester-ae70f.appspot.com/o/User_documents%2Fgester_document.pdf?alt=media&token=df1424a8-0223-4184-987e-5a77e83f945b"));
+                            } else {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: ((context) =>
+                                          const PoliceVerificationScreen())));
+                            }
+                          }
+                        },
+                        image: "assets/images/stay/police icon.svg",
+                        line1: "View Police",
+                        line2: "Verification",
+                      ),
                     ],
                   ),
                   // const Gap(20),
@@ -259,12 +304,11 @@ class StayScreen extends StatelessWidget {
                   InkWell(
                     onTap: () async {
                       final Uri url = Uri.parse('https://wa.me/918882638903');
-                      try{
+                      try {
                         await launchUrl(url);
-                      }catch(e){
+                      } catch (e) {
                         print(e);
                       }
-                      
                     },
                     child: Container(
                       padding: const EdgeInsets.symmetric(

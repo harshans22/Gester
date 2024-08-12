@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gester/models/all_meal_details.dart';
@@ -6,14 +5,14 @@ import 'package:gester/models/stay_model.dart';
 import 'package:gester/models/usermodel.dart';
 import 'package:gester/utils/utilities.dart';
 import 'package:logger/logger.dart';
-import 'package:http/http.dart' as http;
 
 class FireStoreMethods {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   var logger = Logger();
 
 //updating user gooogle photourl
-  Future<void> updateUserDataFirebase(String? photourl, String? email) async {
+  Future<void> updateUserDataFirebase(
+      String? photourl, String? email, String? username) async {
     try {
       // Query the user document by email
       QuerySnapshot querySnapshot = await _firestore
@@ -30,31 +29,24 @@ class FireStoreMethods {
         await _firestore.collection("User").doc(docId).set({
           "photourl": photourl,
         }, SetOptions(merge: true));
+        await createMealCustomization();
         //  Utils.toastMessage("User Logged In",Colors.red);
       } else {
-        await _firestore.collection("User").doc().set(UserData(
-              accomodation: Accomodation(rent: 0, securityDeposit: 0),
-              subscription: Subscription(
+        await _firestore.collection("User").doc(Utils.generateUserId()).set({
+          "Email": email,
+          "photourl": photourl,
+          "Usertype": "AppUser",
+          "Username": username,
+          "Subscription": Subscription(
+                  subscriptionCode: "P000",
                   amount: 0,
                   daysLeft: 30,
-                  numberOfMeals: 90,
+                  numberOfMeals: 0,
                   planName: "No Plan",
-                  status: "InActive",
-                  subscriptionCode: "0000"),
-              userType: "AppUser",
-              dietaryPreference: "",
-              pgNumber: "",
-              userId: "",
-              fname: "",
-              lname: "",
-              gender: "",
-              email: email!,
-              photoUrl: photourl!,
-              username: "",
-              dateOfbirth: "",
-              password: "",
-              phoneNumber: "",
-            ).toJson());
+                  status: "InActive")
+              .toJson(),
+        });
+      
       }
     } catch (e) {
       logger.e(e.toString());
@@ -135,9 +127,13 @@ class FireStoreMethods {
           .where("pgNumber", isEqualTo: pgNumber)
           .get();
       DocumentSnapshot snapshot = querySnapshot.docs.first;
-      Map<String, dynamic> snapshotdata =
-          snapshot.data() as Map<String, dynamic>;
-      return PGDetails.fromMap(snapshotdata);
+      if (snapshot.exists) {
+        Map<String, dynamic> snapshotdata =
+            snapshot.data() as Map<String, dynamic>;
+        return PGDetails.fromMap(snapshotdata);
+      } else {
+        return PGDetails.fromMap({});
+      }
     } catch (e) {
       throw Exception("Error while fetching PgDetails$e");
     }
@@ -234,41 +230,49 @@ class FireStoreMethods {
           "${dateTime.day < 10 ? '0${dateTime.day}' : dateTime.day}-${dateTime.month < 10 ? '0${dateTime.month}' : dateTime.month}-${dateTime.year}";
       DocumentSnapshot snapshot =
           await _firestore.collection("User").doc(docId).get();
-      DocumentSnapshot mealcustomization = await _firestore
-          .collection("User")
-          .doc(docId)
-          .collection("MealCustomization")
-          .doc(Utils.getDayName(dateTime.weekday))
-          .get();
-      DocumentSnapshot mealoptSnapshot = await _firestore
-          .collection("User")
-          .doc(docId)
-          .collection("MealOpt")
-          .doc(dateTime.year.toString())
-          .collection(Utils.getMonthName(dateTime.month))
-          .doc(date)
-          .get();
-      DocumentSnapshot kycdata = await _firestore
-          .collection("User")
-          .doc(docId)
-          .collection("KYCData")
-          .doc("main")
-          .get();
-      UserData user = UserData.fromjson(
-          snapshot.data() as Map<String, dynamic>,
-          docId,
-          (mealoptSnapshot.data() == null)
-              ? {
-                  "breakfast": 0,
-                  "lunch": 0,
-                  "dinner": 0,
-                }
-              : mealoptSnapshot.data() as Map<String, dynamic>,
-          (kycdata.data() == null)
-              ? {}
-              : kycdata.data() as Map<String, dynamic>,
-          mealcustomization.data() as Map<String, dynamic>);
-      return user;
+
+      if ((snapshot.data() as Map)["Usertype"] == "PGUser") {
+        DocumentSnapshot mealcustomization = await _firestore
+            .collection("User")
+            .doc(docId)
+            .collection("MealCustomization")
+            .doc(Utils.getDayName(dateTime.weekday))
+            .get();
+
+        DocumentSnapshot mealoptSnapshot = await _firestore
+            .collection("User")
+            .doc(docId)
+            .collection("MealOpt")
+            .doc(dateTime.year.toString())
+            .collection(Utils.getMonthName(dateTime.month))
+            .doc(date)
+            .get();
+        DocumentSnapshot kycdata = await _firestore
+            .collection("User")
+            .doc(docId)
+            .collection("KYCData")
+            .doc("main")
+            .get();
+        UserData user = UserData.fromjson(
+            !snapshot.exists ? {} : snapshot.data() as Map<String, dynamic>,
+            docId,
+            (mealoptSnapshot.exists)
+                ? {
+                    "breakfast": 0,
+                    "lunch": 0,
+                    "dinner": 0,
+                  }
+                : {},
+            (!kycdata.exists) ? {} : kycdata.data() as Map<String, dynamic>,
+            (!mealcustomization.exists)
+                ? {}
+                : mealcustomization.data() as Map<String, dynamic>);
+        return user;
+      } else {
+        UserData user = UserData.fromjson(
+            snapshot.data() as Map<String, dynamic>, docId, {}, {}, {});
+        return user;
+      }
     } catch (e) {
       throw Exception("Error while getting user data $e");
     }
@@ -496,8 +500,8 @@ class FireStoreMethods {
           totalDaalEvening = totalmealOpt["Evening"]["total_daal"];
           totalsaladEvening = totalmealOpt["Evening"]["total_salad"];
           totalraitaEvening = totalmealOpt["Evening"]["total_raita"];
-          numberOfRotiEvening = totalmealOpt["Evening"]["numberofRoti"];
-          riceQuantityEvening = totalmealOpt["Evening"]["riceQuantity"];
+          numberOfRotiEvening = totalmealOpt["Evening"]["total_roties"];
+          riceQuantityEvening = totalmealOpt["Evening"]["total_rice"];
         }
         await _firestore.collection("Kitchen").doc(date).set(
           {
@@ -577,14 +581,13 @@ class FireStoreMethods {
           .collection("KYCData")
           .doc("main")
           .get();
-      DocumentSnapshot accomodationSnapshot =
+      DocumentSnapshot usersnapshot =
           await _firestore.collection("User").doc(userId).get();
       return StayModel.fromJson(
           !kycsnapshot.exists ? {} : kycsnapshot.data() as Map<String, dynamic>,
-          !accomodationSnapshot.exists
+          !usersnapshot.exists
               ? {}
-              : (accomodationSnapshot.data()
-                  as Map<String, dynamic>)["Accommodation"]);
+              : ((usersnapshot.data() as Map)["Accommodation"] ?? {}));
     } catch (e) {
       throw Exception("Error while fetching stay details :$e");
     }
@@ -658,7 +661,7 @@ class FireStoreMethods {
     } catch (e) {
       throw Exception("Error while getting user monthly meap opt :$e");
     }
-   // return {};
+    // return {};
   }
 
   //update meal customization

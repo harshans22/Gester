@@ -4,6 +4,7 @@ import 'package:gester/provider/meal_customization_provider.dart';
 import 'package:gester/provider/user_provider.dart';
 import 'package:gester/resources/color.dart';
 import 'package:gester/resources/dimensions.dart';
+import 'package:gester/utils/utilities.dart';
 import 'package:gester/utils/widgets/textbutton.dart';
 import 'package:gester/view/home/widgets/drop_down_menu.dart';
 import 'package:provider/provider.dart';
@@ -45,15 +46,13 @@ class _MenuCustomizationScreenState extends State<MenuCustomizationScreen> {
     "Extra full": 1
   };
 
-
-
   int _dayselectedIndex = 0;
   @override
   void initState() {
     super.initState();
-    if(widget.datetime.hour>=21){
+    if (widget.datetime.hour >= 21) {
       _dayselectedIndex = widget.datetime.weekday;
-    }else{
+    } else {
       _dayselectedIndex = widget.datetime.weekday - 1;
     }
   }
@@ -154,6 +153,7 @@ class _MenuCustomizationScreenState extends State<MenuCustomizationScreen> {
                           choosenvalue: (String value) {
                             morningmealcustomization.numberofRoti =
                                 int.parse(value);
+                            userprovider.notifylistner();
                           },
                           list: _rotilist,
                           initialvalue:
@@ -168,6 +168,7 @@ class _MenuCustomizationScreenState extends State<MenuCustomizationScreen> {
                           choosenvalue: (String value) {
                             morningmealcustomization.riceQuantity =
                                 _ricequantityDouble[value]!;
+                            userprovider.notifylistner();
                           },
                           list: _ricequantity.values.toList(),
                           initialvalue: _ricequantity[
@@ -182,6 +183,7 @@ class _MenuCustomizationScreenState extends State<MenuCustomizationScreen> {
                           choosenvalue: (String value) {
                             morningmealcustomization.daal =
                                 value == "Yes" ? true : false;
+                            userprovider.notifylistner();
                           },
                           list: const ["Yes", "No"],
                           initialvalue:
@@ -196,6 +198,7 @@ class _MenuCustomizationScreenState extends State<MenuCustomizationScreen> {
                           choosenvalue: (String value) {
                             morningmealcustomization.sukhiSabji =
                                 value == "Yes" ? true : false;
+                            userprovider.notifylistner();
                           },
                           list: const ["Yes", "No"],
                           initialvalue: morningmealcustomization.sukhiSabji
@@ -211,6 +214,7 @@ class _MenuCustomizationScreenState extends State<MenuCustomizationScreen> {
                             choosenvalue: (String value) {
                               morningmealcustomization.raita =
                                   value == "Yes" ? true : false;
+                              userprovider.notifylistner();
                             },
                             list: const ["Yes", "No"],
                             initialvalue:
@@ -224,6 +228,7 @@ class _MenuCustomizationScreenState extends State<MenuCustomizationScreen> {
                           choosenvalue: (String value) {
                             morningmealcustomization.salad =
                                 value == "Yes" ? true : false;
+                            userprovider.notifylistner();
                           },
                           list: const ["Yes", "No"],
                           initialvalue:
@@ -269,6 +274,7 @@ class _MenuCustomizationScreenState extends State<MenuCustomizationScreen> {
                           choosenvalue: (String value) {
                             eveningmealcustomization.numberofRoti =
                                 int.parse(value);
+                            userprovider.notifylistner();
                           },
                           list: _rotilist,
                           initialvalue:
@@ -283,6 +289,7 @@ class _MenuCustomizationScreenState extends State<MenuCustomizationScreen> {
                           choosenvalue: (String value) {
                             eveningmealcustomization.riceQuantity =
                                 _ricequantityDouble[value]!;
+                            userprovider.notifylistner();
                           },
                           list: _ricequantity.values.toList(),
                           initialvalue: _ricequantity[
@@ -298,6 +305,7 @@ class _MenuCustomizationScreenState extends State<MenuCustomizationScreen> {
                           choosenvalue: (String value) {
                             eveningmealcustomization.daal =
                                 value == "Yes" ? true : false;
+                            userprovider.notifylistner();
                           },
                           list: const ["Yes", "No"],
                           initialvalue:
@@ -312,6 +320,7 @@ class _MenuCustomizationScreenState extends State<MenuCustomizationScreen> {
                           choosenvalue: (String value) {
                             eveningmealcustomization.sukhiSabji =
                                 value == "Yes" ? true : false;
+                            userprovider.notifylistner();
                           },
                           list: const ["Yes", "No"],
                           initialvalue: eveningmealcustomization.sukhiSabji
@@ -327,6 +336,7 @@ class _MenuCustomizationScreenState extends State<MenuCustomizationScreen> {
                           choosenvalue: (String value) {
                             eveningmealcustomization.raita =
                                 value == "Yes" ? true : false;
+                            userprovider.notifylistner();
                           },
                           list: const ["Yes", "No"],
                           initialvalue:
@@ -341,6 +351,7 @@ class _MenuCustomizationScreenState extends State<MenuCustomizationScreen> {
                           choosenvalue: (String value) {
                             eveningmealcustomization.salad =
                                 value == "Yes" ? true : false;
+                            userprovider.notifylistner();
                           },
                           list: const ["Yes", "No"],
                           initialvalue:
@@ -365,8 +376,6 @@ class _MenuCustomizationScreenState extends State<MenuCustomizationScreen> {
                       ),
                     ],
                   ),
-           
-                 
                   SizedBox(
                     height: 200,
                     child: Center(
@@ -379,7 +388,9 @@ class _MenuCustomizationScreenState extends State<MenuCustomizationScreen> {
           ),
           bottomNavigationBar: IntrinsicHeight(
             child: Container(
-              padding:const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeDefault,vertical: Dimensions.paddingSizeDefault),
+              padding: const EdgeInsets.symmetric(
+                  horizontal: Dimensions.paddingSizeDefault,
+                  vertical: Dimensions.paddingSizeDefault),
               decoration: BoxDecoration(
                 color: AppColor.WHITE,
                 boxShadow: [
@@ -392,27 +403,51 @@ class _MenuCustomizationScreenState extends State<MenuCustomizationScreen> {
                 ],
               ),
               child: Consumer<MealCustomizationProvider>(
-                        builder: (context, value, child) => TextCommonButton(
-                          title: "Save & continue",
-                          color: AppColor.PRIMARY,
-                          textColor: AppColor.WHITE,
-                          isloader: value.getLoader,
+                  builder: (context, value, child) {
+                bool isChanged = (userprovider.oldmorningData !=
+                        morningmealcustomization) ||
+                    (userprovider.oldeveningData != eveningmealcustomization);
+                return TextCommonButton(
+                  title: "Save & continue",
+                  color: isChanged
+                      ? AppColor.PRIMARY
+                      : AppColor.GREY.withOpacity(0.2),
+                  textColor: AppColor.WHITE,
+                  isloader: value.getLoader,
+                  onTap: () async {
+                    if (userprovider.user.userType != "PGUser") {
+                      Utils.showWithSingleButton(
+                          context, "Your currently don't have any Active Plan ",
                           onTap: () {
-                            value.updateMealCustomization(
-                                userprovider.user.userId,
-                                userprovider.user.pgNumber,
-                                userprovider.user.fname,
-                                userprovider.user.dietaryPreference,
-                                morningmealcustomization.toJson(),
-                                eveningmealcustomization.toJson(),
-                                _sameformorning,
-                                _sameforevening,
-                                _dayselectedIndex,userprovider.user.breakfast,userprovider.user.lunch,userprovider.user.dinner,widget.datetime);
-                          },
-                        ),
-                      ),
+                        Navigator.pop(context);
+                      }, buttonTitle: 'Okay, Got it');
+                    } else {
+                      await value.updateMealCustomization(
+                          userprovider.user.userId,
+                          userprovider.user.pgNumber,
+                          userprovider.user.fname,
+                          userprovider.user.dietaryPreference,
+                          morningmealcustomization.toJson(),
+                          eveningmealcustomization.toJson(),
+                          _sameformorning,
+                          _sameforevening,
+                          _dayselectedIndex,
+                          userprovider.user.breakfast,
+                          userprovider.user.lunch,
+                          userprovider.user.dinner,
+                          widget.datetime);
+                      userprovider.setOldmealcustomization(
+                          morningmealcustomization, eveningmealcustomization);
+                      if (!context.mounted) return;
+                      Navigator.pop(context);
+                      Utils.showWithNoButton(context,
+                          title: "Meal Customized Successfully");
+                    }
+                  },
+                );
+              }),
             ),
-          ) ,
+          ),
         ),
       ),
     );

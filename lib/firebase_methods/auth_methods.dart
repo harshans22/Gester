@@ -17,7 +17,7 @@ class AuthMethods {
           accessToken: googleAuth?.accessToken, idToken: googleAuth?.idToken);
       await _auth.signInWithCredential(credential);
       await _firestoreMethods.updateUserDataFirebase(
-          googleUser!.photoUrl, googleUser.email); //updating userphotoUrl
+          googleUser!.photoUrl, googleUser.email,googleUser.displayName); //updating userphotoUrl
     } catch (e) {
       throw Exception(e);
     }
@@ -29,7 +29,8 @@ class AuthMethods {
       UserCredential userCredential = await _auth.signInWithPopup(authProvider);
       final user = userCredential.user;
       await _firestoreMethods.updateUserDataFirebase(
-          user!.photoURL, user.email); // Update user photo URL
+          user!.photoURL, user.email,user.displayName); // Update user photo URL
+          
     } catch (e) {
       throw Exception(e);
     }

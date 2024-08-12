@@ -7,47 +7,41 @@ import 'package:gester/utils/utilities.dart';
 var logger = Logger();
 
 class StayModel {
-  final int rent;
-  final int securityDeposit;
-  final int bed;
-  final String pgNumber;
-  final String room;
-  final DateTime startDate;
+  int rent=0;
+  int securityDeposit=0;
+  int bed=0;
+  String pgNumber="N.A";
+  String room="N.A";
+  DateTime startDate=DateTime.now();
   StayModel({
-    required this.rent,
-    required this.securityDeposit,
-    required this.bed,
-    required this.pgNumber,
-    required this.room,
-    required this.startDate,
-  });
+    this.rent=0,
+    this.securityDeposit=0,
+    this.bed=0,
+    this.pgNumber="N.A",
+    this.room="N.A",
+    DateTime? startdate,
+  }):startDate=startdate??DateTime.now();
 
   factory StayModel.fromJson(
           Map<String, dynamic> kycData, Map<String, dynamic> accomodation) =>
       StayModel(
-        rent: accomodation.isEmpty ? 0 : accomodation['Rent'],
+        rent: accomodation['Rent']??0,
         securityDeposit:
-            accomodation.isEmpty ? 0 : accomodation['Security Deposite'],
-        bed: kycData.isEmpty ? 0 : kycData['Accommodation_details']['Bed'],
-        pgNumber: kycData.isEmpty
-            ? "not valid"
-            : kycData['Accommodation_details']['PG_number'],
-        room: kycData.isEmpty
-            ? "not valid"
-            : kycData['Accommodation_details']['Room'],
-        startDate: kycData.isEmpty
-            ? DateTime.now()
-            : Utils.getDateFromFirebase(
-                (kycData['Accommodation_details']['StartDate'])),
+           accomodation['Security Deposite']??0,
+        bed: kycData.isEmpty?0: kycData['Accommodation_details']['Bed'],
+        pgNumber:kycData.isNotEmpty? kycData['Accommodation_details']['PG_number']:"N.A",
+        room: kycData.isNotEmpty? kycData['Accommodation_details']['Room']:"N.A",
+        startdate:kycData.isNotEmpty? Utils.getDateFromFirebase(
+              kycData['Accommodation_details']['StartDate']):DateTime.now()
       );
 }
 
 class PGDetails {
-  final String pgAddress;
-  final String coverPhoto;
+  String pgAddress="";
+  String coverPhoto="";
   PGDetails({
-    required this.pgAddress,
-    required this.coverPhoto,
+    this.pgAddress="",
+    this.coverPhoto="",
   });
   
 

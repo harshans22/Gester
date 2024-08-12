@@ -90,12 +90,12 @@ class ProfileScreen extends StatelessWidget {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    "${user.fname} ${user.lname}",
+                                    (user.fname +user.lname).isEmpty?user.username:(user.fname +user.lname),
                                     style: Theme.of(context)
                                         .textTheme
                                         .displayLarge,
                                   ),
-                                  const Icon(Icons.chevron_right)
+                                  const Icon(Icons.chevron_right),
                                 ],
                               ),
                               Text(

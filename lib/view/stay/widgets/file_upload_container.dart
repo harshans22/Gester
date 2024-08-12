@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:gester/resources/color.dart';
 import 'package:gester/resources/dimensions.dart';
 import 'package:svg_flutter/svg.dart';
 
-class QuickAccessContainer extends StatelessWidget {
+class FileUploadContainer extends StatelessWidget {
   final VoidCallback onTap;
   final String image;
   final String line1;
   final String line2;
-  const QuickAccessContainer(
+  const FileUploadContainer(
       {super.key,
       required this.image,
       required this.onTap,
@@ -25,7 +26,7 @@ class QuickAccessContainer extends StatelessWidget {
                 const EdgeInsets.only(right: Dimensions.paddingSizeExtraSmall),
             padding: const EdgeInsets.symmetric(
                 vertical: Dimensions.paddingSizeDefault,
-                horizontal: Dimensions.paddingSizeExtraSmall),
+                horizontal: Dimensions.paddingSizeSmall),
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(Dimensions.radiusLarge),
                 color: const Color.fromRGBO(255, 255, 255, 1)),
@@ -41,16 +42,17 @@ class QuickAccessContainer extends StatelessWidget {
                   style: const TextStyle(
                     fontWeight: FontWeight.w600,
                     fontSize: 12,
-                    height: 1,
+                    
                   ),
                   textAlign: TextAlign.center,
                 ),
                 Text(
-                  line2,
-                  style: const TextStyle(
+                  line2,//TODO: use themefile to set textstyle
+                  style: TextStyle(
                     fontWeight: FontWeight.w600,
-                    fontSize: 12,
-                    height: 1,
+                    fontSize: 10,
+                    height: 1.1,
+                    color: AppColor.GREY_COLOR_LIGHT.withOpacity(0.5)
                   ),
                   textAlign: TextAlign.center,
                 ),

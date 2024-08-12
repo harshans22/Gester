@@ -25,39 +25,12 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
 //dialog for success mealopted
-  show(BuildContext context) {
-    showDialog(
-        context: context,
-        builder: (context) => Dialog(
-            insetPadding: const EdgeInsets.symmetric(
-                vertical: Dimensions.paddingSizeExtraLarge),
-            backgroundColor: AppColor.WHITE,
-            surfaceTintColor: AppColor.WHITE,
-            child: Container(
-              padding: const EdgeInsets.symmetric(
-                  horizontal: Dimensions.paddingSizeDefault,
-                  vertical: Dimensions.paddingSizeExtraLarge),
-              //alignment: Alignment.center,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  SvgPicture.asset("assets/images/homepage/checkIconGreen.svg"),
-                  const Gap(10),
-                  Text(
-                    "Your meal has been opted!",
-                    style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                        color: AppColor.PRIMARY, fontWeight: FontWeight.w600),
-                  )
-                ],
-              ),
-            )));
-  }
 
   @override
   Widget build(BuildContext context) {
     final homescreenprovider =
         Provider.of<HomeScreenProvider>(context, listen: true);
-    final userprovider = Provider.of<UserDataProvider>(context);
+    final userprovider = Provider.of<UserDataProvider>(context, listen: true);
     DateTime datetime = homescreenprovider.dateTime;
     int hour = datetime.hour;
     String timeRefrence = "Today";
@@ -66,7 +39,11 @@ class _HomeScreenState extends State<HomeScreen> {
       timeRefrence = "Tomorrow";
     }
 
-    if (homescreenprovider.dateTime.hour == 21 && homescreenprovider.dateTime.minute == 0 && homescreenprovider.dateTime.second == 0) {
+    if ((homescreenprovider.dateTime.hour == 21 ||
+            homescreenprovider.dateTime.hour == 17 ||
+            homescreenprovider.dateTime.hour == 5) &&
+        homescreenprovider.dateTime.minute == 0 &&
+        homescreenprovider.dateTime.second==0) {
       userprovider.resetMealOpt();
     }
 
@@ -76,23 +53,6 @@ class _HomeScreenState extends State<HomeScreen> {
         userprovider.user.lunch != userprovider.oldlunch ||
         userprovider.user.dinner != userprovider.olddinner) {
       showSaveChangesButton = true;
-      // if (userprovider.user.breakfast != userprovider.oldbreakfast ||
-      //     userprovider.user.lunch != userprovider.oldlunch) {
-      //   if (datetime.hour < 5) {
-      //     showSaveChangesButton = true;
-      //   } else {
-
-      //     showSaveChangesButton = false;
-      //   }
-      // }
-      // if (userprovider.user.dinner != userprovider.olddinner) {
-      //   if (datetime.hour < 21) {
-      //     //when user is on app ex-8:59 he is on app and saves some value to reset at 9:01
-      //     showSaveChangesButton = true;
-      //   } else {
-      //     showSaveChangesButton = false;
-      //   }
-      // }
     }
 
     return Column(
@@ -138,16 +98,6 @@ class _HomeScreenState extends State<HomeScreen> {
                               paddingHorizontal: Dimensions.paddingSizeSmall,
                               fontWeight: FontWeight.w400,
                             ),
-                            // Expanded(child: Container()),
-                            // GestureDetector(
-                            //     onTap: () {
-                            //       Navigator.push(
-                            //           context,
-                            //           MaterialPageRoute(
-                            //               builder: (_) =>
-                            //                   const MealSubscription()));
-                            //     },
-                            //     child: const Icon(Icons.chevron_right)),
                           ],
                         ),
                         const Gap(Dimensions.paddingSizeSmall),
@@ -263,7 +213,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                             userprovider.user.dinner);
                                         if (!homescreenprovider.mealoptloader) {
                                           if (!context.mounted) return;
-                                          show(context);
+                                          Utils.showWithNoButton(context,
+                                              title:
+                                                  "Your meal has been opted!");
                                         }
                                       },
                                       paddingvertical:

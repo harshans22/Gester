@@ -1,6 +1,6 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:gester/models/all_meal_details.dart';
 
+//TODO: seperate the meal customization data from user data
 class UserData {
   final String userId;
   final String email;
@@ -71,23 +71,20 @@ class UserData {
           Map<String, dynamic> mealCustomization) =>
       UserData(
         userId: docId,
-        accomodation:
-            Accomodation.fromjson(json.isEmpty ? {} : json["Accommodation"]),
+        accomodation: Accomodation.fromjson(json["Accommodation"] ?? {}),
         userType: json['Usertype'] ?? "",
         fname: json['fname'] ?? "",
         lname: json['lname'] ?? "",
-        gender: json['Gender'] ?? "",
+        gender: json['Gender'] ?? "Not Defined",
         email: json['Email'] ?? "",
         photoUrl: json['photourl'] ?? "",
         username: json['Username'] ?? "",
-        dateOfbirth: json['DateOfBirth'] ?? "",
-        password: json['Password'] ?? "",
-        phoneNumber: json['phoneNumber'] ?? "",
-        dietaryPreference: json["Dietary_preference"] ?? "",
-        subscription: Subscription.fromjson(json.isEmpty
-            ? {}
-            : json[
-                'Subscription']), //to-do what if the subscription if not present
+        dateOfbirth: json['DateOfBirth'] ?? "Not Available",
+        password: json['Password'] ?? "Not Available",
+        phoneNumber: json['phoneNumber'] ?? "Not Defined",
+        dietaryPreference: json["Dietary_preference"] ?? "Not Defined",
+        subscription: Subscription.fromjson(json['Subscription'] ??
+            {}), //to-do what if the subscription if not present
         breakfast: mealOptjson['breakfast'] ?? 0,
         lunch: mealOptjson['lunch'] ?? 0,
         dinner: mealOptjson['dinner'] ?? 0,
@@ -139,14 +136,15 @@ class Subscription {
         numberOfMeals: json['numberOfMeals'] ?? 0,
         planName: json['planName'] ?? "",
         status: json['status'] ?? "",
-        subscriptionCode: json['subscriptionCode'] ?? "",
+        subscriptionCode: json['subscriptionCode'] ?? "P004",
       );
   Map<String, dynamic> toJson() => {
         'amount': amount,
         'daysLeft': daysLeft,
         'numberOfMeals': numberOfMeals,
         'planName': planName,
-        'status': status
+        'status': status,
+        'subscriptionCode': subscriptionCode,
       };
 }
 
@@ -160,7 +158,7 @@ class Accomodation {
 
   factory Accomodation.fromjson(Map<String, dynamic> json) => Accomodation(
         rent: json['Rent'] ?? 0,
-        securityDeposit: json['Security Deposite'] ?? "",
+        securityDeposit: json['Security Deposite'] ?? 0,
       );
   Map<String, dynamic> toJson() =>
       {'Rent': rent, 'Security Deposite': securityDeposit};

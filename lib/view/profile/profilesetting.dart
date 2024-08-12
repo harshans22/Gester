@@ -45,7 +45,6 @@ class _ProfileSettingState extends State<ProfileSetting> {
   }
 
   void _onTextChanged() {
-    print("Text field changed");
     isChanged.value = true;
   }
 
@@ -103,7 +102,7 @@ class _ProfileSettingState extends State<ProfileSetting> {
                   ),
                   onPressed: () async {
                     Navigator.of(context).pop();
-                    Uint8List file = await Utils().pickImage(
+                    Uint8List file = await Utils.pickImage(
                       ImageSource.camera,
                     );
                     setState(() {
@@ -128,7 +127,7 @@ class _ProfileSettingState extends State<ProfileSetting> {
                   ),
                   onPressed: () async {
                     Navigator.of(context).pop();
-                    Uint8List file = await Utils().pickImage(
+                    Uint8List file = await Utils.pickImage(
                       ImageSource.gallery,
                     );
                     setState(() {
@@ -182,7 +181,7 @@ class _ProfileSettingState extends State<ProfileSetting> {
                   Center(
                     child: Stack(
                       children: [
-                        user!.photoUrl.isNotEmpty?CircleAvatar(
+                        user.photoUrl.isNotEmpty?CircleAvatar(
                           backgroundImage: _file == null
                               ? NetworkImage(user.photoUrl)
                               : MemoryImage(_file!) as ImageProvider,

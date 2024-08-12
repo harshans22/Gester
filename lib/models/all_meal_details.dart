@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 class Menu {
@@ -25,6 +24,50 @@ class MealCustomizationData {
     this.sukhiSabji=true,
     this.raita=true,
   });
+
+
+
+  MealCustomizationData copyWith({
+    int? numberofRoti,
+    double? riceQuantity,
+    bool? daal,
+    bool? sukhiSabji,
+    bool? raita,
+    bool? salad,
+  }) {
+    return MealCustomizationData(
+      numberofRoti: numberofRoti ?? this.numberofRoti,
+      riceQuantity: riceQuantity ?? this.riceQuantity,
+      daal: daal ?? this.daal,
+      sukhiSabji: sukhiSabji ?? this.sukhiSabji,
+      raita: raita ?? this.raita,
+      salad: salad ?? this.salad,
+    );
+  }
+
+  
+   @override
+  bool operator ==(Object other) {//to compare two classes are  equal or not because they may have diffrent hash code
+    if (identical(this, other)) return true;
+
+    return other is MealCustomizationData &&
+        other.numberofRoti == numberofRoti &&
+        other.riceQuantity == riceQuantity &&
+        other.daal == daal &&
+        other.sukhiSabji == sukhiSabji &&
+        other.raita == raita &&
+        other.salad == salad;
+  }
+
+  @override
+  int get hashCode {
+    return numberofRoti.hashCode ^
+        riceQuantity.hashCode ^
+        daal.hashCode ^
+        sukhiSabji.hashCode ^
+        raita.hashCode ^
+        salad.hashCode;
+  }
 
 
   Map<String, dynamic> toJson() {

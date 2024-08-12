@@ -8,9 +8,10 @@ import 'package:gester/resources/dimensions.dart';
 import 'package:gester/utils/widgets/textbutton.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:svg_flutter/svg.dart';
+import 'package:uuid/uuid.dart';
 
 class Utils {
-  pickImage(ImageSource source) async {
+  static pickImage(ImageSource source) async {
     final ImagePicker imagepicker = ImagePicker();
     XFile? file = await imagepicker.pickImage(source: source);
     if (file != null) {
@@ -33,6 +34,10 @@ class Utils {
         backgroundColor: color,
         fontSize: 15,
         timeInSecForIosWeb: 4);
+  }
+
+  static String generateUserId(){
+    return const Uuid().v1();
   }
 
   static void flushbarErrorMessage(String message, BuildContext context) {
@@ -124,18 +129,7 @@ class Utils {
         (60 - now.second) < 10 ? "0${(60 - now.second)}" : "${60 - now.second}";
     return "$minute:$second";
   }
-//   function generateUUID() {
-//     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-//         var r = (crypto.getRandomValues(new Uint8Array(1))[0] & 0x0f) | (c === 'x' ? 0 : 0x8);
-//         return r.toString(16);
-//     });
-// }
 
-// // Generate UUID and store it in a temporary state
-// const uuid = generateUUID();
-
-// // Return the UUID to be used in Retool
-// return uuid;
 
   static showWithDoubleButton(
       BuildContext context, String title, String content,
@@ -277,6 +271,36 @@ class Utils {
                 ),
               ),
             ));
+  }
+
+
+  //popUp with no button
+  static showWithNoButton(BuildContext context,{required String title}) {
+    showDialog(
+        context: context,
+        builder: (context) => Dialog(
+            insetPadding: const EdgeInsets.symmetric(
+                vertical: Dimensions.paddingSizeExtraLarge),
+            backgroundColor: AppColor.WHITE,
+            surfaceTintColor: AppColor.WHITE,
+            child: Container(
+              padding: const EdgeInsets.symmetric(
+                  horizontal: Dimensions.paddingSizeDefault,
+                  vertical: Dimensions.paddingSizeExtraLarge),
+              //alignment: Alignment.center,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SvgPicture.asset("assets/images/homepage/checkIconGreen.svg"),
+                  const Gap(10),
+                  Text(
+                    title,
+                    style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                        color: AppColor.PRIMARY, fontWeight: FontWeight.w600),
+                  )
+                ],
+              ),
+            )));
   }
 
   //get date functon from firebaseString Date

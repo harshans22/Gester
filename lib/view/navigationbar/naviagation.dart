@@ -35,7 +35,6 @@ class _NavgationScreenState extends State<NavigationScreen> {
     Future.microtask(() => updateProvider());
   }
 
-
   // @override
   // void didChangeDependencies() {
   //   super.didChangeDependencies();
@@ -46,6 +45,8 @@ class _NavgationScreenState extends State<NavigationScreen> {
 
   Future<void> updateProvider() async {
     try {
+ 
+     
       await Provider.of<UserDataProvider>(context, listen: false).updateUser();
       if (!mounted) return;
       await Provider.of<UserDataProvider>(context, listen: false)
@@ -72,7 +73,6 @@ class _NavgationScreenState extends State<NavigationScreen> {
       }
     }
   }
-  
 
   @override
   Widget build(BuildContext context) {

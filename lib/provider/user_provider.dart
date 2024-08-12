@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:gester/firebase_methods/firestore_methods.dart';
+import 'package:gester/models/all_meal_details.dart';
 import 'package:gester/models/stay_model.dart';
 import 'package:gester/models/usermodel.dart';
 import 'package:logger/logger.dart';
@@ -22,12 +23,28 @@ class UserDataProvider with ChangeNotifier {
   int get olddinner => _olddinner;
   int _totalMealopt = 0;
   int get totalMealopt => _totalMealopt;
+  MealCustomizationData _oldmorningData = MealCustomizationData();
+  MealCustomizationData get oldmorningData => _oldmorningData;
+  MealCustomizationData _oldeveningData = MealCustomizationData();
+  MealCustomizationData get oldeveningData => _oldeveningData;
+
+  setOldmealcustomization(
+      MealCustomizationData morning, MealCustomizationData evening) {
+    _oldmorningData = morning.copyWith();
+    _oldeveningData = evening.copyWith();
+    notifyListeners();
+  }
 
   setoldMealtype(int breakfast, int lunch, int dinner) {
     _totalMealopt = breakfast + lunch + dinner;
-    _oldbreakfast = _user!.breakfast;
-    _oldlunch = _user!.lunch;
-    _olddinner = _user!.dinner;
+    _oldbreakfast = breakfast;
+    _oldlunch = lunch;
+    _olddinner = dinner;
+    notifyListeners();
+  }
+
+  notifylistner() {
+    //to notifly listners
     notifyListeners();
   }
 
@@ -38,6 +55,7 @@ class UserDataProvider with ChangeNotifier {
         await FireStoreMethods().checkMealOptexists(_user!.userId);
       }
       setoldMealtype(_user!.breakfast, _user!.lunch, _user!.dinner);
+      setOldmealcustomization(_user!.morning, _user!.evening);
       notifyListeners();
     } catch (e) {
       throw Exception(e);
@@ -47,7 +65,12 @@ class UserDataProvider with ChangeNotifier {
   //get PG Details
   Future<void> getPGDetails() async {
     try {
-      _pgDetails = await FireStoreMethods().getPGDetails(_user!.pgNumber);
+      if (_user!.userType == "PGUser") {
+        _pgDetails = await FireStoreMethods().getPGDetails(_user!.pgNumber);
+      } else {
+        _pgDetails = PGDetails();
+      }
+
       notifyListeners();
     } catch (e) {
       logger.e(e.toString());

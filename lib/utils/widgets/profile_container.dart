@@ -32,13 +32,20 @@ class ProfileContainer extends StatelessWidget {
             GestureDetector(
               onTap: () {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => ProfileScreen()));
+                    MaterialPageRoute(builder: (context) => const ProfileScreen()));
               },
               // child:user!.photoUrl.isNotEmpty?NetworkImage(user.photoUrl):Icon(Icons.person) as ;
-              child: user!.photoUrl.isNotEmpty
-                  ? CircleAvatar(
-                      radius: 25,
-                      backgroundImage: NetworkImage(user.photoUrl),
+              child: user.photoUrl.isNotEmpty
+                  ? ClipRRect(
+                  borderRadius: BorderRadius.circular(30),
+                      child: Image.network(user.photoUrl,
+                      height: 60,
+                      width: 60,
+                      fit: BoxFit.cover,
+                      errorBuilder: (BuildContext context,
+                                Object exception, StackTrace? stackTrace) {
+      return Image.asset("assets/images/profile/dummy profile.webp",height: 60,width: 60,fit: BoxFit.cover,); 
+    },),
                     )
                   : Container(
                       decoration: BoxDecoration(

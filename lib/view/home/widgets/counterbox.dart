@@ -28,12 +28,10 @@ class CounterBox extends StatefulWidget {
 class _CheckBoxWigdetState extends State<CounterBox> {
   @override
   Widget build(BuildContext context) {
-    DateTime dateTime =
-        Provider.of<HomeScreenProvider>(context).dateTime;
+    DateTime dateTime = Provider.of<HomeScreenProvider>(context).dateTime;
     return Consumer<UserDataProvider>(builder: (context, userprovider, child) {
-      bool canbeAddedPGUser = (userprovider.user.userType == "PGUser")
-          ? ((userprovider.totalMealopt >= 3) ? false : true)
-          : true;
+      bool isPGUser = userprovider.user.subscription.subscriptionCode == "P004";
+      bool canbeAddedPGUser = ((userprovider.totalMealopt >= 3) ? false : true);
       bool canbeChanged = (widget.isbrekfast || widget.islunch)
           ? ((dateTime.hour < 5 || dateTime.hour >= 21) ? true : false)
           : ((dateTime.hour < 17 || dateTime.hour >= 21) ? true : false);
@@ -52,28 +50,36 @@ class _CheckBoxWigdetState extends State<CounterBox> {
           padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
           // margin:const EdgeInsets.only(left: Dimensions.paddingSizeSmall),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
-            color: (containsMeal && canbeChanged)
-                ? AppColor.bluecolor.withOpacity(0.3)
-                : Colors.transparent,
-            border: Border.all(
-                color: (containsMeal && canbeChanged)
-                    ? AppColor.bluecolor
-                    : Colors.grey),
-          ),
+              borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
+              color: isPGUser
+                  ? ((containsMeal && canbeChanged)
+                      ? AppColor.bluecolor.withOpacity(0.3)
+                      : Colors.transparent)
+                  : Colors.transparent,
+              border: Border.all(
+                color: isPGUser
+                    ? ((containsMeal && canbeChanged)
+                        ? AppColor.bluecolor
+                        : Colors.grey)
+                    : Colors.grey,
+              )),
           child: Column(
             children: [
-              SvgPicture.asset(canbeChanged
-                  ? (containsMeal
-                      ? "assets/images/homepage/checkIconblue.svg"
+              SvgPicture.asset(isPGUser
+                  ? (canbeChanged
+                      ? (containsMeal
+                          ? "assets/images/homepage/checkIconblue.svg"
+                          : "assets/images/homepage/checkIcon.svg")
                       : "assets/images/homepage/checkIcon.svg")
                   : "assets/images/homepage/checkIcon.svg"),
               const Gap(5),
               Text(
                 widget.name,
                 style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                    color: canbeChanged
-                        ? (containsMeal ? AppColor.bluecolor : Colors.grey)
+                    color: isPGUser
+                        ? (canbeChanged
+                            ? (containsMeal ? AppColor.bluecolor : Colors.grey)
+                            : Colors.grey)
                         : Colors.grey,
                     fontWeight: FontWeight.w500,
                     fontSize: 16),
@@ -86,10 +92,12 @@ class _CheckBoxWigdetState extends State<CounterBox> {
                     color: AppColor.WHITE,
                     borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                     border: Border.all(
-                        color: canbeAddedPGUser
-                            ? !canbeChanged
-                                ? AppColor.GREY_COLOR_LIGHT.withOpacity(0.4)
-                                : AppColor.bluecolor
+                        color: isPGUser
+                            ? (canbeAddedPGUser
+                                ? !canbeChanged
+                                    ? AppColor.GREY_COLOR_LIGHT.withOpacity(0.4)
+                                    : AppColor.bluecolor
+                                : AppColor.GREY_COLOR_LIGHT.withOpacity(0.4))
                             : AppColor.GREY_COLOR_LIGHT.withOpacity(0.4),
                         width: 0.8)),
                 child: containsMeal
@@ -99,32 +107,29 @@ class _CheckBoxWigdetState extends State<CounterBox> {
                         children: [
                           InkWell(
                               onTap: () {
-                                if (currentValue==1) {
+                                if (currentValue == 1) {
                                   Utils.showWithDoubleButton(
                                       context,
                                       "You are about to cancel a meal",
-                                      "Are you sure you want to cancel your ${widget.name}. This Action can be undone before ${(widget.isbrekfast || widget.islunch)? '5 AM' :'5 PM'}",
+                                      "Are you sure you want to cancel your ${widget.name}. This Action can be undone before ${(widget.isbrekfast || widget.islunch) ? '5 AM' : '5 PM'}",
                                       onYes: () {
-                                        userprovider.updateMealOpt(
-                                      currentValue - 1,
-                                      widget.isbrekfast,
-                                      widget.islunch,
-                                      widget.isdinner,
-                                      userprovider.user.userType,
-                                      true);
-                                        Navigator.pop(context);
-                                      });
-                                  
-                                } else if(!canbeChanged){
-                                     Utils.showWithSingleButton(
-                                      context,
-                                      "Your ${widget.name} is Locked. Cannot be changed after ${(widget.isbrekfast || widget.islunch)? '5 AM' :'5 PM'}",
-                                      buttonTitle: "Okay, Got it!",
-                                      onTap: () {
-                                        Navigator.pop(context);
-                                      });
-                                }else{
                                     userprovider.updateMealOpt(
+                                        currentValue - 1,
+                                        widget.isbrekfast,
+                                        widget.islunch,
+                                        widget.isdinner,
+                                        userprovider.user.userType,
+                                        true);
+                                    Navigator.pop(context);
+                                  });
+                                } else if (!canbeChanged) {
+                                  Utils.showWithSingleButton(context,
+                                      "Your ${widget.name} is Locked. Cannot be changed after ${(widget.isbrekfast || widget.islunch) ? '5 AM' : '5 PM'}",
+                                      buttonTitle: "Okay, Got it!", onTap: () {
+                                    Navigator.pop(context);
+                                  });
+                                } else {
+                                  userprovider.updateMealOpt(
                                       currentValue - 1,
                                       widget.isbrekfast,
                                       widget.islunch,
@@ -157,22 +162,18 @@ class _CheckBoxWigdetState extends State<CounterBox> {
                                       widget.islunch,
                                       widget.isdinner,
                                       userprovider.user.userType);
-                                } 
-                                else if (!canbeAddedPGUser && canbeChanged) {
+                                } else if (!canbeAddedPGUser && canbeChanged) {
                                   Utils.showWithSingleButton(context,
                                       "You cannot opt more than a total of 3 meals in a day",
                                       onTap: () {
                                     Navigator.pop(context);
                                   }, buttonTitle: "Okay, Got it!");
-                                } 
-                                else {
-                                   Utils.showWithSingleButton(
-                                      context,
-                                      "Your ${widget.name} is Locked. Cannot be changed after ${(widget.isbrekfast || widget.islunch)? '5 AM' :'5 PM'}",
-                                      buttonTitle: "Okay, Got it!",
-                                      onTap: () {
-                                        Navigator.pop(context);
-                                      });
+                                } else {
+                                  Utils.showWithSingleButton(context,
+                                      "Your ${widget.name} is Locked. Cannot be changed after ${(widget.isbrekfast || widget.islunch) ? '5 AM' : '5 PM'}",
+                                      buttonTitle: "Okay, Got it!", onTap: () {
+                                    Navigator.pop(context);
+                                  });
                                 }
                               },
                               child: Icon(Icons.add,
@@ -183,40 +184,46 @@ class _CheckBoxWigdetState extends State<CounterBox> {
                       )
                     : InkWell(
                         onTap: () {
-                          if (canbeChanged && canbeAddedPGUser) {
+                          if (!isPGUser) {
+                            Utils.showWithSingleButton(context,
+                                "Your currently don't have any Active Plan ",
+                                onTap: () {
+                              Navigator.pop(context);
+                            }, buttonTitle: 'Okay, Got it');
+                          }
+                          else if (canbeChanged && canbeAddedPGUser) {
                             userprovider.updateMealOpt(
                                 currentValue + 1,
                                 widget.isbrekfast,
                                 widget.islunch,
                                 widget.isdinner,
                                 userprovider.user.userType);
-                          } else if(canbeChanged && !canbeAddedPGUser){
-                            Utils.showWithSingleButton(
-                                      context,
-                                      "You cannot opt more than a total of 3 meals in a day",
-                                      onTap: () {
-                                    Navigator.pop(context);
-                                  }, buttonTitle: "Okay, Got it!");
-                          }
-                          else {
-                            Utils.showWithSingleButton(
-                                      context,
-                                      "Your ${widget.name} is Locked. Cannot be changed after ${(widget.isbrekfast || widget.islunch)? '5 AM' :'5 PM'}",
-                                      buttonTitle: "Okay, Got it!",
-                                      onTap: () {
-                                        Navigator.pop(context);
-                                      });
+                          } else if (canbeChanged && !canbeAddedPGUser) {
+                            Utils.showWithSingleButton(context,
+                                "You cannot opt more than a total of 3 meals in a day",
+                                onTap: () {
+                              Navigator.pop(context);
+                            }, buttonTitle: "Okay, Got it!");
+                          } else {
+                            Utils.showWithSingleButton(context,
+                                "Your ${widget.name} is Locked. Cannot be changed after ${(widget.isbrekfast || widget.islunch) ? '5 AM' : '5 PM'}",
+                                buttonTitle: "Okay, Got it!", onTap: () {
+                              Navigator.pop(context);
+                            });
                           }
                         },
                         child: Text(
                           "ADD",
                           style:
                               Theme.of(context).textTheme.bodyLarge!.copyWith(
-                                    color: canbeAddedPGUser
-                                        ? !canbeChanged
-                                            ? AppColor.GREY_COLOR_LIGHT
-                                                .withOpacity(0.4)
-                                            : AppColor.bluecolor
+                                    color: isPGUser
+                                        ? (canbeAddedPGUser
+                                            ? !canbeChanged
+                                                ? AppColor.GREY_COLOR_LIGHT
+                                                    .withOpacity(0.4)
+                                                : AppColor.bluecolor
+                                            : AppColor.GREY_COLOR_LIGHT
+                                                .withOpacity(0.4))
                                         : AppColor.GREY_COLOR_LIGHT
                                             .withOpacity(0.4),
                                     fontWeight: FontWeight.w800,
