@@ -2,20 +2,45 @@ import 'dart:typed_data';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:gester/provider/user_documents_provider.dart';
 import 'package:gester/resources/color.dart';
 import 'package:gester/resources/dimensions.dart';
 import 'package:gester/utils/utilities.dart';
 import 'package:gester/view/stay/widgets/file_upload_container.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:logger/logger.dart';
+import 'package:provider/provider.dart';
 
 class MyDocuments extends StatefulWidget {
-  const MyDocuments({super.key});
+  final String userId;
+  const MyDocuments({super.key, required this.userId});
 
   @override
   State<MyDocuments> createState() => _MyDocumentsState();
 }
 
 class _MyDocumentsState extends State<MyDocuments> {
+  var logger = Logger();
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getDocuments();
+  }
+
+  
+
+  
+  Future<void> getDocuments() async {
+    //get documents from api
+    try {
+      await Provider.of<UserKYCDocumentsProvider>(context)
+          .getKYCDocuments(widget.userId);
+    } catch (e) {
+      logger.e(e.toString());
+    }
+  }
+
   Uint8List? _adhaarFront;
   Uint8List? _adhaarBack;
   Uint8List? _workProof;
@@ -24,6 +49,8 @@ class _MyDocumentsState extends State<MyDocuments> {
 
   @override
   Widget build(BuildContext context) {
+    final documents =
+        Provider.of<UserKYCDocumentsProvider>(context).kycDocuments;
     Future<Uint8List?> selectImage(BuildContext context) async {
       Uint8List? selectedPhoto;
       showDialog(
@@ -106,7 +133,6 @@ class _MyDocumentsState extends State<MyDocuments> {
             centerTitle: true,
             elevation: 5,
           ),
-          
           body: Padding(
             padding: const EdgeInsets.symmetric(
                 horizontal: Dimensions.paddingSizeSmall),
@@ -123,17 +149,16 @@ class _MyDocumentsState extends State<MyDocuments> {
                 Row(
                   children: [
                     (_adhaarFront == null)
-                        ? FileUploadContainer(
-                            image: "assets/images/stay/upload.svg",
-                            line1: "Upload Aadhaar Front",
-                            line2: "",
-                            onTap: ()async {
-                            
-                            //   _adhaarFront=  await selectImage(context);
-                            // setState(() {
-                              
-                            // });
-                            })
+                        ? ((documents!.adhaarBack.isNotEmpty)
+                            ? Image.network(documents.adhaarBack)
+                            : FileUploadContainer(
+                                image: "assets/images/stay/upload.svg",
+                                line1: "Upload Aadhaar Front",
+                                line2: "",
+                                onTap: () async {
+                                  _adhaarFront = await selectImage(context);
+                                  setState(() {});
+                                }))
                         : Image.memory(_adhaarFront!),
                     const Gap(5),
                     FileUploadContainer(
@@ -180,7 +205,7 @@ class _MyDocumentsState extends State<MyDocuments> {
                         line1: "Upload passport size photo",
                         line2: "Upload only .jpeg, jpg and png format",
                         onTap: () {}),
-                        Flexible(child: Container())
+                    Flexible(child: Container())
                   ],
                 ),
               ],

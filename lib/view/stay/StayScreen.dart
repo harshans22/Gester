@@ -180,7 +180,7 @@ class StayScreen extends StatelessWidget {
                                 context,
                                 MaterialPageRoute(
                                     builder: ((context) =>
-                                        const MyDocuments())));
+                                         MyDocuments(userId: userdetails.userId,))));
                           }
                         },
                         image: "assets/images/stay/mydocuments.svg",

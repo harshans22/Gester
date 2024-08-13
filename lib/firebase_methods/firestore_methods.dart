@@ -1,5 +1,9 @@
+import 'dart:typed_data';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
+import 'package:gester/firebase_methods/index.dart';
 import 'package:gester/models/all_meal_details.dart';
 import 'package:gester/models/stay_model.dart';
 import 'package:gester/models/usermodel.dart';
@@ -46,7 +50,6 @@ class FireStoreMethods {
                   status: "InActive")
               .toJson(),
         });
-      
       }
     } catch (e) {
       logger.e(e.toString());
@@ -257,11 +260,7 @@ class FireStoreMethods {
             !snapshot.exists ? {} : snapshot.data() as Map<String, dynamic>,
             docId,
             (mealoptSnapshot.exists)
-                ? {
-                    "breakfast": 0,
-                    "lunch": 0,
-                    "dinner": 0,
-                  }
+                ? mealoptSnapshot.data() as Map<String,dynamic>
                 : {},
             (!kycdata.exists) ? {} : kycdata.data() as Map<String, dynamic>,
             (!mealcustomization.exists)
@@ -812,5 +811,64 @@ class FireStoreMethods {
       throw Exception("Error while Meal optimization : $e");
     }
     return MealCustomizationData();
+  }
+
+  //upload KYC documents
+  Future<void> uploadKYCDocuments({
+    required String userdocid,
+    required Uint8List adhaarFront,
+    required Uint8List adhaarBack,
+    required Uint8List workProof,
+    required Uint8List photo,
+    required Uint8List collegeProof,
+  }) async {
+    try {
+      final adhaarFrontUrl = await StoargeMethods()
+          .uploadImageToStorage(userdocid, adhaarFront, "UserDocuments");
+      final adhaarBackUrl = await StoargeMethods()
+          .uploadImageToStorage(userdocid, adhaarBack, "UserDocuments");
+      final workProofUrl = await StoargeMethods()
+          .uploadImageToStorage(userdocid, workProof, "UserDocuments");
+      final photoUrl = await StoargeMethods()
+          .uploadImageToStorage(userdocid, photo, "UserDocuments");
+      final collegeProofUrl = await StoargeMethods()
+          .uploadImageToStorage(userdocid, collegeProof, "UserDocuments");
+
+
+      await _firestore
+          .collection("User")
+          .doc(userdocid)
+          .collection("KYCData")
+          .doc("main")
+          .set({
+            "documentDetails":KYCDocuments(
+              adhaarFront: adhaarFrontUrl,
+              adhaarBack: adhaarBackUrl,
+              workProof: workProofUrl,
+              photo: photoUrl,
+              collegeProof: collegeProofUrl
+            ).toMap()
+          }, SetOptions(merge: true));
+    } catch (e) {
+      throw Exception("Error while uploading KYC documents : $e");
+    }
+  }
+
+
+
+  //getkyc data
+  Future<KYCDocuments> getKYCDocuments(String userdocid) async {
+    try {
+      DocumentSnapshot snapshot = await _firestore
+          .collection("User")
+          .doc(userdocid)
+          .collection("KYCData")
+          .doc("main")
+          .get();
+      return KYCDocuments.fromMap(
+          !snapshot.exists ? {} : (snapshot.data() as Map<String, dynamic>)["documentDetails"]??{});
+    } catch (e) {
+      throw Exception("Error while fetching KYC documents : $e");
+    }
   }
 }

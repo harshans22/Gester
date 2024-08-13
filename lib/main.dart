@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:gester/firebase_options.dart';
 import 'package:gester/provider/meal_customization_provider.dart';
 import 'package:gester/provider/menu_provider.dart';
+import 'package:gester/provider/user_documents_provider.dart';
 import 'package:gester/provider/user_provider.dart';
 import 'package:gester/resources/theme.dart';
 import 'package:gester/view/auth/screens/sign_in_screen.dart';
@@ -58,6 +59,7 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider(create: (_) => ProfileProvider()),
         ChangeNotifierProvider(create: (_) => MenuProvider()),
         ChangeNotifierProvider(create: (_) => MealCustomizationProvider()),
+        ChangeNotifierProvider(create: (_) => UserKYCDocumentsProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

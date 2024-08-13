@@ -1,3 +1,6 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:convert';
+
 import 'package:gester/models/all_meal_details.dart';
 
 //TODO: seperate the meal customization data from user data
@@ -162,4 +165,41 @@ class Accomodation {
       );
   Map<String, dynamic> toJson() =>
       {'Rent': rent, 'Security Deposite': securityDeposit};
+}
+
+class KYCDocuments {
+  final String adhaarFront;
+  final String adhaarBack;
+  final String workProof;
+  final String collegeProof;
+  final String photo;
+  KYCDocuments({
+    required this.adhaarFront,
+    required this.adhaarBack,
+    required this.workProof,
+    required this.collegeProof,
+    required this.photo,
+  });
+  
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'adhaarFront': adhaarFront,
+      'adhaarBack': adhaarBack,
+      'workProof': workProof,
+      'collegeProof': collegeProof,
+      'photo': photo,
+    };
+  }
+
+  factory KYCDocuments.fromMap(Map<String, dynamic> map) {
+    return KYCDocuments(
+      adhaarFront: map['Aadhaar_front']??"",
+      adhaarBack: map['Aadhaar_back']??"",
+      workProof: map['Work_proof']??"",
+      collegeProof: map['College_proof']??"",
+      photo: map['Passport_photo']??"",
+    );
+  }
+
 }
