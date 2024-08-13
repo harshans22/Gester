@@ -37,13 +37,13 @@ class UserKYCDocumentsProvider with ChangeNotifier {
   }
 
   Future<void> getKYCDocuments(String userId) async {
-    setisLoading(true);
+
     try {
       _kycDocuments = await FireStoreMethods().getKYCDocuments(userId);
       notifyListeners();
     } catch (e) {
       logger.e(e.toString());
     }
-    setisLoading(false);
+  
   }
 }

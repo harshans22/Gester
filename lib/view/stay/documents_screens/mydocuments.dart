@@ -21,16 +21,7 @@ class MyDocuments extends StatefulWidget {
 
 class _MyDocumentsState extends State<MyDocuments> {
   var logger = Logger();
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    getDocuments();
-  }
 
-  
-
-  
   Future<void> getDocuments() async {
     //get documents from api
     try {
@@ -41,82 +32,115 @@ class _MyDocumentsState extends State<MyDocuments> {
     }
   }
 
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+    getDocuments();
+  }
+
   Uint8List? _adhaarFront;
   Uint8List? _adhaarBack;
   Uint8List? _workProof;
   Uint8List? _collegeProof;
   Uint8List? _photo;
 
+  //for selecting image
+  selectImage(BuildContext context, int imageNumber) async {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return SimpleDialog(
+            surfaceTintColor: Colors.transparent,
+            backgroundColor: AppColor.WHITE,
+            children: [
+              SimpleDialogOption(
+                padding: const EdgeInsets.all(20),
+                child: const Row(
+                  children: [
+                    Icon(Icons.photo_camera),
+                    Gap(10),
+                    Text("Take a photo"),
+                  ],
+                ),
+                onPressed: () async {
+                  Navigator.of(context).pop();
+                  Uint8List file = await Utils.pickImage(
+                    ImageSource.camera,
+                  );
+                },
+              ),
+              const Divider(
+                color: AppColor.BG_COLOR,
+                height: 1,
+                thickness: 2,
+              ),
+              SimpleDialogOption(
+                padding: const EdgeInsets.all(20),
+                child: const Row(
+                  children: [
+                    Icon(Icons.photo_library),
+                    Gap(10),
+                    Text("Choose from gallery"),
+                  ],
+                ),
+                onPressed: () async {
+                  Navigator.of(context).pop();
+                  Uint8List file = await Utils.pickImage(
+                    ImageSource.gallery,
+                  );
+                  switch (imageNumber) {
+                    case 1:
+                      setState(() {
+                        _adhaarFront = file;
+                      });
+                      break;
+                    case 2:
+                      setState(() {
+                        _adhaarBack = file;
+                      });
+                      break;
+                    case 3:
+                      setState(() {
+                        _workProof = file;
+                      });
+                      break;
+                    case 4:
+                      setState(() {
+                        _collegeProof = file;
+                      });
+                      break;
+                    case 5:
+                      setState(() {
+                        _photo = file;
+                      });
+                      break;
+                    default:
+                      return;
+                  }
+                },
+              ),
+              const Divider(
+                color: AppColor.BG_COLOR,
+                height: 1,
+                thickness: 2,
+              ),
+              SimpleDialogOption(
+                padding: const EdgeInsets.all(20),
+                child: const Text("Cancel"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     final documents =
         Provider.of<UserKYCDocumentsProvider>(context).kycDocuments;
-    Future<Uint8List?> selectImage(BuildContext context) async {
-      Uint8List? selectedPhoto;
-      showDialog(
-          context: context,
-          builder: (context) {
-            return SimpleDialog(
-              surfaceTintColor: Colors.transparent,
-              backgroundColor: AppColor.WHITE,
-              children: [
-                SimpleDialogOption(
-                  padding: const EdgeInsets.all(20),
-                  child: const Row(
-                    children: [
-                      Icon(Icons.photo_camera),
-                      Gap(10),
-                      Text("Take a photo"),
-                    ],
-                  ),
-                  onPressed: () async {
-                    Navigator.of(context).pop();
-                    Uint8List file = await Utils.pickImage(
-                      ImageSource.camera,
-                    );
-
-                    selectedPhoto = file;
-                  },
-                ),
-                const Divider(
-                  color: AppColor.BG_COLOR,
-                  height: 1,
-                  thickness: 2,
-                ),
-                SimpleDialogOption(
-                  padding: const EdgeInsets.all(20),
-                  child: const Row(
-                    children: [
-                      Icon(Icons.photo_library),
-                      Gap(10),
-                      Text("Choose from gallery"),
-                    ],
-                  ),
-                  onPressed: () async {
-                    Navigator.of(context).pop();
-                    Uint8List file = await Utils.pickImage(
-                      ImageSource.gallery,
-                    );
-                    selectedPhoto = file;
-                  },
-                ),
-                const Divider(
-                  color: AppColor.BG_COLOR,
-                  height: 1,
-                  thickness: 2,
-                ),
-                SimpleDialogOption(
-                  padding: const EdgeInsets.all(20),
-                  child: const Text("Cancel"),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
-            );
-          });
-      return selectedPhoto;
-    }
 
     return Center(
       child: ConstrainedBox(
@@ -149,17 +173,90 @@ class _MyDocumentsState extends State<MyDocuments> {
                 Row(
                   children: [
                     (_adhaarFront == null)
-                        ? ((documents!.adhaarBack.isNotEmpty)
-                            ? Image.network(documents.adhaarBack)
+                        ? ((documents!.adhaarFront.isNotEmpty)
+                            ? Flexible(
+                                fit: FlexFit.tight,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(
+                                      Dimensions.radiusDefault),
+                                  child: Stack(
+                                    fit: StackFit.passthrough,
+                                    children: [
+                                      Image.network(
+                                        documents.adhaarFront,
+                                        height: 100,
+                                        fit: BoxFit.fill,
+                                        errorBuilder: (BuildContext context,
+                                            Object exception,
+                                            StackTrace? stackTrace) {
+                                              logger.e(exception);
+                                          return CircularProgressIndicator();
+                                        },
+                                      ),
+                                      Container(
+                                        height: 100,
+                                        color: Colors.black.withOpacity(0.4),
+                                        child: Center(
+                                          child: TextButton(
+                                              onPressed: () {
+                                                selectImage(context, 1);
+                                              },
+                                              child: const Icon(
+                                                Icons.edit,
+                                                color: AppColor.WHITE,
+                                                size: 35,
+                                              )),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              )
                             : FileUploadContainer(
                                 image: "assets/images/stay/upload.svg",
                                 line1: "Upload Aadhaar Front",
                                 line2: "",
                                 onTap: () async {
-                                  _adhaarFront = await selectImage(context);
-                                  setState(() {});
+                                  try {
+                                    await selectImage(context, 1);
+                                  } catch (e) {
+                                    logger.e(e.toString());
+                                  }
                                 }))
-                        : Image.memory(_adhaarFront!),
+                        : Flexible(
+                            fit: FlexFit.tight,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(
+                                  Dimensions.radiusDefault),
+                              child: Stack(
+                                fit: StackFit.passthrough,
+                                children: [
+                                  Image.memory(
+                                    _adhaarFront!,
+                                    height: 100,
+                                    fit: BoxFit.fill,
+                                  ),
+                                  Container(
+                                    height: 100,
+                                    color: Colors.black.withOpacity(0.4),
+                                    child: Center(
+                                      child: IconButton(
+                                          onPressed: () {
+                                            setState(() {
+                                              _adhaarFront = null;
+                                            });
+                                          },
+                                          icon: const Icon(
+                                            Icons.delete,
+                                            color: AppColor.WHITE,
+                                            size: 35,
+                                          )),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
                     const Gap(5),
                     FileUploadContainer(
                         image: "assets/images/stay/upload.svg",
