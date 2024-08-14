@@ -47,7 +47,7 @@ class FireStoreMethods {
                   daysLeft: 30,
                   numberOfMeals: 0,
                   planName: "No Plan",
-                  status: "InActive")
+                  status: "Inactive")
               .toJson(),
         });
       }
@@ -816,25 +816,39 @@ class FireStoreMethods {
   //upload KYC documents
   Future<void> uploadKYCDocuments({
     required String userdocid,
-    required Uint8List adhaarFront,
-    required Uint8List adhaarBack,
-    required Uint8List workProof,
-    required Uint8List photo,
-    required Uint8List collegeProof,
+    required Uint8List? adhaarFront,
+    required Uint8List? adhaarBack,
+    required Uint8List? workProof,
+    required Uint8List? photo,
+    required Uint8List? collegeProof,
   }) async {
     try {
-      final adhaarFrontUrl = await StoargeMethods()
+      String adhaarfrontUrl="";
+      String adhaarBackUrl='';
+      String workProofUrl='';
+      String photoUrl='';
+      String collegeProofUrl='';
+      if(adhaarFront!=null){
+      await StoargeMethods()
           .uploadImageToStorage(userdocid, adhaarFront, "UserDocuments");
-      final adhaarBackUrl = await StoargeMethods()
+      }
+      if(adhaarBack!=null){
+      await StoargeMethods()
           .uploadImageToStorage(userdocid, adhaarBack, "UserDocuments");
-      final workProofUrl = await StoargeMethods()
+      }
+      if(workProof!=null){
+      await StoargeMethods()
           .uploadImageToStorage(userdocid, workProof, "UserDocuments");
-      final photoUrl = await StoargeMethods()
+      }
+      if(photo!=null){
+      await StoargeMethods()
           .uploadImageToStorage(userdocid, photo, "UserDocuments");
-      final collegeProofUrl = await StoargeMethods()
+      }
+      if(collegeProof!=null){
+      await StoargeMethods()
           .uploadImageToStorage(userdocid, collegeProof, "UserDocuments");
-
-
+      }
+      
       await _firestore
           .collection("User")
           .doc(userdocid)
@@ -842,7 +856,7 @@ class FireStoreMethods {
           .doc("main")
           .set({
             "documentDetails":KYCDocuments(
-              adhaarFront: adhaarFrontUrl,
+              adhaarFront: adhaarfrontUrl,
               adhaarBack: adhaarBackUrl,
               workProof: workProofUrl,
               photo: photoUrl,

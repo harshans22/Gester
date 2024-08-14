@@ -89,8 +89,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                             const Gap(10),
                             TextCommonButton(
-                              title: "Active",
-                              color: AppColor.GREEN_COLOR,
+                              title:  userprovider.user.subscription.subscriptionCode=="P000"?"Inactive":"Active",
+                              color: userprovider.user.subscription.subscriptionCode=="P000"? AppColor.RED_COLOR:AppColor.GREEN_COLOR,
                               textColor: AppColor.WHITE,
                               onTap: () {},
                               fontsize: 12,

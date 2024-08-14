@@ -9,8 +9,6 @@ class StoargeMethods {
       String userId, Uint8List file,String childName) async {
     Reference ref =
         _storage.ref().child(childName).child(userId);
-
-    
     UploadTask uploadTask = ref.putData(file);
     TaskSnapshot snap = await uploadTask; //  metadata data of uploaded file
     // to download link of our image which is stored in firestore

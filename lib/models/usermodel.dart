@@ -49,21 +49,21 @@ class UserData {
     MealCustomizationData? evening,
   })  : morning = morning ??
             MealCustomizationData(
-              numberofRoti: 4,
-              riceQuantity: 0.2,
+              numberofRoti: 3,
+              riceQuantity: 0.5,
               daal: true,
-              salad: true,
+              salad: false,
               sukhiSabji: true,
-              raita: true,
+              raita: false,
             ),
         evening = evening ??
             MealCustomizationData(
-              numberofRoti: 4,
-              riceQuantity: 0.2,
+              numberofRoti: 3,
+              riceQuantity: 0.5,
               daal: true,
-              salad: true,
+              salad: false,
               sukhiSabji: true,
-              raita: true,
+              raita: false,
             );
 
   factory UserData.fromjson(
@@ -184,11 +184,11 @@ class KYCDocuments {
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      'adhaarFront': adhaarFront,
-      'adhaarBack': adhaarBack,
-      'workProof': workProof,
-      'collegeProof': collegeProof,
-      'photo': photo,
+      'Aadhaar_front': adhaarFront,
+      'Aadhaar_back': adhaarBack,
+      'Work_proof': workProof,
+      'College_proof': collegeProof,
+      'Passport_photo': photo,
     };
   }
 

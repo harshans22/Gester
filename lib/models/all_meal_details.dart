@@ -19,10 +19,10 @@ class MealCustomizationData {
   MealCustomizationData({
     this.numberofRoti=4,
     this.riceQuantity=0.2,
-    this.daal=true,
-    this.salad=true,
-    this.sukhiSabji=true,
-    this.raita=true,
+    this.daal=false,
+    this.salad=false,
+    this.sukhiSabji=false,
+    this.raita=false,
   });
 
 
@@ -86,10 +86,10 @@ class MealCustomizationData {
     return MealCustomizationData(
       numberofRoti: map['numberofRoti']??4,
       riceQuantity: map['riceQuantity']??0.2,
-      daal: map['daal']??true,
-      salad: map['salad']??true,
-      sukhiSabji: map['sukhiSabji']??true,
-      raita: map['raita']??true,
+      daal: map['daal']??false,
+      salad: map['salad']??false,
+      sukhiSabji: map['sukhiSabji']??false,
+      raita: map['raita']??false,
     );
   }
 

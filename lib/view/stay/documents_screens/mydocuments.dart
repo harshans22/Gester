@@ -6,7 +6,8 @@ import 'package:gester/provider/user_documents_provider.dart';
 import 'package:gester/resources/color.dart';
 import 'package:gester/resources/dimensions.dart';
 import 'package:gester/utils/utilities.dart';
-import 'package:gester/view/stay/widgets/file_upload_container.dart';
+import 'package:gester/utils/widgets/textbutton.dart';
+import 'package:gester/view/stay/widgets/file_upload_contain.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
@@ -140,7 +141,7 @@ class _MyDocumentsState extends State<MyDocuments> {
   @override
   Widget build(BuildContext context) {
     final documents =
-        Provider.of<UserKYCDocumentsProvider>(context).kycDocuments;
+        Provider.of<UserKYCDocumentsProvider>(context,listen: true).kycDocuments;
 
     return Center(
       child: ConstrainedBox(
@@ -172,97 +173,47 @@ class _MyDocumentsState extends State<MyDocuments> {
                 const Gap(10),
                 Row(
                   children: [
-                    (_adhaarFront == null)
-                        ? ((documents!.adhaarFront.isNotEmpty)
-                            ? Flexible(
-                                fit: FlexFit.tight,
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(
-                                      Dimensions.radiusDefault),
-                                  child: Stack(
-                                    fit: StackFit.passthrough,
-                                    children: [
-                                      Image.network(
-                                        documents.adhaarFront,
-                                        height: 100,
-                                        fit: BoxFit.fill,
-                                        errorBuilder: (BuildContext context,
-                                            Object exception,
-                                            StackTrace? stackTrace) {
-                                              logger.e(exception);
-                                          return CircularProgressIndicator();
-                                        },
-                                      ),
-                                      Container(
-                                        height: 100,
-                                        color: Colors.black.withOpacity(0.4),
-                                        child: Center(
-                                          child: TextButton(
-                                              onPressed: () {
-                                                selectImage(context, 1);
-                                              },
-                                              child: const Icon(
-                                                Icons.edit,
-                                                color: AppColor.WHITE,
-                                                size: 35,
-                                              )),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              )
-                            : FileUploadContainer(
-                                image: "assets/images/stay/upload.svg",
-                                line1: "Upload Aadhaar Front",
-                                line2: "",
-                                onTap: () async {
-                                  try {
-                                    await selectImage(context, 1);
-                                  } catch (e) {
-                                    logger.e(e.toString());
-                                  }
-                                }))
-                        : Flexible(
-                            fit: FlexFit.tight,
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(
-                                  Dimensions.radiusDefault),
-                              child: Stack(
-                                fit: StackFit.passthrough,
-                                children: [
-                                  Image.memory(
-                                    _adhaarFront!,
-                                    height: 100,
-                                    fit: BoxFit.fill,
-                                  ),
-                                  Container(
-                                    height: 100,
-                                    color: Colors.black.withOpacity(0.4),
-                                    child: Center(
-                                      child: IconButton(
-                                          onPressed: () {
-                                            setState(() {
-                                              _adhaarFront = null;
-                                            });
-                                          },
-                                          icon: const Icon(
-                                            Icons.delete,
-                                            color: AppColor.WHITE,
-                                            size: 35,
-                                          )),
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
-                    const Gap(5),
-                    FileUploadContainer(
-                        image: "assets/images/stay/upload.svg",
-                        line1: "Upload Aadhaar Back",
+                    FileUpload(
+                        line1: "Upload Adhaar Front",
                         line2: "",
-                        onTap: () {}),
+                        currentImage: _adhaarFront,
+                        oldImage: documents!.adhaarFront,
+                        onedit: () {
+                          selectImage(context, 1);
+                        },
+                        ondelete: () {
+                          setState(() {
+                            _adhaarFront = null;
+                          });
+                        },
+                        onUpload: () async {
+                          try {
+                            await selectImage(context, 1);
+                          } catch (e) {
+                            logger.e(e.toString());
+                          }
+                        }),
+                    const Gap(5),
+                    FileUpload(
+                        line1: "Upload Adhaar Back",
+                        line2: "",
+                        currentImage: _adhaarBack,
+                        oldImage: documents.adhaarBack,
+                        onedit: () {
+                          selectImage(context, 2);
+                        },
+                        ondelete: () {
+                          setState(() {
+                            _adhaarBack = null;
+                          });
+                        },
+                        onUpload: () async {
+                          try {
+                            await selectImage(context, 2);
+                          } catch (e) {
+                            logger.e(e.toString());
+                          }
+                        }),
                   ],
                 ),
                 const Gap(20),
@@ -274,18 +225,49 @@ class _MyDocumentsState extends State<MyDocuments> {
                 const Gap(20),
                 Row(
                   children: [
-                    FileUploadContainer(
-                        image: "assets/images/stay/upload.svg",
+                    FileUpload(
                         line1: "Upload work proof",
-                        line2: "Offer letter, internship letter or salary slip",
-                        onTap: () {}),
-                    const Gap(5),
-                    FileUploadContainer(
-                        image: "assets/images/stay/upload.svg",
-                        line1: "Upload College proof ",
                         line2:
-                            "Admission letter, college ID or enrollement recipt",
-                        onTap: () {}),
+                            "Offer letter, internship letter and salary slip",
+                        currentImage: _workProof,
+                        oldImage: documents.workProof,
+                        onedit: () {
+                          selectImage(context, 3);
+                        },
+                        ondelete: () {
+                          setState(() {
+                            _workProof = null;
+                          });
+                        },
+                        onUpload: () async {
+                          try {
+                            await selectImage(context, 3);
+                          } catch (e) {
+                            logger.e(e.toString());
+                          }
+                        }),
+                    const Gap(5),
+                    FileUpload(
+                        line1: "Upload College proof",
+                        line2:
+                            "Admission letter, Collge ID or enrollment recipt",
+                        currentImage: _collegeProof,
+                        oldImage: documents.collegeProof,
+                        onedit: () {
+                          selectImage(context, 4);
+                        },
+                        ondelete: () {
+                          setState(() {
+                            _collegeProof = null;
+                          });
+                        },
+                        onUpload: () async {
+                          try {
+                            await selectImage(context, 4);
+                          } catch (e) {
+                            logger.e(e.toString());
+                          }
+                        }),
                   ],
                 ),
                 const Gap(20),
@@ -297,15 +279,69 @@ class _MyDocumentsState extends State<MyDocuments> {
                 const Gap(20),
                 Row(
                   children: [
-                    FileUploadContainer(
-                        image: "assets/images/stay/upload.svg",
+                    FileUpload(
                         line1: "Upload passport size photo",
-                        line2: "Upload only .jpeg, jpg and png format",
-                        onTap: () {}),
+                        line2: "file format should be .jpeg, .jpg and png",
+                        currentImage: _photo,
+                        oldImage: documents.photo,
+                        onedit: () {
+                          selectImage(context, 5);
+                        },
+                        ondelete: () {
+                          setState(() {
+                            _photo = null;
+                          });
+                        },
+                        onUpload: () async {
+                          try {
+                            await selectImage(context, 5);
+                          } catch (e) {
+                            logger.e(e.toString());
+                          }
+                        }),
                     Flexible(child: Container())
                   ],
                 ),
               ],
+            ),
+          ),
+          bottomNavigationBar: IntrinsicHeight(
+            child: Container(
+              padding: const EdgeInsets.symmetric(
+                  horizontal: Dimensions.paddingSizeDefault,
+                  vertical: Dimensions.paddingSizeDefault),
+              decoration: BoxDecoration(
+                color: AppColor.WHITE,
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColor.GREY_COLOR_LIGHT.withOpacity(0.3),
+                    spreadRadius: 1,
+                    blurRadius: 5,
+                    offset: const Offset(0, -1),
+                  ),
+                ],
+              ),
+              child: Consumer<UserKYCDocumentsProvider>(
+                  builder: (context, value, child) {
+                return TextCommonButton(
+                  title: "Save & continue",
+                  color: AppColor.PRIMARY,
+                  textColor: AppColor.WHITE,
+                  isloader: value.isLoading,
+                  onTap: () async {
+                    try{
+                        await value.uploadKYCDocuments(_adhaarFront, _adhaarBack,
+                        _workProof, _collegeProof, _photo, widget.userId);
+                    }catch(e){
+                      logger.e(e.toString());
+                    }
+                    if (!context.mounted) return;
+                    Navigator.pop(context);
+                    Utils.showWithNoButton(context,
+                        title: "Documents Uploaded Successfully");
+                  },
+                );
+              }),
             ),
           ),
         ),
