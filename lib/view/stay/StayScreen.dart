@@ -127,7 +127,7 @@ class StayScreen extends StatelessWidget {
                   ),
                   const Gap(20),
                   const Text(
-                    "Accomodation Details",
+                    "Accommodation Details",
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w700,
@@ -145,10 +145,10 @@ class StayScreen extends StatelessWidget {
                   const Gap(10),
                   Row(children: [
                     AccomodationContainer(
-                        title: "Start Date",
+                        title: "Start date",
                         content: Utils.getDate(stayDetails.startDate)),
                     AccomodationContainer(
-                        title: "Security Deposit",
+                        title: "Security deposit",
                         content: '₹${stayDetails.securityDeposit}'),
                     AccomodationContainer(
                       title: "Rent",
@@ -197,21 +197,18 @@ class StayScreen extends StatelessWidget {
                               Navigator.pop(context);
                             }, buttonTitle: "Okay");
                           } else {
-                            if (kIsWeb) {
-                              launchUrl(Uri.parse(
-                                  "https://firebasestorage.googleapis.com/v0/b/gester-ae70f.appspot.com/o/User_documents%2Fgester_document.pdf?alt=media&token=df1424a8-0223-4184-987e-5a77e83f945b"));
-                            } else {
+                           
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                       builder: ((context) =>
                                           const KYCAgreementScreen())));
-                            }
+                            
                           }
                         },
                         image: "assets/images/stay/kyc icon.svg",
                         line1: "View KYC ",
-                        line2: "Documents",
+                        line2: "agreement",
                       ),
                       Gap(5),
                       DocumentsContainer(
@@ -223,21 +220,18 @@ class StayScreen extends StatelessWidget {
                               Navigator.pop(context);
                             }, buttonTitle: "Okay");
                           } else {
-                            if (kIsWeb) {
-                              launchUrl(Uri.parse(
-                                  "https://firebasestorage.googleapis.com/v0/b/gester-ae70f.appspot.com/o/User_documents%2Fgester_document.pdf?alt=media&token=df1424a8-0223-4184-987e-5a77e83f945b"));
-                            } else {
+                           
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                       builder: ((context) =>
                                           const PoliceVerificationScreen())));
-                            }
+                            
                           }
                         },
                         image: "assets/images/stay/police icon.svg",
-                        line1: "View Police",
-                        line2: "Verification",
+                        line1: "View police",
+                        line2: "verification",
                       ),
                     ],
                   ),

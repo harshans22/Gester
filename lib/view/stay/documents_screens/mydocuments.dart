@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:gap/gap.dart';
 import 'package:gester/provider/user_documents_provider.dart';
 import 'package:gester/resources/color.dart';
@@ -22,7 +23,7 @@ class MyDocuments extends StatefulWidget {
 
 class _MyDocumentsState extends State<MyDocuments> {
   var logger = Logger();
-
+  bool isloading = true;
   Future<void> getDocuments() async {
     //get documents from api
     try {
@@ -30,6 +31,12 @@ class _MyDocumentsState extends State<MyDocuments> {
           .getKYCDocuments(widget.userId);
     } catch (e) {
       logger.e(e.toString());
+    }finally {
+      if (mounted) {
+        setState(() {
+          isloading = false;
+        });
+      }
     }
   }
 
@@ -69,6 +76,35 @@ class _MyDocumentsState extends State<MyDocuments> {
                   Uint8List file = await Utils.pickImage(
                     ImageSource.camera,
                   );
+                  switch (imageNumber) {
+                    case 1:
+                      setState(() {
+                        _adhaarFront = file;
+                      });
+                      break;
+                    case 2:
+                      setState(() {
+                        _adhaarBack = file;
+                      });
+                      break;
+                    case 3:
+                      setState(() {
+                        _workProof = file;
+                      });
+                      break;
+                    case 4:
+                      setState(() {
+                        _collegeProof = file;
+                      });
+                      break;
+                    case 5:
+                      setState(() {
+                        _photo = file;
+                      });
+                      break;
+                    default:
+                      return;
+                  }
                 },
               ),
               const Divider(
@@ -141,7 +177,8 @@ class _MyDocumentsState extends State<MyDocuments> {
   @override
   Widget build(BuildContext context) {
     final documents =
-        Provider.of<UserKYCDocumentsProvider>(context,listen: true).kycDocuments;
+        Provider.of<UserKYCDocumentsProvider>(context, listen: true)
+            .kycDocuments;
 
     return Center(
       child: ConstrainedBox(
@@ -158,7 +195,7 @@ class _MyDocumentsState extends State<MyDocuments> {
             centerTitle: true,
             elevation: 5,
           ),
-          body: Padding(
+          body:isloading?const SpinKitFadingCircle(color: AppColor.PRIMARY,) :Padding(
             padding: const EdgeInsets.symmetric(
                 horizontal: Dimensions.paddingSizeSmall),
             child: Column(
@@ -329,10 +366,10 @@ class _MyDocumentsState extends State<MyDocuments> {
                   textColor: AppColor.WHITE,
                   isloader: value.isLoading,
                   onTap: () async {
-                    try{
-                        await value.uploadKYCDocuments(_adhaarFront, _adhaarBack,
-                        _workProof, _collegeProof, _photo, widget.userId);
-                    }catch(e){
+                    try {
+                      await value.uploadKYCDocuments(_adhaarFront, _adhaarBack,
+                          _workProof, _collegeProof, _photo, widget.userId);
+                    } catch (e) {
                       logger.e(e.toString());
                     }
                     if (!context.mounted) return;

@@ -102,7 +102,7 @@ class ProfileScreen extends StatelessWidget {
                                 user.email,
                                 style: Theme.of(context).textTheme.titleMedium,
                               ),
-                              const ActiveButton()
+                               ActiveButton(isactive:user.subscription.subscriptionCode=="P004" ,)
                             ],
                           ),
                         ),

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:gester/firebase_methods/auth_methods.dart';
 import 'package:gester/resources/dimensions.dart';
+import 'package:gester/utils/utilities.dart';
 import 'package:gester/view/navigationbar/naviagation.dart';
 import 'package:logger/logger.dart';
 import 'package:svg_flutter/svg.dart';
@@ -20,8 +21,6 @@ class _SignInScreenState extends State<SignInScreen> {
   void initState() {
     super.initState();
   }
-
- 
 
   Widget _buildBody() {
     return Stack(
@@ -52,26 +51,31 @@ class _SignInScreenState extends State<SignInScreen> {
                 const Gap(30),
                 GestureDetector(
                   onTap: () async {
+                    String res = "";
                     try {
                       if (kIsWeb) {
                         // Create a new provider
-                        await AuthMethods().googleloginweb();
+                        res = await AuthMethods().googleloginweb();
                         // Or use sign;InWithRedirect
                         // return await FirebaseAuth.instance.signInWithRedirect(googleProvider);
                       } else {
-                        await AuthMethods().googleLogin();
+                        res = await AuthMethods().googleLogin();
                       }
                     } catch (e) {
                       var logger = Logger();
                       logger.e(e.toString());
                     }
-                  
+
                     if (!mounted) return;
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const NavigationScreen()),
-                    );
+                    if (res == "success") {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const NavigationScreen()),
+                      );
+                    } else {
+                      Utils.flushbarErrorMessage("some error occured", context);
+                    }
                   },
                   child: Container(
                     padding:

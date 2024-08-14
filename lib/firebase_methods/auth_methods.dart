@@ -8,7 +8,8 @@ class AuthMethods {
   final _auth = FirebaseAuth.instance;
   final _firestoreMethods = FireStoreMethods();
 
-  Future<void> googleLogin() async {
+  Future<String> googleLogin() async {
+    String res = "";
     try {
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
       final GoogleSignInAuthentication? googleAuth =
@@ -16,23 +17,29 @@ class AuthMethods {
       final credential = GoogleAuthProvider.credential(
           accessToken: googleAuth?.accessToken, idToken: googleAuth?.idToken);
       await _auth.signInWithCredential(credential);
-      await _firestoreMethods.updateUserDataFirebase(
-          googleUser!.photoUrl, googleUser.email,googleUser.displayName); //updating userphotoUrl
+      await _firestoreMethods.updateUserDataFirebase(googleUser!.photoUrl,
+          googleUser.email, googleUser.displayName); //updating userphotoUrl
+      res = "success";
     } catch (e) {
+      res = "fail";
       throw Exception(e);
     }
+    return res;
   }
 
-  Future<void> googleloginweb() async {
+  Future<String> googleloginweb() async {
+    String res = "";
     try {
       GoogleAuthProvider authProvider = GoogleAuthProvider();
       UserCredential userCredential = await _auth.signInWithPopup(authProvider);
       final user = userCredential.user;
-      await _firestoreMethods.updateUserDataFirebase(
-          user!.photoURL, user.email,user.displayName); // Update user photo URL
-          
+      await _firestoreMethods.updateUserDataFirebase(user!.photoURL, user.email,
+          user.displayName); // Update user photo URL
+      res = "success";
     } catch (e) {
+      res = "fail";
       throw Exception(e);
     }
+    return res;
   }
 }

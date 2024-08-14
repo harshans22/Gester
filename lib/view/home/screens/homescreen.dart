@@ -4,6 +4,7 @@ import 'package:gester/provider/user_provider.dart';
 import 'package:gester/resources/color.dart';
 import 'package:gester/resources/dimensions.dart';
 import 'package:gester/utils/utilities.dart';
+import 'package:gester/utils/widgets/activebutton.dart';
 import 'package:gester/utils/widgets/profile_container.dart';
 import 'package:gester/utils/widgets/textbutton.dart';
 import 'package:gester/provider/home_screen_provider.dart';
@@ -88,16 +89,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               style: Theme.of(context).textTheme.displayLarge,
                             ),
                             const Gap(10),
-                            TextCommonButton(
-                              title:  userprovider.user.subscription.subscriptionCode=="P000"?"Inactive":"Active",
-                              color: userprovider.user.subscription.subscriptionCode=="P000"? AppColor.RED_COLOR:AppColor.GREEN_COLOR,
-                              textColor: AppColor.WHITE,
-                              onTap: () {},
-                              fontsize: 12,
-                              paddingvertical: 2,
-                              paddingHorizontal: Dimensions.paddingSizeSmall,
-                              fontWeight: FontWeight.w400,
-                            ),
+                             ActiveButton(isactive:userprovider.user.subscription.subscriptionCode=="P004" ,)
                           ],
                         ),
                         const Gap(Dimensions.paddingSizeSmall),

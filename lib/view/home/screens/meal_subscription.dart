@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:gester/resources/color.dart';
 import 'package:gester/resources/dimensions.dart';
-import 'package:gester/utils/widgets/activebutton.dart';
 import 'package:gester/view/home/widgets/cotaniner_with_padding.dart';
 import 'package:gester/view/home/widgets/drop_down_menu.dart';
 import 'package:gester/view/home/widgets/meal_subscription_container.dart';
@@ -51,7 +50,7 @@ class MealSubscription extends StatelessWidget {
                         style: Theme.of(context).textTheme.displayLarge,
                       ),
                       Gap(10),
-                      ActiveButton(),
+                     // ActiveButton(isactive:user.subscription.subscriptionCode=="P004" ,)
                     ],
                   ),
                   Text(

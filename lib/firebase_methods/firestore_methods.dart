@@ -829,26 +829,25 @@ class FireStoreMethods {
       String photoUrl='';
       String collegeProofUrl='';
       if(adhaarFront!=null){
-      await StoargeMethods()
+      adhaarfrontUrl=await StoargeMethods()
           .uploadImageToStorage(userdocid, adhaarFront, "UserDocuments");
       }
       if(adhaarBack!=null){
-      await StoargeMethods()
+      adhaarBackUrl=await StoargeMethods()
           .uploadImageToStorage(userdocid, adhaarBack, "UserDocuments");
       }
       if(workProof!=null){
-      await StoargeMethods()
+      workProofUrl==await StoargeMethods()
           .uploadImageToStorage(userdocid, workProof, "UserDocuments");
       }
       if(photo!=null){
-      await StoargeMethods()
+      photoUrl=await StoargeMethods()
           .uploadImageToStorage(userdocid, photo, "UserDocuments");
       }
       if(collegeProof!=null){
-      await StoargeMethods()
+      collegeProofUrl=await StoargeMethods()
           .uploadImageToStorage(userdocid, collegeProof, "UserDocuments");
       }
-      
       await _firestore
           .collection("User")
           .doc(userdocid)
