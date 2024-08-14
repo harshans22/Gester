@@ -821,31 +821,31 @@ class FireStoreMethods {
     required Uint8List? workProof,
     required Uint8List? photo,
     required Uint8List? collegeProof,
+    required String oldadhaarfront,
+    required String oldadhaarBack,
+    required String oldworkProof,
+    required String oldphoto,
+    required String oldcollegeProof,
   }) async {
     try {
-      String adhaarfrontUrl="";
-      String adhaarBackUrl='';
-      String workProofUrl='';
-      String photoUrl='';
-      String collegeProofUrl='';
       if(adhaarFront!=null){
-      adhaarfrontUrl=await StoargeMethods()
+      oldadhaarfront=await StoargeMethods()
           .uploadImageToStorage(userdocid, adhaarFront, "UserDocuments");
       }
       if(adhaarBack!=null){
-      adhaarBackUrl=await StoargeMethods()
+      oldadhaarBack=await StoargeMethods()
           .uploadImageToStorage(userdocid, adhaarBack, "UserDocuments");
       }
       if(workProof!=null){
-      workProofUrl==await StoargeMethods()
+      oldworkProof=await StoargeMethods()
           .uploadImageToStorage(userdocid, workProof, "UserDocuments");
       }
       if(photo!=null){
-      photoUrl=await StoargeMethods()
+      oldphoto=await StoargeMethods()
           .uploadImageToStorage(userdocid, photo, "UserDocuments");
       }
       if(collegeProof!=null){
-      collegeProofUrl=await StoargeMethods()
+      oldcollegeProof=await StoargeMethods()
           .uploadImageToStorage(userdocid, collegeProof, "UserDocuments");
       }
       await _firestore
@@ -855,11 +855,11 @@ class FireStoreMethods {
           .doc("main")
           .set({
             "documentDetails":KYCDocuments(
-              adhaarFront: adhaarfrontUrl,
-              adhaarBack: adhaarBackUrl,
-              workProof: workProofUrl,
-              photo: photoUrl,
-              collegeProof: collegeProofUrl
+              adhaarFront: oldadhaarBack,
+              adhaarBack: oldadhaarBack,
+              workProof: oldworkProof,
+              photo: oldphoto,
+              collegeProof: oldcollegeProof
             ).toMap()
           }, SetOptions(merge: true));
     } catch (e) {

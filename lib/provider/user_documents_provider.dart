@@ -10,7 +10,7 @@ import 'package:gester/models/usermodel.dart';
 class UserKYCDocumentsProvider with ChangeNotifier {
   var logger = Logger();
   KYCDocuments? _kycDocuments;
-  KYCDocuments? get kycDocuments => _kycDocuments;
+  KYCDocuments get kycDocuments => _kycDocuments!;
   bool _isLoading = false;
   bool get isLoading => _isLoading;
   UserDocumentsInFile? _documentsInFile;
@@ -46,7 +46,13 @@ class UserKYCDocumentsProvider with ChangeNotifier {
           adhaarBack: aadharCardBack,
           workProof: workProof,
           collegeProof: collegeProof,
-          photo: passportPhoto);
+          photo: passportPhoto,
+          oldadhaarfront: kycDocuments.adhaarFront,
+          oldadhaarBack: kycDocuments.adhaarBack,
+          oldworkProof: kycDocuments.workProof,
+          oldcollegeProof: kycDocuments.collegeProof,
+          oldphoto: kycDocuments.photo,
+          );
            await getKYCDocuments(userId);
     } catch (e) {
       logger.e(e.toString());
