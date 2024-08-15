@@ -855,12 +855,12 @@ class FireStoreMethods {
           .doc("main")
           .set({
             "documentDetails":KYCDocuments(
-              adhaarFront: oldadhaarBack,
+              adhaarFront: oldadhaarfront,
               adhaarBack: oldadhaarBack,
               workProof: oldworkProof,
               photo: oldphoto,
               collegeProof: oldcollegeProof
-            ).toMap()
+            ).toMap(),
           }, SetOptions(merge: true));
     } catch (e) {
       throw Exception("Error while uploading KYC documents : $e");

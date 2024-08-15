@@ -202,7 +202,7 @@ class _MyDocumentsState extends State<MyDocuments> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Gap(10),
-                Text("Aadhar",
+                Text("Aadhaar",
                     style: Theme.of(context)
                         .textTheme
                         .bodyLarge!

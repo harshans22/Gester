@@ -17,8 +17,8 @@ class MealCustomizationData {
    bool sukhiSabji;
    bool raita;
   MealCustomizationData({
-    this.numberofRoti=4,
-    this.riceQuantity=0.2,
+    this.numberofRoti=3,
+    this.riceQuantity=0.5,
     this.daal=false,
     this.salad=false,
     this.sukhiSabji=false,

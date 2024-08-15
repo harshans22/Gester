@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:gester/resources/color.dart';
 import 'package:gester/resources/dimensions.dart';
-import 'package:logger/logger.dart';
 import 'package:svg_flutter/svg.dart';
 
 class FileUpload extends StatelessWidget {
