@@ -5,9 +5,9 @@ class StoargeMethods {
   final FirebaseStorage _storage = FirebaseStorage.instance;
   //adding image to firebase storage
   Future<String> uploadImageToStorage(
-      String userId, Uint8List file, String childName) async {
+      String userId, Uint8List file, String childName,String parentname) async {
     try {
-      Reference ref = _storage.ref().child(childName).child(userId);
+      Reference ref = _storage.ref().child(parentname).child(userId).child(childName);
       UploadTask uploadTask = ref.putData(file);
       TaskSnapshot snap = await uploadTask; //  metadata data of uploaded file
       // to download link of our image which is stored in firestore

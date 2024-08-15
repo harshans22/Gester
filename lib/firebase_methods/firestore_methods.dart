@@ -830,23 +830,23 @@ class FireStoreMethods {
     try {
       if(adhaarFront!=null){
       oldadhaarfront=await StoargeMethods()
-          .uploadImageToStorage(userdocid, adhaarFront, "UserDocuments");
+          .uploadImageToStorage(userdocid, adhaarFront, "adhaarfront","UserDocuments");
       }
       if(adhaarBack!=null){
       oldadhaarBack=await StoargeMethods()
-          .uploadImageToStorage(userdocid, adhaarBack, "UserDocuments");
+          .uploadImageToStorage(userdocid, adhaarBack,"adhaarback", "UserDocuments");
       }
       if(workProof!=null){
       oldworkProof=await StoargeMethods()
-          .uploadImageToStorage(userdocid, workProof, "UserDocuments");
+          .uploadImageToStorage(userdocid, workProof,"workProof", "UserDocuments");
       }
       if(photo!=null){
       oldphoto=await StoargeMethods()
-          .uploadImageToStorage(userdocid, photo, "UserDocuments");
+          .uploadImageToStorage(userdocid, photo,"photo", "UserDocuments");
       }
       if(collegeProof!=null){
       oldcollegeProof=await StoargeMethods()
-          .uploadImageToStorage(userdocid, collegeProof, "UserDocuments");
+          .uploadImageToStorage(userdocid, collegeProof,"collegeProof", "UserDocuments");
       }
       await _firestore
           .collection("User")
