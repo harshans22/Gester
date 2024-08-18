@@ -1,35 +1,34 @@
 {
-  "hosting": {
-    "public": "build/web",
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
-    ],
-    "rewrites": [
-      {
-        "source": "**",
-        "destination": "/index.html"
-      }
-    ],
-    "headers": [
-      {
-        "source": "**",
-        "headers": [
-          {
-            "key": "Access-Control-Allow-Origin",
-            "value": "https://app.gester.in"
-          },
-          {
-            "key": "Access-Control-Allow-Methods",
-            "value": "GET, POST, OPTIONS"
-          },
-          {
-            "key": "Access-Control-Allow-Headers",
-            "value": "Content-Type"
-          }
-        ]
-      }
-    ]
-  }
+  "hosting": [
+    {
+      "target": "tested",
+      "public": "public",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "rewrites": [
+        {
+          "source": "**",
+          "destination": "/index.html"
+        }
+      ]
+    },
+    {
+      "target": "working",
+      "public": "public",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "rewrites": [
+        {
+          "source": "**",
+          "destination": "/index.html"
+        }
+      ]
+    }
+  ]
 }
