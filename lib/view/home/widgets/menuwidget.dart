@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:gap/gap.dart';
 import 'package:gester/provider/menu_provider.dart';
 import 'package:gester/resources/dimensions.dart';
@@ -69,6 +68,23 @@ class MenuWidget extends StatelessWidget {
               Expanded(
                 child: Text(
                   todaysMenu[2],
+                  style: const TextStyle(fontSize: 13),
+                ),
+              ),
+            ],
+          ),
+          const Gap(5),
+          todaysMenu[3].isEmpty? Container():Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                "Desert", 
+                style: TextStyle(fontSize: 13),
+              ),
+              const Gap(38),
+              Expanded(
+                child: Text(
+                  todaysMenu[3],
                   style: const TextStyle(fontSize: 13),
                 ),
               ),

@@ -555,9 +555,10 @@ class FireStoreMethods {
         Map<String, dynamic> dailyMenusnapshot =
             snapshot.data() as Map<String, dynamic>;
         List<String> dailyMenu = [];
-        dailyMenu.add(dailyMenusnapshot["breakfast"]);
-        dailyMenu.add(dailyMenusnapshot["lunch"]);
-        dailyMenu.add(dailyMenusnapshot["dinner"]);
+        dailyMenu.add(dailyMenusnapshot["breakfast"]??"");
+        dailyMenu.add(dailyMenusnapshot["lunch"]??"");
+        dailyMenu.add(dailyMenusnapshot["dinner"]??"");
+        dailyMenu.add(dailyMenusnapshot["desert"]??"");
         weeklymenu[day] = dailyMenu;
       }
       DocumentSnapshot weekperiodsnapshot =
@@ -569,6 +570,7 @@ class FireStoreMethods {
       throw Exception("Error while fetching daily menu :$e");
     }
   }
+
 
   //get stay details
 

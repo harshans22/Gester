@@ -102,34 +102,50 @@ class _MenuCustomizationScreenState extends State<MenuCustomizationScreen> {
                                     _dayselectedIndex = index;
                                   });
                                 },
-                                child: Container(
-                                  height: 40,
-                                  margin: const EdgeInsets.only(
-                                    right: Dimensions.paddingSizeExtraSmall,
-                                    left: Dimensions.paddingSizeExtraSmall,
-                                    top: Dimensions.paddingSizeLarge,
-                                  ),
-                                  decoration: BoxDecoration(
-                                      color: index == _dayselectedIndex
-                                          ? Theme.of(context)
-                                              .colorScheme
-                                              .primary
-                                          : Theme.of(context)
-                                              .colorScheme
-                                              .secondary,
-                                      borderRadius: BorderRadius.circular(
-                                          Dimensions.radiusSmall)),
-                                  alignment: Alignment.center,
-                                  child: Text(
-                                    _days[index],
-                                    style: TextStyle(
-                                      color: index == _dayselectedIndex
-                                          ? Theme.of(context)
-                                              .colorScheme
-                                              .onPrimary
-                                          : Theme.of(context)
-                                              .colorScheme
-                                              .onSecondary,
+                                child: AnimatedSwitcher(
+                                  duration: const Duration(milliseconds: 10000),
+          transitionBuilder: (Widget child, Animation<double> animation) {
+            final slideAnimation = Tween<Offset>(
+              begin: Offset(0.0, 1.0),  // Start the slide from the bottom
+              end: Offset(0.0, 0.0),
+            ).animate(animation);
+
+            return SlideTransition(
+              position: slideAnimation,
+              child: child,
+            );
+          },
+                                  child: Container(
+                                                key: ValueKey<int>(index), // Ensure unique key for each child
+
+                                    height: 40,
+                                    margin: const EdgeInsets.only(
+                                      right: Dimensions.paddingSizeExtraSmall,
+                                      left: Dimensions.paddingSizeExtraSmall,
+                                      top: Dimensions.paddingSizeLarge,
+                                    ),
+                                    decoration: BoxDecoration(
+                                        color: index == _dayselectedIndex
+                                            ? Theme.of(context)
+                                                .colorScheme
+                                                .primary
+                                            : Theme.of(context)
+                                                .colorScheme
+                                                .secondary,
+                                        borderRadius: BorderRadius.circular(
+                                            Dimensions.radiusSmall)),
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      _days[index],
+                                      style: TextStyle(
+                                        color: index == _dayselectedIndex
+                                            ? Theme.of(context)
+                                                .colorScheme
+                                                .onPrimary
+                                            : Theme.of(context)
+                                                .colorScheme
+                                                .onSecondary,
+                                      ),
                                     ),
                                   ),
                                 ),
