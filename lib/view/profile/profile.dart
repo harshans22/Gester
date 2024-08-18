@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:gap/gap.dart';
+import 'package:gester/firebase_methods/firestore_methods.dart';
 import 'package:gester/main.dart';
 import 'package:gester/provider/home_screen_provider.dart';
 import 'package:gester/provider/user_provider.dart';
@@ -26,7 +27,7 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<UserDataProvider>(context, listen: true).user;
-    final  dateTime=  Provider.of<HomeScreenProvider>(context).dateTime;
+    final dateTime = Provider.of<HomeScreenProvider>(context).dateTime;
     return Center(
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 400),
@@ -90,7 +91,9 @@ class ProfileScreen extends StatelessWidget {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    (user.fname +user.lname).isEmpty?user.username:(user.fname +user.lname),
+                                    (user.fname + user.lname).isEmpty
+                                        ? user.username
+                                        : (user.fname + user.lname),
                                     style: Theme.of(context)
                                         .textTheme
                                         .displayLarge,
@@ -102,7 +105,13 @@ class ProfileScreen extends StatelessWidget {
                                 user.email,
                                 style: Theme.of(context).textTheme.titleMedium,
                               ),
-                               ActiveButton(isactive:user.subscription.subscriptionCode=="P004" ,)
+                              ActiveButton(
+                                isactive: user.subscription.subscriptionCode ==
+                                    "P004",
+                                onTap: () {
+                                  
+                                },
+                              )
                             ],
                           ),
                         ),
@@ -131,8 +140,9 @@ class ProfileScreen extends StatelessWidget {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (_) =>
-                                         MenuCustomizationScreen(datetime:dateTime ,)));
+                                    builder: (_) => MenuCustomizationScreen(
+                                          datetime: dateTime,
+                                        )));
                           },
                           content: "Meal Customization",
                           image:
@@ -197,26 +207,26 @@ class ProfileScreen extends StatelessWidget {
                                 context,
                                 "You are about to logout",
                                 "Are you sure you want to log out?",
-                               onYes:  () async {
-                                  try {
-      if (kIsWeb) {
-        // Google logout for web
-        await FirebaseAuth.instance.signOut();
-      } else {
-        // Google logout for mobile
-        await GoogleSignIn().signOut();
-        await FirebaseAuth.instance.signOut();
-      }
-      Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (context) => const MyApp()),
-        (Route<dynamic> route) => false,
-      );
-    } catch (e) {
-      final Logger logger = Logger();
-      logger.e("Sign-out failed: ${e.toString()}");
-    }
-  }
-                              ); //popUP
+                                onYes: () async {
+                              try {
+                                if (kIsWeb) {
+                                  // Google logout for web
+                                  await FirebaseAuth.instance.signOut();
+                                } else {
+                                  // Google logout for mobile
+                                  await GoogleSignIn().signOut();
+                                  await FirebaseAuth.instance.signOut();
+                                }
+                                Navigator.of(context).pushAndRemoveUntil(
+                                  MaterialPageRoute(
+                                      builder: (context) => const MyApp()),
+                                  (Route<dynamic> route) => false,
+                                );
+                              } catch (e) {
+                                final Logger logger = Logger();
+                                logger.e("Sign-out failed: ${e.toString()}");
+                              }
+                            }); //popUP
                           },
                           content: "Log out",
                           image: "assets/images/profile/logout.svg"),

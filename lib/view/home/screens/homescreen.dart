@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:gester/firebase_methods/firestore_methods.dart';
 import 'package:gester/provider/user_provider.dart';
 import 'package:gester/resources/color.dart';
 import 'package:gester/resources/dimensions.dart';
@@ -36,15 +37,15 @@ class _HomeScreenState extends State<HomeScreen> {
     int hour = datetime.hour;
     String timeRefrence = "Today";
     if (hour >= 21) {
-      datetime = datetime.add(const Duration(days: 1)); //adding date after 9 PM
-      timeRefrence = "Tomorrow";
+      datetime= datetime.add(const Duration(days: 1));
+      timeRefrence = "Tomorrow"; //adding date after 9 PM
     }
 
     if ((homescreenprovider.dateTime.hour == 21 ||
             homescreenprovider.dateTime.hour == 17 ||
             homescreenprovider.dateTime.hour == 5) &&
         homescreenprovider.dateTime.minute == 0 &&
-        homescreenprovider.dateTime.second==0) {
+        homescreenprovider.dateTime.second == 0) {
       userprovider.resetMealOpt();
     }
 
@@ -89,7 +90,14 @@ class _HomeScreenState extends State<HomeScreen> {
                               style: Theme.of(context).textTheme.displayLarge,
                             ),
                             const Gap(10),
-                             ActiveButton(isactive:userprovider.user.subscription.subscriptionCode=="P004" ,)
+                            ActiveButton(
+                              isactive: userprovider
+                                      .user.subscription.subscriptionCode ==
+                                  "P004",
+                              onTap: () {
+                                // await  FireStoreMethods().func();
+                              },
+                            )
                           ],
                         ),
                         const Gap(Dimensions.paddingSizeSmall),
@@ -117,7 +125,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         .titleSmall!
                                         .copyWith(
                                             color: AppColor.WHITE,
-                                            fontWeight: FontWeight.w100,
+                                            fontWeight: FontWeight.w400,
                                             height: 1.5)),
                               )
                             : Container(),
@@ -227,8 +235,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                   const Gap(30),
-                  const Text("Today's menu",
-                      style: TextStyle(
+                   Text(' $timeRefrence menu',
+                      style:const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w700,
                       )),

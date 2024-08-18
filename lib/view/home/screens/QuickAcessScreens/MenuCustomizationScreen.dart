@@ -213,31 +213,37 @@ class _MenuCustomizationScreenState extends State<MenuCustomizationScreen> {
                           color: AppColor.BG_COLOR,
                           height: 1,
                         ),
-                       showRaitaandSalad? DropDownMenuWidget(
-                            title: "Raita",
-                            choosenvalue: (String value) {
-                              morningmealcustomization.raita =
-                                  value == "Yes" ? true : false;
-                              userprovider.notifylistner();
-                            },
-                            list: const ["Yes", "No"],
-                            initialvalue:
-                                morningmealcustomization.raita ? "Yes" : "No"):Container(),
+                        showRaitaandSalad
+                            ? DropDownMenuWidget(
+                                title: "Raita",
+                                choosenvalue: (String value) {
+                                  morningmealcustomization.raita =
+                                      value == "Yes" ? true : false;
+                                  userprovider.notifylistner();
+                                },
+                                list: const ["Yes", "No"],
+                                initialvalue: morningmealcustomization.raita
+                                    ? "Yes"
+                                    : "No")
+                            : Container(),
                         const Divider(
                           color: AppColor.BG_COLOR,
                           height: 1,
                         ),
-                        showRaitaandSalad?  DropDownMenuWidget(
-                          title: "Salad",
-                          choosenvalue: (String value) {
-                            morningmealcustomization.salad =
-                                value == "Yes" ? true : false;
-                            userprovider.notifylistner();
-                          },
-                          list: const ["Yes", "No"],
-                          initialvalue:
-                              morningmealcustomization.salad ? "Yes" : "No",
-                        ):Container(),
+                        showRaitaandSalad
+                            ? DropDownMenuWidget(
+                                title: "Salad",
+                                choosenvalue: (String value) {
+                                  morningmealcustomization.salad =
+                                      value == "Yes" ? true : false;
+                                  userprovider.notifylistner();
+                                },
+                                list: const ["Yes", "No"],
+                                initialvalue: morningmealcustomization.salad
+                                    ? "Yes"
+                                    : "No",
+                              )
+                            : Container(),
                       ],
                     ),
                   ),
@@ -335,32 +341,38 @@ class _MenuCustomizationScreenState extends State<MenuCustomizationScreen> {
                           color: AppColor.BG_COLOR,
                           height: 1,
                         ),
-                       showRaitaandSalad? DropDownMenuWidget(
-                          title: "Raita",
-                          choosenvalue: (String value) {
-                            eveningmealcustomization.raita =
-                                value == "Yes" ? true : false;
-                            userprovider.notifylistner();
-                          },
-                          list: const ["Yes", "No"],
-                          initialvalue:
-                              eveningmealcustomization.raita ? "Yes" : "No",
-                        ):Container(),
+                        showRaitaandSalad
+                            ? DropDownMenuWidget(
+                                title: "Raita",
+                                choosenvalue: (String value) {
+                                  eveningmealcustomization.raita =
+                                      value == "Yes" ? true : false;
+                                  userprovider.notifylistner();
+                                },
+                                list: const ["Yes", "No"],
+                                initialvalue: eveningmealcustomization.raita
+                                    ? "Yes"
+                                    : "No",
+                              )
+                            : Container(),
                         const Divider(
                           color: AppColor.BG_COLOR,
                           height: 1,
                         ),
-                       showRaitaandSalad? DropDownMenuWidget(
-                          title: "Salad",
-                          choosenvalue: (String value) {
-                            eveningmealcustomization.salad =
-                                value == "Yes" ? true : false;
-                            userprovider.notifylistner();
-                          },
-                          list: const ["Yes", "No"],
-                          initialvalue:
-                              eveningmealcustomization.salad ? "Yes" : "No",
-                        ):Container(),
+                        showRaitaandSalad
+                            ? DropDownMenuWidget(
+                                title: "Salad",
+                                choosenvalue: (String value) {
+                                  eveningmealcustomization.salad =
+                                      value == "Yes" ? true : false;
+                                  userprovider.notifylistner();
+                                },
+                                list: const ["Yes", "No"],
+                                initialvalue: eveningmealcustomization.salad
+                                    ? "Yes"
+                                    : "No",
+                              )
+                            : Container(),
                       ],
                     ),
                   ),
@@ -426,26 +438,35 @@ class _MenuCustomizationScreenState extends State<MenuCustomizationScreen> {
                         Navigator.pop(context);
                       }, buttonTitle: 'Okay, Got it');
                     } else {
-                      await value.updateMealCustomization(
-                          userprovider.user.userId,
-                          userprovider.user.pgNumber,
-                          userprovider.user.fname,
-                          userprovider.user.dietaryPreference,
-                          morningmealcustomization.toJson(),
-                          eveningmealcustomization.toJson(),
-                          _sameformorning,
-                          _sameforevening,
-                          _dayselectedIndex,
-                          userprovider.user.breakfast,
-                          userprovider.user.lunch,
-                          userprovider.user.dinner,
-                          widget.datetime);
-                      userprovider.setOldmealcustomization(
-                          morningmealcustomization, eveningmealcustomization);
-                      if (!context.mounted) return;
-                      Navigator.pop(context);
-                      Utils.showWithNoButton(context,
-                          title: "Meal Customized Successfully");
+                      if (widget.datetime.hour >= 17 &&
+                          widget.datetime.hour <= 21) {
+                        Utils.showWithSingleButton(
+                            context, "You can't customize today's meal between 5pm to 9pm",
+                            onTap: () {
+                          Navigator.pop(context);
+                        }, buttonTitle: 'Okay, Got it');
+                      } else {
+                        await value.updateMealCustomization(
+                            userprovider.user.userId,
+                            userprovider.user.pgNumber,
+                            userprovider.user.fname,
+                            userprovider.user.dietaryPreference,
+                            morningmealcustomization.toJson(),
+                            eveningmealcustomization.toJson(),
+                            _sameformorning,
+                            _sameforevening,
+                            _dayselectedIndex,
+                            userprovider.user.breakfast,
+                            userprovider.user.lunch,
+                            userprovider.user.dinner,
+                            widget.datetime);
+                        userprovider.setOldmealcustomization(
+                            morningmealcustomization, eveningmealcustomization);
+                        if (!context.mounted) return;
+                        Navigator.pop(context);
+                        Utils.showWithNoButton(context,
+                            title: "Meal Customized Successfully");
+                      }
                     }
                   },
                 );

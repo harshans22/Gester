@@ -20,8 +20,8 @@ class MealCustomizationData {
     this.numberofRoti=3,
     this.riceQuantity=0.5,
     this.daal=false,
-    this.salad=false,
-    this.sukhiSabji=false,
+    this.salad=true,
+    this.sukhiSabji=true,
     this.raita=false,
   });
 
@@ -82,13 +82,14 @@ class MealCustomizationData {
   }
 
 
+
   factory MealCustomizationData.fromMap(Map<String, dynamic> map) {
     return MealCustomizationData(
-      numberofRoti: map['numberofRoti']??4,
-      riceQuantity: map['riceQuantity']??0.2,
-      daal: map['daal']??false,
+      numberofRoti: map['numberofRoti']??3,
+      riceQuantity: map['riceQuantity']??0.5,
+      daal: map['daal']??true,
       salad: map['salad']??false,
-      sukhiSabji: map['sukhiSabji']??false,
+      sukhiSabji: map['sukhiSabji']??true,
       raita: map['raita']??false,
     );
   }

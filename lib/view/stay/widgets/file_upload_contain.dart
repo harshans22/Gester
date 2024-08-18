@@ -36,14 +36,14 @@ class FileUpload extends StatelessWidget {
                     children: [
                       Image.network(
                         oldImage,
-                        height: 110,
-                        fit: BoxFit.fill,
+                        height: 120,
+                        fit: BoxFit.cover,
                         errorBuilder: (BuildContext context, Object exception,
                             StackTrace? stackTrace) {
                          
                           return Image.asset(
                             "assets/images/stay/noImage.jpg",
-                            height: 110,
+                            height: 120,
                             fit: BoxFit.cover,
                           );
                         },
@@ -55,16 +55,14 @@ class FileUpload extends StatelessWidget {
                               context: context,
                               builder: (context) {
                                 return Dialog(
-                                  child: Container(
-                                    height: 300,
-                                    width: 300,
+                                  child: SizedBox(
                                     child: Image.network(oldImage),
                                   ),
                                 );
                               });
                         },
                         child: SizedBox(
-                          height: 110,
+                          height: 120,
                           child: Align(
                             alignment: Alignment.topRight,
                             child: TextButton(
@@ -109,7 +107,7 @@ class FileUpload extends StatelessWidget {
                 child: GestureDetector(
                   onTap: onUpload,
                   child: Container(
-                      height: 110,
+                      height: 120,
                       padding: const EdgeInsets.symmetric(
                           vertical: Dimensions.paddingSizeDefault,
                           horizontal: Dimensions.paddingSizeSmall),
@@ -157,13 +155,13 @@ class FileUpload extends StatelessWidget {
                 children: [
                   Image.memory(
                     currentImage!,
-                    height: 110,
-                    fit: BoxFit.fill,
+                    height: 120,
+                    fit: BoxFit.cover,
                     errorBuilder: (BuildContext context, Object exception,
                         StackTrace? stackTrace) {
                       return Image.asset(
                         "assets/images/stay/noImage.jpg",
-                        height: 110,
+                        height: 120,
                         fit: BoxFit.cover,
                       );
                     },
@@ -176,14 +174,13 @@ class FileUpload extends StatelessWidget {
                           builder: (context) {
                             return Dialog(
                               child: SizedBox(
-                                child: Image.memory(currentImage!, height: 300,
-                                width: 300,fit: BoxFit.fill,),
+                                child: Image.memory(currentImage!),
                               ),
                             );
                           });
                     },
                     child: SizedBox(
-                      height: 110,
+                      height: 120,
                       child: Align(
                         alignment: Alignment.topRight,
                         child: TextButton(

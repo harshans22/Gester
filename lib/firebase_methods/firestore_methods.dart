@@ -83,10 +83,10 @@ class FireStoreMethods {
 
       // Prepare the meal customization data
       final mealCustomizationData = MealCustomizationData(
-          numberofRoti: 4,
-          riceQuantity: 0.2,
-          salad: true,
-          raita: true,
+          numberofRoti: 3,
+          riceQuantity: 0.5,
+          salad: false,
+          raita: false,
           sukhiSabji: true,
           daal: true);
 
@@ -260,7 +260,7 @@ class FireStoreMethods {
             !snapshot.exists ? {} : snapshot.data() as Map<String, dynamic>,
             docId,
             (mealoptSnapshot.exists)
-                ? mealoptSnapshot.data() as Map<String,dynamic>
+                ? mealoptSnapshot.data() as Map<String, dynamic>
                 : {},
             (!kycdata.exists) ? {} : kycdata.data() as Map<String, dynamic>,
             (!mealcustomization.exists)
@@ -715,7 +715,7 @@ class FireStoreMethods {
             currentbreakfast,
             currentLunch,
             currrentDinner,
-            dateTime,
+            dateTime.subtract(const Duration(days: 1)),//this fucntion is remaining one day more and kicten fucntion is also checking for time after 9PM so its add one day extra in writing data
             morning,
             evening);
       }
@@ -828,25 +828,25 @@ class FireStoreMethods {
     required String oldcollegeProof,
   }) async {
     try {
-      if(adhaarFront!=null){
-      oldadhaarfront=await StoargeMethods()
-          .uploadImageToStorage(userdocid, adhaarFront, "adhaarfront","UserDocuments");
+      if (adhaarFront != null) {
+        oldadhaarfront = await StoargeMethods().uploadImageToStorage(
+            userdocid, adhaarFront, "adhaarfront", "UserDocuments");
       }
-      if(adhaarBack!=null){
-      oldadhaarBack=await StoargeMethods()
-          .uploadImageToStorage(userdocid, adhaarBack,"adhaarback", "UserDocuments");
+      if (adhaarBack != null) {
+        oldadhaarBack = await StoargeMethods().uploadImageToStorage(
+            userdocid, adhaarBack, "adhaarback", "UserDocuments");
       }
-      if(workProof!=null){
-      oldworkProof=await StoargeMethods()
-          .uploadImageToStorage(userdocid, workProof,"workProof", "UserDocuments");
+      if (workProof != null) {
+        oldworkProof = await StoargeMethods().uploadImageToStorage(
+            userdocid, workProof, "workProof", "UserDocuments");
       }
-      if(photo!=null){
-      oldphoto=await StoargeMethods()
-          .uploadImageToStorage(userdocid, photo,"photo", "UserDocuments");
+      if (photo != null) {
+        oldphoto = await StoargeMethods()
+            .uploadImageToStorage(userdocid, photo, "photo", "UserDocuments");
       }
-      if(collegeProof!=null){
-      oldcollegeProof=await StoargeMethods()
-          .uploadImageToStorage(userdocid, collegeProof,"collegeProof", "UserDocuments");
+      if (collegeProof != null) {
+        oldcollegeProof = await StoargeMethods().uploadImageToStorage(
+            userdocid, collegeProof, "collegeProof", "UserDocuments");
       }
       await _firestore
           .collection("User")
@@ -854,20 +854,18 @@ class FireStoreMethods {
           .collection("KYCData")
           .doc("main")
           .set({
-            "documentDetails":KYCDocuments(
-              adhaarFront: oldadhaarfront,
-              adhaarBack: oldadhaarBack,
-              workProof: oldworkProof,
-              photo: oldphoto,
-              collegeProof: oldcollegeProof
-            ).toMap(),
-          }, SetOptions(merge: true));
+        "documentDetails": KYCDocuments(
+                adhaarFront: oldadhaarfront,
+                adhaarBack: oldadhaarBack,
+                workProof: oldworkProof,
+                photo: oldphoto,
+                collegeProof: oldcollegeProof)
+            .toMap(),
+      }, SetOptions(merge: true));
     } catch (e) {
       throw Exception("Error while uploading KYC documents : $e");
     }
   }
-
-
 
   //getkyc data
   Future<KYCDocuments> getKYCDocuments(String userdocid) async {
@@ -878,10 +876,42 @@ class FireStoreMethods {
           .collection("KYCData")
           .doc("main")
           .get();
-      return KYCDocuments.fromMap(
-          !snapshot.exists ? {} : (snapshot.data() as Map<String, dynamic>)["documentDetails"]??{});
+      return KYCDocuments.fromMap(!snapshot.exists
+          ? {}
+          : (snapshot.data() as Map<String, dynamic>)["documentDetails"] ?? {});
     } catch (e) {
       throw Exception("Error while fetching KYC documents : $e");
+    }
+  }
+
+  //write all temp
+  Future<void> func() async {
+    try {
+      await _firestore
+          .collection("User")
+          .doc("807c545b-80a0-4fe3-f934-6a2a83ff8f53")
+          .collection("MealCustomization")
+          .doc()
+          .update({
+        "Morning": {
+          "numberofRoti": 3,
+          "riceQuantity": 0.5,
+          "salad": false,
+          "raita": false,
+          "sukhiSabji": true,
+          "daal": true
+        },
+        "Evening": {
+          "numberofRoti": 3,
+          "riceQuantity": 0.5,
+          "salad": false,
+          "raita": false,
+          "sukhiSabji": true,
+          "daal": true
+        }
+      });
+    } catch (e) {
+      logger.e(e.toString());
     }
   }
 }

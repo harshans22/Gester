@@ -9,7 +9,7 @@ class AuthMethods {
   final _firestoreMethods = FireStoreMethods();
 
   Future<String> googleLogin() async {
-    String res = "";
+    String res = "success";
     try {
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
       final GoogleSignInAuthentication? googleAuth =
@@ -19,7 +19,6 @@ class AuthMethods {
       await _auth.signInWithCredential(credential);
       await _firestoreMethods.updateUserDataFirebase(googleUser!.photoUrl,
           googleUser.email, googleUser.displayName); //updating userphotoUrl
-      res = "success";
     } catch (e) {
       res = "fail";
       throw Exception(e);
@@ -28,14 +27,13 @@ class AuthMethods {
   }
 
   Future<String> googleloginweb() async {
-    String res = "";
+    String res = "success";
     try {
       GoogleAuthProvider authProvider = GoogleAuthProvider();
       UserCredential userCredential = await _auth.signInWithPopup(authProvider);
       final user = userCredential.user;
       await _firestoreMethods.updateUserDataFirebase(user!.photoURL, user.email,
           user.displayName); // Update user photo URL
-      res = "success";
     } catch (e) {
       res = "fail";
       throw Exception(e);

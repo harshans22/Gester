@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:gap/gap.dart';
 import 'package:gester/provider/menu_provider.dart';
 import 'package:gester/resources/color.dart';
@@ -12,10 +11,10 @@ class MenuCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final weekPeriod=Provider.of<MenuProvider>(context,listen: true).menu!.weekPeriod;
-    final  _menu =
+    final  menu =
         Provider.of<MenuProvider>(context,listen: true).menu!.weeklyMenu;
 
-    List<String> _days = _menu.keys.toList();
+    List<String> _days = menu.keys.toList();
     return Center(
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 400),
@@ -73,17 +72,17 @@ class MenuCard extends StatelessWidget {
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                            "Breakfast - ${_menu[_days[index]]![0]}",
+                                            "Breakfast - ${menu[_days[index]]![0]}",
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .titleLarge!
                                                 .copyWith(height: 1.1)),
-                                        Text("Lunch - ${_menu[_days[index]]![1]}",
+                                        Text("Lunch - ${menu[_days[index]]![1]}",
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .titleLarge!
                                                 .copyWith(height: 1.1)),
-                                        Text("Dinner - ${_menu[_days[index]]![2]}",
+                                        Text("Dinner - ${menu[_days[index]]![2]}",
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .titleLarge!
