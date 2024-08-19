@@ -16,15 +16,13 @@ jobs:
         with:
           java-version: '12.x'
       - uses: subosito/flutter-action@v1
-      - name: Install Firebase CLI
-        run: npm install -g firebase-tools
       - name: 'Run flutter pub get'
         run: flutter pub get
       - name: 'Build Web App'
         run: flutter build web
       - name: Deploy to Firebase Hosting (Working)
         if: github.ref == 'refs/heads/working'
-        run: firebase deploy --only hosting:working --token ${{ secrets.FIREBASE_TOKEN }}
+        run: firebase deploy --only hosting:working --token ${{ secrets.GITHUB_TOKEN }}
       - name: Deploy to Firebase Hosting (Tested)
         if: github.ref == 'refs/heads/tested'
-        run: firebase deploy --only hosting:tested --token ${{ secrets.FIREBASE_TOKEN }}
+        run: firebase deploy --only hosting:tested --token ${{ secrets.GITHUB_TOKEN }}
