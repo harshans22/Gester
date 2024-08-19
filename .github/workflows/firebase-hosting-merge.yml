@@ -31,7 +31,6 @@ jobs:
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_GESTER_AE70F }}
           projectId: gester-ae70f
           channelId: live
-      
       # Deploy to Firebase Hosting (Working) if on the 'working' branch
       - name: Deploy to Firebase Hosting (Working)
         if: github.ref == 'refs/heads/working'
