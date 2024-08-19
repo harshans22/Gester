@@ -22,9 +22,17 @@ jobs:
         run: flutter pub get
       - name: 'Build Web App'
         run: flutter build web
-      - name: Deploy to Firebase Hosting (Working)
-        if: github.ref == 'refs/heads/working'
-        run: firebase deploy --only hosting:working --token ${{ secrets.GITHUB_TOKEN }}
       - name: Deploy to Firebase Hosting (Tested)
-        if: github.ref == 'refs/heads/tested'
-        run: firebase deploy --only hosting:tested --token ${{ secrets.GITHUB_TOKEN }}
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}
+          projectId: gester-ae70f
+          channelId: tested
+      - name: Deploy to Firebase Hosting (Working)
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}
+          projectId: gester-ae70f
+          channelId: working
