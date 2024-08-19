@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:gester/firebase_methods/firestore_methods.dart';
 import 'package:gester/provider/user_provider.dart';
 import 'package:gester/resources/color.dart';
 import 'package:gester/resources/dimensions.dart';

@@ -716,7 +716,7 @@ class FireStoreMethods {
             currentbreakfast,
             currentLunch,
             currrentDinner,
-            dateTime.subtract(const Duration(days: 1)),//this fucntion is remaining one day more and kicten fucntion is also checking for time after 9PM so its add one day extra in writing data
+            dateTime,
             morning,
             evening);
       }
