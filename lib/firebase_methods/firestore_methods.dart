@@ -571,7 +571,6 @@ class FireStoreMethods {
     }
   }
 
-
   //get stay details
 
   Future<StayModel> getStayDetails(String userId) async {
