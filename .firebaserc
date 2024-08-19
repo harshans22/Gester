@@ -2,8 +2,18 @@
   "projects": {
     "default": "gester-ae70f"
   },
-  "hosting": {
-    "tested": "gester-ae70f",
-    "working": "gester100"
-  }
+  "targets": {
+    "gester-ae70f": {
+      "hosting": {
+        "tested": [
+          "gester-ae70f"
+        ],
+        "working": [
+          "gester100"
+        ]
+      }
+    }
+  },
+  "etags": {},
+  "dataconnectEmulatorConfig": {}
 }
