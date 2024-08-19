@@ -1,8 +1,8 @@
 {
   "hosting": [
     {
-      "target": "tested",
-      "public": "public",
+      "target": "live",
+      "public": "build/web",
       "ignore": [
         "firebase.json",
         "**/.*",
@@ -17,7 +17,7 @@
     },
     {
       "target": "working",
-      "public": "public",
+      "public": "build/web",
       "ignore": [
         "firebase.json",
         "**/.*",
