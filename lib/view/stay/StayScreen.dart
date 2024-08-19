@@ -197,7 +197,6 @@ class StayScreen extends StatelessWidget {
                               Navigator.pop(context);
                             }, buttonTitle: "Okay");
                           } else {
-                           
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
