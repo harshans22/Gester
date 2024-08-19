@@ -6,10 +6,10 @@
     "gester-ae70f": {
       "hosting": {
         "tested": [
-          "app-gester-in"
+          "gester-ae70f"
         ],
         "working": [
-          "test-gester-in"
+          "gester100"
         ]
       }
     }
