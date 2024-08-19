@@ -1,7 +1,7 @@
 {
   "hosting": [
     {
-      "site": "gester-ae70f",
+      "target": "tested",
       "public": "build/web",
       "ignore": [
         "firebase.json",
@@ -16,7 +16,7 @@
       ]
     },
     {
-      "site": "gester100",
+      "target": "working",
       "public": "build/web",
       "ignore": [
         "firebase.json",
