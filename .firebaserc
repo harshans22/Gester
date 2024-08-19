@@ -7,17 +7,10 @@
       "hosting": {
         "tested": [
           "gester-ae70f"
-        ],
-        "working": [
-          "gester100"
         ]
       }
     }
   },
   "etags": {},
-  "dataconnectEmulatorConfig": {},
-  "hosting": {
-    "tested": "gester-ae70f",
-    "working": "gester100"
-  }
+  "dataconnectEmulatorConfig": {}
 }
