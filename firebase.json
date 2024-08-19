@@ -1,7 +1,6 @@
 {
   "hosting": [
     {
-      "target": "tested",
       "site": "gester-ae70f",
       "public": "build/web",
       "ignore": [
@@ -17,7 +16,6 @@
       ]
     },
     {
-      "target": "working",
       "site": "gester100",
       "public": "build/web",
       "ignore": [
