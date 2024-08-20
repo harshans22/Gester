@@ -759,7 +759,6 @@ class FireStoreMethods {
           "Evening": evening,
         };
         final batch = _firestore.batch();
-
         // Loop through the days of the week
         for (int i = 1; i <= 7; i++) {
           await _firestore
