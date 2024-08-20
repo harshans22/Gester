@@ -236,7 +236,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   
                   const Gap(30),
-                   Text(' $timeRefrence Menu',
+                   Text(' $timeRefrence menu',
                    
                       style:const TextStyle(
                         fontSize: 18,
