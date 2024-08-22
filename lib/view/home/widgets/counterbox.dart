@@ -107,7 +107,7 @@ class _CheckBoxWigdetState extends State<CounterBox> {
                         children: [
                           InkWell(
                               onTap: () {
-                                 if (canbeChanged) {
+                                 if (!canbeChanged) {
                                   Utils.showWithSingleButton(context,
                                       "Your ${widget.name} is Locked. Cannot be changed after ${(widget.isbrekfast || widget.islunch) ? '5 AM' : '5 PM'}",
                                       buttonTitle: "Okay, Got it!", onTap: () {
