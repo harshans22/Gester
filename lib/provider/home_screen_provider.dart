@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:gester/firebase_methods/firestore_methods.dart';
 import 'package:gester/models/stay_model.dart';
-import 'package:gester/utils/utilities.dart';
 
 class HomeScreenProvider with ChangeNotifier {
   DateTime? _dateTime;
