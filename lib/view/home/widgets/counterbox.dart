@@ -122,7 +122,7 @@ class _CheckBoxWigdetState extends State<CounterBox> {
                                         true);
                                     Navigator.pop(context);
                                   });
-                                } else if (!canbeChanged) {
+                                } else if (canbeChanged) {
                                   Utils.showWithSingleButton(context,
                                       "Your ${widget.name} is Locked. Cannot be changed after ${(widget.isbrekfast || widget.islunch) ? '5 AM' : '5 PM'}",
                                       buttonTitle: "Okay, Got it!", onTap: () {
