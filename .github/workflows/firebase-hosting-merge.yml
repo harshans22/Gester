@@ -33,7 +33,7 @@ jobs:
       # Deploy to Firebase Hosting (Working) if on the 'working' branch
       - name: Deploy to Firebase Hosting (Working)
         if: github.ref == 'refs/heads/working'
-        run: firebase deploy --only hosting:working
+        run: firebase deploy --only hosting:working --debug
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_GESTER_AE70F }}
           GOOGLE_APPLICATION_CREDENTIALS: "${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}"
