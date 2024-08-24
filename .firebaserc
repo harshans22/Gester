@@ -7,6 +7,9 @@
       "hosting": {
         "working": [
           "gester100"
+        ],
+        "live": [
+          "gester-ae70f"
         ]
       }
     }
