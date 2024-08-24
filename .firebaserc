@@ -1,19 +1,5 @@
 {
   "projects": {
     "default": "gester-ae70f"
-  },
-  "targets": {
-    "gester-ae70f": {
-      "hosting": {
-        "live": [
-          "gester-ae70f"
-        ],
-        "working": [
-          "gester100"
-        ]
-      }
-    }
-  },
-  "etags": {},
-  "dataconnectEmulatorConfig": {}
+  }
 }

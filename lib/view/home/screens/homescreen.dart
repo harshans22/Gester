@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:gester/firebase_methods/firestore_methods.dart';
 import 'package:gester/provider/user_provider.dart';
 import 'package:gester/resources/color.dart';
 import 'package:gester/resources/dimensions.dart';
@@ -180,7 +179,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             MaterialPageRoute(
                                                 builder: (context) =>
                                                     MenuCustomizationScreen(
-                                                      datetime: datetime,
+                                                      datetime: homescreenprovider.dateTime,
                                                     )));
                                       },
                                       paddingvertical:
@@ -236,7 +235,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   
                   const Gap(30),
-                   Text(' $timeRefrence menu',
+                   Text(" $timeRefrence's menu",
                    
                       style:const TextStyle(
                         fontSize: 18,

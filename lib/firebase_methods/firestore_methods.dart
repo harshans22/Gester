@@ -571,7 +571,6 @@ class FireStoreMethods {
     }
   }
 
-
   //get stay details
 
   Future<StayModel> getStayDetails(String userId) async {
@@ -717,7 +716,7 @@ class FireStoreMethods {
             currentbreakfast,
             currentLunch,
             currrentDinner,
-            dateTime.subtract(const Duration(days: 1)),//this fucntion is remaining one day more and kicten fucntion is also checking for time after 9PM so its add one day extra in writing data
+            dateTime,
             morning,
             evening);
       }
@@ -760,7 +759,6 @@ class FireStoreMethods {
           "Evening": evening,
         };
         final batch = _firestore.batch();
-
         // Loop through the days of the week
         for (int i = 1; i <= 7; i++) {
           await _firestore

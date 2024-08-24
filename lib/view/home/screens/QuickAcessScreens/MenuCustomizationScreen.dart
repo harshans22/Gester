@@ -455,7 +455,7 @@ class _MenuCustomizationScreenState extends State<MenuCustomizationScreen> {
                       }, buttonTitle: 'Okay, Got it');
                     } else {
                       if (widget.datetime.hour >= 17 &&
-                          widget.datetime.hour <21) {
+                          widget.datetime.hour < 21) {
                         Utils.showWithSingleButton(
                             context, "You can't customize today's meal between 5pm to 9pm",
                             onTap: () {
