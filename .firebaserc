@@ -5,7 +5,7 @@
   "targets": {
     "gester-ae70f": {
       "hosting": {
-        "live": [
+        "tested": [
           "gester-ae70f"
         ],
         "working": [
