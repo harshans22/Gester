@@ -25,19 +25,7 @@ jobs:
         # Deploy to Firebase Hosting (Tested) if on the 'tested' branch
       - name: Deploy to Firebase Hosting (Tested)
         if: github.ref == 'refs/heads/tested'
-        uses: FirebaseExtended/action-hosting-deploy@v0
-        with:
-          repoToken: ${{ secrets.GITHUB_TOKEN }}
-          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_GESTER_AE70F }}
-          projectId: gester-ae70f
-          target: live
-          channel: live
+        run: firebase deploy --only hosting:live
       - name: Deploy to Firebase Hosting (Tested)
         if: github.ref == 'refs/heads/working'
-        uses: FirebaseExtended/action-hosting-deploy@v0
-        with:
-          repoToken: ${{ secrets.GITHUB_TOKEN }}
-          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_GESTER_AE70F }}
-          projectId: gester-ae70f
-          target: working
-          channel: working
+        run: firebase deploy --only hosting:working
