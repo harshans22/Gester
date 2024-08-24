@@ -26,6 +26,7 @@ class MealCustomizationProvider with ChangeNotifier {
       int currentLunch,
       int currentDinner,DateTime dateTime) async {
     setloader(true);
+    
     try {
       await FireStoreMethods().updateMealCustomization(
           userdocid,
