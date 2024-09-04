@@ -78,6 +78,13 @@ class FireStoreMethods {
     //TODO: handle it in such a way that if user is logging for the first time so there might be some meal customization present so don't create it on login
     String userdocid = await getUserDocId();
     try {
+      DocumentSnapshot snapshot = await _firestore
+          .collection("User")
+          .doc(userdocid)
+          .collection("MealCustomization").doc("Monday").get();
+      if(snapshot.exists){
+        return;//don't create meal customization if already exists
+      }
       final batch = _firestore.batch();
 
       // Create a reference to the collection
@@ -202,31 +209,40 @@ class FireStoreMethods {
       }
       String date =
           "${dateTime.day < 10 ? '0${dateTime.day}' : dateTime.day}-${dateTime.month < 10 ? '0${dateTime.month}' : dateTime.month}-${dateTime.year}";
-     
     } catch (e) {
       throw Exception("Error while updating note in kitchen data $e");
     }
   }
 
-
-  Future<void> updateNoteInKitchenData(String userdocid, String note, DateTime dateTime)async{
-    try{
-    int hour = dateTime.hour;
+  Future<void> updateNoteInKitchenData(
+      String userdocid, String note, DateTime dateTime) async {
+    try {
+      int hour = dateTime.hour;
       if (hour >= 21) {
         dateTime =
             dateTime.add(const Duration(days: 1)); //adding date after 9 PM
       }
       String date =
           "${dateTime.day < 10 ? '0${dateTime.day}' : dateTime.day}-${dateTime.month < 10 ? '0${dateTime.month}' : dateTime.month}-${dateTime.year}";
-     await _firestore
+      DocumentSnapshot snapshot = await _firestore
           .collection("Kitchen")
           .doc(date)
           .collection("MealOpt")
           .doc(userdocid)
-          .set({
-        "note": note,
-      }, SetOptions(merge: true));
-    }catch(e){
+          .get();//TODO change this use some logic to check whether note can be written or not
+      if (snapshot.exists) {
+        await _firestore
+            .collection("Kitchen")
+            .doc(date)
+            .collection("MealOpt")
+            .doc(userdocid)
+            .set({
+          "note": note,
+        }, SetOptions(merge: true));
+      } else {
+        return;
+      }
+    } catch (e) {
       throw Exception("Error while updating note in kitchen data $e");
     }
   }
@@ -262,12 +278,12 @@ class FireStoreMethods {
   }
 
   //fetch user mealCustomization
-  Future<List<Map<String,MealCustomizationData>>> fetchUserMealCustomization(
+  Future<List<Map<String, MealCustomizationData>>> fetchUserMealCustomization(
       String userdocid) async {
-    List<Map<String,MealCustomizationData>> mealCustomizationData = [];
+    List<Map<String, MealCustomizationData>> mealCustomizationData = [];
 
     try {
-      CollectionReference reference =  _firestore
+      CollectionReference reference = _firestore
           .collection("User")
           .doc(userdocid)
           .collection("MealCustomization");
@@ -275,12 +291,16 @@ class FireStoreMethods {
         String day = Utils.getDayName(i);
         DocumentSnapshot snapshot = await reference.doc(day).get();
         if (snapshot.exists) {
-          
           Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
-          mealCustomizationData.add({"Morning":MealCustomizationData.fromMap(data["Morning"]),
-          "Evening":MealCustomizationData.fromMap(data["Evening"])});
+          mealCustomizationData.add({
+            "Morning": MealCustomizationData.fromMap(data["Morning"]),
+            "Evening": MealCustomizationData.fromMap(data["Evening"])
+          });
         } else {
-          mealCustomizationData.add({"Morning":MealCustomizationData(),"Evening":MealCustomizationData()});
+          mealCustomizationData.add({
+            "Morning": MealCustomizationData(),
+            "Evening": MealCustomizationData()
+          });
         }
       }
     } catch (e) {
@@ -347,7 +367,8 @@ class FireStoreMethods {
       int newdinner,
       DateTime dateTime,
       Map<String, dynamic> morning,
-      Map<String, dynamic> evening) async {
+      Map<String, dynamic> evening,
+      ) async {
     try {
       int hour = dateTime.hour;
       if (hour >= 21) {
@@ -365,7 +386,6 @@ class FireStoreMethods {
       if (snapshot.exists) {
         Map<String, dynamic> mealoptData =
             snapshot.data() as Map<String, dynamic>;
-
         bool oldMorningdaal = mealoptData['Morning']['daal'];
         bool oldMorningsalad = mealoptData['Morning']['salad'];
         bool oldMorningraita = mealoptData['Morning']['raita'];
@@ -393,8 +413,9 @@ class FireStoreMethods {
           "Morning": morning,
           "Evening": evening,
           "timeMealAdded": FieldValue.arrayUnion([
-            "$newbreakfast, $newlunch, $newdinner, ${DateTime.now().hour}:${DateTime.now().minute}:${DateTime.now().second}"
+            "$newbreakfast, $newlunch, $newdinner, ${DateTime.now().hour}:${DateTime.now().minute}:${DateTime.now().second}",
           ]),
+          
         }, SetOptions(merge: true));
         DocumentSnapshot totalmealOptsnapshot =
             await _firestore.collection("Kitchen").doc(date).get();
@@ -525,6 +546,7 @@ class FireStoreMethods {
           "timeMealAdded": FieldValue.arrayUnion([
             "$newbreakfast, $newlunch, $newdinner, ${DateTime.now().hour}:${DateTime.now().minute}:${DateTime.now().second}"
           ]),
+          
         });
         DocumentSnapshot totalmealOptsnapshot =
             await _firestore.collection("Kitchen").doc(date).get();
@@ -616,15 +638,17 @@ class FireStoreMethods {
         Map<String, dynamic> dailyMenusnapshot =
             snapshot.data() as Map<String, dynamic>;
         List<dynamic> dailyMenu = [];
-        dailyMenu.add(dailyMenusnapshot["breakfast"] ?? "");//TODO: change this into proper objects of class not list
+        dailyMenu.add(dailyMenusnapshot["breakfast"] ??
+            ""); //TODO: change this into proper objects of class not list
         dailyMenu.add(dailyMenusnapshot["lunch"] ?? "");
         dailyMenu.add(dailyMenusnapshot["dinner"] ?? "");
         dailyMenu.add(dailyMenusnapshot["desert"] ?? "");
-        dailyMenu.add(dailyMenusnapshot["dietaryOption"] ?? {
-          "lunch":["Veg"],
-          "dinner":["Veg"]
-        });
-        weeklymenu[day] = dailyMenu;//add data to map
+        dailyMenu.add(dailyMenusnapshot["dietaryOption"] ??
+            {
+              "lunch": ["Veg"],
+              "dinner": ["Veg"]
+            });
+        weeklymenu[day] = dailyMenu; //add data to map
       }
       DocumentSnapshot weekperiodsnapshot =
           await _firestore.collection("Menu").doc("Data").get();
@@ -772,16 +796,8 @@ class FireStoreMethods {
       DateTime dateTime) async {
     try {
       if (currentbreakfast > 0 || currentLunch > 0 || currrentDinner > 0) {
-        await updatekitchendata(
-            userdocid,
-            pgNumber,
-            fname,
-            currentbreakfast,
-            currentLunch,
-            currrentDinner,
-            dateTime,
-            morning,
-            evening);
+        await updatekitchendata(userdocid, pgNumber, fname, currentbreakfast,
+            currentLunch, currrentDinner, dateTime, morning, evening);
       }
 
       if (sameforMorning && !sameforEvening) {

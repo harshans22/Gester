@@ -173,7 +173,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         //to show add note
                         if (userprovider.user.breakfast > 0 ||
                             userprovider.user.lunch > 0 ||
-                            userprovider.user.dinner > 0)const AddNote(),
+                            userprovider.user.dinner > 0)
+                          const AddNote(),
                         const Gap(10),
                         showSaveChangesButton
                             ? Row(
@@ -212,8 +213,30 @@ class _HomeScreenState extends State<HomeScreen> {
                                             userprovider.user.userId,
                                             userprovider.user.pgNumber,
                                             userprovider.user.fname,
-                                            context.read<MealCustomizationProvider>().oldeveningData[homescreenprovider.dateTime.hour>=21?datetime.weekday  :datetime.weekday - 1].toJson(),
-                                            context.read<MealCustomizationProvider>().oldmorningData[homescreenprovider.dateTime.hour>=21?datetime.weekday  :datetime.weekday - 1].toJson());
+                                            context
+                                                .read<
+                                                    MealCustomizationProvider>()
+                                                .oldeveningData[
+                                                    homescreenprovider.dateTime
+                                                                .hour >=
+                                                            21
+                                                        ? datetime.weekday
+                                                        : datetime.weekday - 1]
+                                                .toJson(),
+                                            context
+                                                .read<
+                                                    MealCustomizationProvider>()
+                                                .oldmorningData[
+                                                    homescreenprovider.dateTime
+                                                                .hour >=
+                                                            21
+                                                        ? datetime.weekday
+                                                        : datetime.weekday - 1]
+                                                .toJson());
+
+                                                if(homescreenprovider.noteController!.text.isNotEmpty){
+                                                  await homescreenprovider.updateNoteKitchenData(homescreenprovider.noteController!.text);//TODO this is jugaad not usefull when kitchen data also exists only usefull when kitchen data is not there mean all mealopt are zero and you add note and mealopt together
+                                                }
 
                                         userprovider.setoldMealtype(
                                             userprovider.user.breakfast,

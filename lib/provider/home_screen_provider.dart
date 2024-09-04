@@ -71,7 +71,8 @@ class HomeScreenProvider with ChangeNotifier {
           dinner,
           _dateTime!,
           morning,
-          evening);
+          evening,
+          );
       notifyListeners();
     } catch (e) {
       logger.e(e.toString());

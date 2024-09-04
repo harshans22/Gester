@@ -33,7 +33,7 @@ class AuthMethods {
       UserCredential userCredential = await _auth.signInWithPopup(authProvider);
       final user = userCredential.user;
       await _firestoreMethods.updateUserDataFirebase(user!.photoURL, user.email,
-          user.displayName); // Update user photo URL
+          user.displayName); // Update user photo URL we are creating meal customization data inside this method
     } catch (e) {
       res = "fail";
       throw Exception(e);
