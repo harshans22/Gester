@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:gester/provider/home_screen_provider.dart';
+import 'package:gester/provider/meal_customization_provider.dart';
 import 'package:gester/provider/user_provider.dart';
 import 'package:gester/resources/color.dart';
 import 'package:gester/resources/dimensions.dart';
+import 'package:gester/utils/app_constants.dart';
 import 'package:gester/utils/utilities.dart';
 import 'package:gester/utils/widgets/activebutton.dart';
 import 'package:gester/utils/widgets/profile_container.dart';
 import 'package:gester/utils/widgets/textbutton.dart';
-import 'package:gester/provider/home_screen_provider.dart';
 import 'package:gester/view/home/screens/QuickAcessScreens/MenuCustomizationScreen.dart';
 import 'package:gester/view/home/screens/QuickAcessScreens/meal_history_screen.dart';
 import 'package:gester/view/home/screens/QuickAcessScreens/menu.dart';
 import 'package:gester/view/home/widgets/QuickAccessContainer.dart';
+import 'package:gester/view/home/widgets/add_note_dialog.dart';
 import 'package:gester/view/home/widgets/counterbox.dart';
 import 'package:gester/view/home/widgets/menuwidget.dart';
 import 'package:provider/provider.dart';
@@ -36,7 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
     int hour = datetime.hour;
     String timeRefrence = "Today";
     if (hour >= 21) {
-      datetime= datetime.add(const Duration(days: 1));
+      datetime = datetime.add(const Duration(days: 1));
       timeRefrence = "Tomorrow"; //adding date after 9 PM
     }
 
@@ -90,13 +93,11 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                             const Gap(10),
                             ActiveButton(
-                              isactive: userprovider
-                                      .user.subscription.subscriptionCode ==
-                                  "P004",
-                              onTap: () {
-                                // await  FireStoreMethods().func();
-                              },
-                            )
+                              color: Appconstants.subscriptionStatusColor[
+                                  userprovider.user.subscription.status]!,
+                              title: userprovider.user.subscription.status,
+                              onTap: () {},
+                            ),
                           ],
                         ),
                         const Gap(Dimensions.paddingSizeSmall),
@@ -142,7 +143,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       .titleSmall!
                                       .copyWith(
                                           color: AppColor.WHITE,
-                                          fontWeight: FontWeight.w100,
+                                          fontWeight: FontWeight.w400,
                                           height: 1.5),
                                 ),
                               )
@@ -168,6 +169,12 @@ class _HomeScreenState extends State<HomeScreen> {
                           ],
                         ),
                         const Gap(10),
+
+                        //to show add note
+                        if (userprovider.user.breakfast > 0 ||
+                            userprovider.user.lunch > 0 ||
+                            userprovider.user.dinner > 0)const AddNote(),
+                        const Gap(10),
                         showSaveChangesButton
                             ? Row(
                                 children: [
@@ -179,7 +186,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                             MaterialPageRoute(
                                                 builder: (context) =>
                                                     MenuCustomizationScreen(
-                                                      datetime: homescreenprovider.dateTime,
+                                                      datetime:
+                                                          homescreenprovider
+                                                              .dateTime,
                                                     )));
                                       },
                                       paddingvertical:
@@ -203,14 +212,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                             userprovider.user.userId,
                                             userprovider.user.pgNumber,
                                             userprovider.user.fname,
-                                            userprovider.user.dietaryPreference,
-                                            userprovider.user.morning.toJson(),
-                                            userprovider.user.evening.toJson());
+                                            context.read<MealCustomizationProvider>().oldeveningData[homescreenprovider.dateTime.hour>=21?datetime.weekday  :datetime.weekday - 1].toJson(),
+                                            context.read<MealCustomizationProvider>().oldmorningData[homescreenprovider.dateTime.hour>=21?datetime.weekday  :datetime.weekday - 1].toJson());
+
                                         userprovider.setoldMealtype(
                                             userprovider.user.breakfast,
                                             userprovider.user.lunch,
                                             userprovider.user.dinner);
-                                        if (!homescreenprovider.mealoptloader) {
+                                        if (!homescreenprovider.loader) {
                                           if (!context.mounted) return;
                                           Utils.showWithNoButton(context,
                                               title:
@@ -223,21 +232,18 @@ class _HomeScreenState extends State<HomeScreen> {
                                       color: AppColor.bluecolor,
                                       textColor: AppColor.WHITE,
                                       fontWeight: FontWeight.w400,
-                                      isloader:
-                                          homescreenprovider.mealoptloader,
+                                      isloader: homescreenprovider.loader,
                                     ),
                                   ),
                                 ],
                               )
-                            :Container(),
+                            : Container(),
                       ],
                     ),
                   ),
-                  
                   const Gap(30),
-                   Text(" $timeRefrence's menu",
-                   
-                      style:const TextStyle(
+                  Text(" $timeRefrence's menu",
+                      style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w700,
                       )),

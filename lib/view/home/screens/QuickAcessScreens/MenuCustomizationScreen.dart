@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:gester/provider/meal_customization_provider.dart';
+import 'package:gester/provider/menu_provider.dart';
 import 'package:gester/provider/user_provider.dart';
 import 'package:gester/resources/color.dart';
 import 'package:gester/resources/dimensions.dart';
@@ -47,6 +48,7 @@ class _MenuCustomizationScreenState extends State<MenuCustomizationScreen> {
   };
 
   int _dayselectedIndex = 0;
+
   @override
   void initState() {
     super.initState();
@@ -59,65 +61,57 @@ class _MenuCustomizationScreenState extends State<MenuCustomizationScreen> {
 
   bool _sameformorning = false;
   bool _sameforevening = false;
+
   @override
   Widget build(BuildContext context) {
     final userprovider = Provider.of<UserDataProvider>(context);
-    final morningmealcustomization =
-        Provider.of<UserDataProvider>(context).user.morning;
-    final eveningmealcustomization =
-        Provider.of<UserDataProvider>(context).user.evening;
+    final menuprovider = Provider.of<MenuProvider>(context);
     final showRaitaandSalad =
         userprovider.user.subscription.subscriptionCode == "P004"
             ? false
             : true;
-    return Center(
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 400),
-        child: Scaffold(
-          appBar: AppBar(
-            title: Text(
-              "Meal customization",
-              style: Theme.of(context).textTheme.displayLarge,
+    return Consumer<MealCustomizationProvider>(
+        builder: (context, mealCustomizationProvider, child) {
+      final morningmealcustomization = mealCustomizationProvider.morningData;
+      final eveningmealcustomization = mealCustomizationProvider.eveningData;
+      final oldmorningData = mealCustomizationProvider.oldmorningData;
+      final oldeveningData = mealCustomizationProvider.oldeveningData;
+
+      return Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 400),
+          child: Scaffold(
+            appBar: AppBar(
+              title: Text(
+                "Meal customization",
+                style: Theme.of(context).textTheme.displayLarge,
+              ),
+              backgroundColor: AppColor.WHITE,
+              surfaceTintColor: Colors.transparent,
+              shadowColor: AppColor.GREY_COLOR_LIGHT.withOpacity(0.3),
+              centerTitle: true,
+              elevation: 5,
             ),
-            backgroundColor: AppColor.WHITE,
-            surfaceTintColor: Colors.transparent,
-            shadowColor: AppColor.GREY_COLOR_LIGHT.withOpacity(0.3),
-            centerTitle: true,
-            elevation: 5,
-          ),
-          body: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                  horizontal: Dimensions.paddingSizeSmall),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: List.generate(
-                        _days.length,
-                        (index) => Expanded(
-                              child: InkWell(
-                                onTap: () {
-                                  setState(() {
-                                    _dayselectedIndex = index;
-                                  });
-                                },
-                                child: AnimatedSwitcher(
-                                  duration: const Duration(milliseconds: 10000),
-          transitionBuilder: (Widget child, Animation<double> animation) {
-            final slideAnimation = Tween<Offset>(
-              begin: Offset(0.0, 1.0),  // Start the slide from the bottom
-              end: Offset(0.0, 0.0),
-            ).animate(animation);
-
-            return SlideTransition(
-              position: slideAnimation,
-              child: child,
-            );
-          },
+            body: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: Dimensions.paddingSizeSmall),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: List.generate(
+                          _days.length,
+                          (index) => Expanded(
+                                child: InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      _dayselectedIndex = index;
+                                    });
+                                  },
                                   child: Container(
-                                                key: ValueKey<int>(index), // Ensure unique key for each child
-
+                                    key: ValueKey<int>(
+                                        index), // Ensure unique key for each child
                                     height: 40,
                                     margin: const EdgeInsets.only(
                                       right: Dimensions.paddingSizeExtraSmall,
@@ -149,303 +143,355 @@ class _MenuCustomizationScreenState extends State<MenuCustomizationScreen> {
                                     ),
                                   ),
                                 ),
-                              ),
-                            )),
-                  ),
-                  const Gap(Dimensions.paddingSizeExtraLarge),
-                  Row(
-                    children: [
-                      const Gap(20),
-                      Text("Morning(Breakfast & Lunch)",
-                          style: Theme.of(context).textTheme.displayMedium),
-                    ],
-                  ),
-                  const Gap(15),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.secondary,
-                      borderRadius: BorderRadius.circular(10),
+                              )),
                     ),
-                    child: Column(
+                    const Gap(Dimensions.paddingSizeExtraLarge),
+                    Row(
                       children: [
-                        DropDownMenuWidget(
-                          title: "Number of roti",
-                          choosenvalue: (String value) {
-                            morningmealcustomization.numberofRoti =
-                                int.parse(value);
-                            userprovider.notifylistner();
-                          },
-                          list: _rotilist,
-                          initialvalue:
-                              morningmealcustomization.numberofRoti.toString(),
-                        ),
-                        const Divider(
-                          color: AppColor.BG_COLOR,
-                          height: 1,
-                        ),
-                        DropDownMenuWidget(
-                          title: "Rice quantity",
-                          choosenvalue: (String value) {
-                            morningmealcustomization.riceQuantity =
-                                _ricequantityDouble[value]!;
-                            userprovider.notifylistner();
-                          },
-                          list: _ricequantity.values.toList(),
-                          initialvalue: _ricequantity[
-                              morningmealcustomization.riceQuantity]!,
-                        ),
-                        const Divider(
-                          color: AppColor.BG_COLOR,
-                          height: 1,
-                        ),
-                        DropDownMenuWidget(
-                          title: "Opt for daal",
-                          choosenvalue: (String value) {
-                            morningmealcustomization.daal =
-                                value == "Yes" ? true : false;
-                            userprovider.notifylistner();
-                          },
-                          list: const ["Yes", "No"],
-                          initialvalue:
-                              morningmealcustomization.daal ? "Yes" : "No",
-                        ),
-                        const Divider(
-                          color: AppColor.BG_COLOR,
-                          height: 1,
-                        ),
-                        DropDownMenuWidget(
-                          title: "Opt for sukhi sabji",
-                          choosenvalue: (String value) {
-                            morningmealcustomization.sukhiSabji =
-                                value == "Yes" ? true : false;
-                            userprovider.notifylistner();
-                          },
-                          list: const ["Yes", "No"],
-                          initialvalue: morningmealcustomization.sukhiSabji
-                              ? "Yes"
-                              : "No",
-                        ),
-                        const Divider(
-                          color: AppColor.BG_COLOR,
-                          height: 1,
-                        ),
-                        showRaitaandSalad
-                            ? DropDownMenuWidget(
-                                title: "Raita",
-                                choosenvalue: (String value) {
-                                  morningmealcustomization.raita =
-                                      value == "Yes" ? true : false;
-                                  userprovider.notifylistner();
-                                },
-                                list: const ["Yes", "No"],
-                                initialvalue: morningmealcustomization.raita
-                                    ? "Yes"
-                                    : "No")
-                            : Container(),
-                        const Divider(
-                          color: AppColor.BG_COLOR,
-                          height: 1,
-                        ),
-                        showRaitaandSalad
-                            ? DropDownMenuWidget(
-                                title: "Salad",
-                                choosenvalue: (String value) {
-                                  morningmealcustomization.salad =
-                                      value == "Yes" ? true : false;
-                                  userprovider.notifylistner();
-                                },
-                                list: const ["Yes", "No"],
-                                initialvalue: morningmealcustomization.salad
-                                    ? "Yes"
-                                    : "No",
-                              )
-                            : Container(),
+                        const Gap(20),
+                        Text("Morning(Breakfast & Lunch)",
+                            style: Theme.of(context).textTheme.displayMedium),
                       ],
                     ),
-                  ),
-                  const Gap(10),
-                  Row(
-                    children: [
-                      Checkbox(
-                          value: _sameformorning,
-                          onChanged: (value) {
-                            setState(() {
-                              _sameformorning = value!;
-                            });
-                          }),
-                      Text(
-                        "Same for every morning",
-                        style: Theme.of(context).textTheme.titleLarge,
+                    const Gap(15),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.secondary,
+                        borderRadius: BorderRadius.circular(10),
                       ),
-                    ],
-                  ),
-                  const Gap(20),
-                  Row(
-                    children: [
-                      const Gap(20),
-                      Text("Evening (Dinner)",
-                          style: Theme.of(context).textTheme.displayMedium),
-                    ],
-                  ),
-                  const Gap(15),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.secondary,
-                      borderRadius: BorderRadius.circular(10),
+                      child: Column(
+                        children: [
+                          DropDownMenuWidget(
+                            title: "Dietary Preference",
+                            choosenvalue: (String value) {
+                              morningmealcustomization[_dayselectedIndex]
+                                  .dietaryPrefrence = value;
+                              mealCustomizationProvider.notifylistner();
+                            },
+                            list: menuprovider
+                                .menu!
+                                .weeklyMenu[
+                                    Utils.getDayName(_dayselectedIndex + 1)]![4]
+                                    ["lunch"]
+                                .cast<String>(),
+                            value: morningmealcustomization[_dayselectedIndex]
+                                .dietaryPrefrence,
+                          ),
+                          DropDownMenuWidget(
+                            title: "Number of roti",
+                            choosenvalue: (String value) {
+                              morningmealcustomization[_dayselectedIndex]
+                                  .numberofRoti = int.parse(value);
+                              mealCustomizationProvider.notifylistner();
+                            },
+                            list: _rotilist,
+                            value: morningmealcustomization[_dayselectedIndex]
+                                .numberofRoti
+                                .toString(),
+                          ),
+                          const Divider(
+                            color: AppColor.BG_COLOR,
+                            height: 1,
+                          ),
+                          DropDownMenuWidget(
+                            title: "Rice quantity",
+                            choosenvalue: (String value) {
+                              morningmealcustomization[_dayselectedIndex]
+                                  .riceQuantity = _ricequantityDouble[value]!;
+                              mealCustomizationProvider.notifylistner();
+                            },
+                            list: _ricequantity.values.toList(),
+                            value: _ricequantity[
+                                morningmealcustomization[_dayselectedIndex]
+                                    .riceQuantity]!,
+                          ),
+                          const Divider(
+                            color: AppColor.BG_COLOR,
+                            height: 1,
+                          ),
+                          DropDownMenuWidget(
+                            title: "Opt for daal",
+                            choosenvalue: (String value) {
+                              morningmealcustomization[_dayselectedIndex].daal =
+                                  value == "Yes" ? true : false;
+                              mealCustomizationProvider.notifylistner();
+                            },
+                            list: const ["Yes", "No"],
+                            value:
+                                morningmealcustomization[_dayselectedIndex].daal
+                                    ? "Yes"
+                                    : "No",
+                          ),
+                          const Divider(
+                            color: AppColor.BG_COLOR,
+                            height: 1,
+                          ),
+                          DropDownMenuWidget(
+                            title: "Opt for sukhi sabji",
+                            choosenvalue: (String value) {
+                              morningmealcustomization[_dayselectedIndex]
+                                  .sukhiSabji = value == "Yes" ? true : false;
+                              mealCustomizationProvider.notifylistner();
+                            },
+                            list: const ["Yes", "No"],
+                            value: morningmealcustomization[_dayselectedIndex]
+                                    .sukhiSabji
+                                ? "Yes"
+                                : "No",
+                          ),
+                          const Divider(
+                            color: AppColor.BG_COLOR,
+                            height: 1,
+                          ),
+                          showRaitaandSalad
+                              ? DropDownMenuWidget(
+                                  title: "Raita",
+                                  choosenvalue: (String value) {
+                                    morningmealcustomization[_dayselectedIndex]
+                                        .raita = value == "Yes" ? true : false;
+                                    mealCustomizationProvider.notifylistner();
+                                  },
+                                  list: const ["Yes", "No"],
+                                  value: morningmealcustomization[
+                                              _dayselectedIndex]
+                                          .raita
+                                      ? "Yes"
+                                      : "No")
+                              : Container(),
+                          const Divider(
+                            color: AppColor.BG_COLOR,
+                            height: 1,
+                          ),
+                          showRaitaandSalad
+                              ? DropDownMenuWidget(
+                                  title: "Salad",
+                                  choosenvalue: (String value) {
+                                    morningmealcustomization[_dayselectedIndex]
+                                        .salad = value == "Yes" ? true : false;
+                                    mealCustomizationProvider.notifylistner();
+                                  },
+                                  list: const ["Yes", "No"],
+                                  value: morningmealcustomization[
+                                              _dayselectedIndex]
+                                          .salad
+                                      ? "Yes"
+                                      : "No",
+                                )
+                              : Container(),
+                        ],
+                      ),
                     ),
-                    child: Column(
+                    const Gap(10),
+                    Row(
                       children: [
-                        DropDownMenuWidget(
-                          title: "Number of roti",
-                          choosenvalue: (String value) {
-                            eveningmealcustomization.numberofRoti =
-                                int.parse(value);
-                            userprovider.notifylistner();
-                          },
-                          list: _rotilist,
-                          initialvalue:
-                              eveningmealcustomization.numberofRoti.toString(),
+                        Checkbox(
+                            value: _sameformorning,
+                            onChanged: (value) {
+                              setState(() {
+                                _sameformorning = value!;
+                              });
+                            }),
+                        Text(
+                          "Same for every morning",
+                          style: Theme.of(context).textTheme.titleLarge,
                         ),
-                        const Divider(
-                          color: AppColor.BG_COLOR,
-                          height: 1,
-                        ),
-                        DropDownMenuWidget(
-                          title: "Rice quantity",
-                          choosenvalue: (String value) {
-                            eveningmealcustomization.riceQuantity =
-                                _ricequantityDouble[value]!;
-                            userprovider.notifylistner();
-                          },
-                          list: _ricequantity.values.toList(),
-                          initialvalue: _ricequantity[
-                              eveningmealcustomization.riceQuantity]!,
-                          // initialvalue: 'c',
-                        ),
-                        const Divider(
-                          color: AppColor.BG_COLOR,
-                          height: 1,
-                        ),
-                        DropDownMenuWidget(
-                          title: "Opt for daal",
-                          choosenvalue: (String value) {
-                            eveningmealcustomization.daal =
-                                value == "Yes" ? true : false;
-                            userprovider.notifylistner();
-                          },
-                          list: const ["Yes", "No"],
-                          initialvalue:
-                              eveningmealcustomization.daal ? "Yes" : "No",
-                        ),
-                        const Divider(
-                          color: AppColor.BG_COLOR,
-                          height: 1,
-                        ),
-                        DropDownMenuWidget(
-                          title: "Opt for sukhi sabji",
-                          choosenvalue: (String value) {
-                            eveningmealcustomization.sukhiSabji =
-                                value == "Yes" ? true : false;
-                            userprovider.notifylistner();
-                          },
-                          list: const ["Yes", "No"],
-                          initialvalue: eveningmealcustomization.sukhiSabji
-                              ? "Yes"
-                              : "No",
-                        ),
-                        const Divider(
-                          color: AppColor.BG_COLOR,
-                          height: 1,
-                        ),
-                        showRaitaandSalad
-                            ? DropDownMenuWidget(
-                                title: "Raita",
-                                choosenvalue: (String value) {
-                                  eveningmealcustomization.raita =
-                                      value == "Yes" ? true : false;
-                                  userprovider.notifylistner();
-                                },
-                                list: const ["Yes", "No"],
-                                initialvalue: eveningmealcustomization.raita
-                                    ? "Yes"
-                                    : "No",
-                              )
-                            : Container(),
-                        const Divider(
-                          color: AppColor.BG_COLOR,
-                          height: 1,
-                        ),
-                        showRaitaandSalad
-                            ? DropDownMenuWidget(
-                                title: "Salad",
-                                choosenvalue: (String value) {
-                                  eveningmealcustomization.salad =
-                                      value == "Yes" ? true : false;
-                                  userprovider.notifylistner();
-                                },
-                                list: const ["Yes", "No"],
-                                initialvalue: eveningmealcustomization.salad
-                                    ? "Yes"
-                                    : "No",
-                              )
-                            : Container(),
                       ],
                     ),
-                  ),
-                  const Gap(10),
-                  Row(
-                    children: [
-                      Checkbox(
-                          value: _sameforevening,
-                          onChanged: (value) {
-                            setState(() {
-                              _sameforevening = value!;
-                            });
-                          }),
-                      Text(
-                        "Same for every evening",
-                        style: Theme.of(context).textTheme.titleLarge,
+                    const Gap(20),
+                    Row(
+                      children: [
+                        const Gap(20),
+                        Text("Evening (Dinner)",
+                            style: Theme.of(context).textTheme.displayMedium),
+                      ],
+                    ),
+                    const Gap(15),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.secondary,
+                        borderRadius: BorderRadius.circular(10),
                       ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 200,
-                    child: Center(
-                        child: SvgPicture.asset(
-                            "assets/images/gester food stay.svg")),
-                  ),
-                ],
+                      child: Column(
+                        children: [
+                          DropDownMenuWidget(
+                            title: "Dietary Preference",
+                            choosenvalue: (String value) {
+                              eveningmealcustomization[_dayselectedIndex]
+                                  .dietaryPrefrence = value;
+                              mealCustomizationProvider.notifylistner();
+                            },
+                            list: menuprovider
+                                .menu!
+                                .weeklyMenu[
+                                    Utils.getDayName(_dayselectedIndex + 1)]![4]
+                                    ["dinner"]
+                                .cast<String>(),
+                            value: eveningmealcustomization[_dayselectedIndex]
+                                .dietaryPrefrence,
+                          ),
+                          const Divider(
+                            color: AppColor.BG_COLOR,
+                            height: 1,
+                          ),
+                          DropDownMenuWidget(
+                            title: "Number of roti",
+                            choosenvalue: (String value) {
+                              eveningmealcustomization[_dayselectedIndex]
+                                  .numberofRoti = int.parse(value);
+                              mealCustomizationProvider.notifylistner();
+                            },
+                            list: _rotilist,
+                            value: eveningmealcustomization[_dayselectedIndex]
+                                .numberofRoti
+                                .toString(),
+                          ),
+                          const Divider(
+                            color: AppColor.BG_COLOR,
+                            height: 1,
+                          ),
+                          DropDownMenuWidget(
+                            title: "Rice quantity",
+                            choosenvalue: (String value) {
+                              eveningmealcustomization[_dayselectedIndex]
+                                  .riceQuantity = _ricequantityDouble[value]!;
+                              mealCustomizationProvider.notifylistner();
+                            },
+                            list: _ricequantity.values.toList(),
+                            value: _ricequantity[
+                                eveningmealcustomization[_dayselectedIndex]
+                                    .riceQuantity]!,
+                            // value: 'c',
+                          ),
+                          const Divider(
+                            color: AppColor.BG_COLOR,
+                            height: 1,
+                          ),
+                          DropDownMenuWidget(
+                            title: "Opt for daal",
+                            choosenvalue: (String value) {
+                              eveningmealcustomization[_dayselectedIndex].daal =
+                                  value == "Yes" ? true : false;
+                              mealCustomizationProvider.notifylistner();
+                            },
+                            list: const ["Yes", "No"],
+                            value:
+                                eveningmealcustomization[_dayselectedIndex].daal
+                                    ? "Yes"
+                                    : "No",
+                          ),
+                          const Divider(
+                            color: AppColor.BG_COLOR,
+                            height: 1,
+                          ),
+                          DropDownMenuWidget(
+                            title: "Opt for sukhi sabji",
+                            choosenvalue: (String value) {
+                              eveningmealcustomization[_dayselectedIndex]
+                                  .sukhiSabji = value == "Yes" ? true : false;
+                              mealCustomizationProvider.notifylistner();
+                            },
+                            list: const ["Yes", "No"],
+                            value: eveningmealcustomization[_dayselectedIndex]
+                                    .sukhiSabji
+                                ? "Yes"
+                                : "No",
+                          ),
+                          const Divider(
+                            color: AppColor.BG_COLOR,
+                            height: 1,
+                          ),
+                          showRaitaandSalad
+                              ? DropDownMenuWidget(
+                                  title: "Raita",
+                                  choosenvalue: (String value) {
+                                    eveningmealcustomization[_dayselectedIndex]
+                                        .raita = value == "Yes" ? true : false;
+                                    mealCustomizationProvider.notifylistner();
+                                  },
+                                  list: const ["Yes", "No"],
+                                  value: eveningmealcustomization[
+                                              _dayselectedIndex]
+                                          .raita
+                                      ? "Yes"
+                                      : "No",
+                                )
+                              : Container(),
+                          const Divider(
+                            color: AppColor.BG_COLOR,
+                            height: 1,
+                          ),
+                          showRaitaandSalad
+                              ? DropDownMenuWidget(
+                                  title: "Salad",
+                                  choosenvalue: (String value) {
+                                    eveningmealcustomization[_dayselectedIndex]
+                                        .salad = value == "Yes" ? true : false;
+                                    mealCustomizationProvider.notifylistner();
+                                  },
+                                  list: const ["Yes", "No"],
+                                  value: eveningmealcustomization[
+                                              _dayselectedIndex]
+                                          .salad
+                                      ? "Yes"
+                                      : "No",
+                                )
+                              : Container(),
+                        ],
+                      ),
+                    ),
+                    const Gap(10),
+                    Row(
+                      children: [
+                        Checkbox(
+                            value: _sameforevening,
+                            onChanged: (value) {
+                              setState(() {
+                                _sameforevening = value!;
+                              });
+                            }),
+                        Text(
+                          "Same for every evening",
+                          style: Theme.of(context).textTheme.titleLarge,
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 200,
+                      child: Center(
+                          child: SvgPicture.asset(
+                              "assets/images/gester food stay.svg")),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-          bottomNavigationBar: IntrinsicHeight(
-            child: Container(
-              padding: const EdgeInsets.symmetric(
-                  horizontal: Dimensions.paddingSizeDefault,
-                  vertical: Dimensions.paddingSizeDefault),
-              decoration: BoxDecoration(
-                color: AppColor.WHITE,
-                boxShadow: [
-                  BoxShadow(
-                    color: AppColor.GREY_COLOR_LIGHT.withOpacity(0.3),
-                    spreadRadius: 1,
-                    blurRadius: 5,
-                    offset: const Offset(0, -1),
-                  ),
-                ],
-              ),
-              child: Consumer<MealCustomizationProvider>(
-                  builder: (context, value, child) {
-                bool isChanged = (userprovider.oldmorningData !=
-                        morningmealcustomization) ||
-                    (userprovider.oldeveningData != eveningmealcustomization);
-                return TextCommonButton(
+            bottomNavigationBar: IntrinsicHeight(
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: Dimensions.paddingSizeDefault,
+                    vertical: Dimensions.paddingSizeDefault),
+                decoration: BoxDecoration(
+                  color: AppColor.WHITE,
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColor.GREY_COLOR_LIGHT.withOpacity(0.3),
+                      spreadRadius: 1,
+                      blurRadius: 5,
+                      offset: const Offset(0, -1),
+                    ),
+                  ],
+                ),
+                child:
+                    // bool isChanged = (userprovider.oldeveningData !=
+                    //         morningmealcustomization) ||
+                    //     (userprovider.oldeveningData != eveningmealcustomization);
+                    TextCommonButton(
                   title: "Save & continue",
-                  color: isChanged
+                  color: true //TODO ; compare instance of classes for button color
                       ? AppColor.PRIMARY
                       : AppColor.GREY.withOpacity(0.2),
                   textColor: AppColor.WHITE,
-                  isloader: value.getLoader,
+                  isloader: mealCustomizationProvider.loader,
                   onTap: () async {
                     if (userprovider.user.userType != "PGUser") {
                       Utils.showWithSingleButton(
@@ -456,27 +502,28 @@ class _MenuCustomizationScreenState extends State<MenuCustomizationScreen> {
                     } else {
                       if (widget.datetime.hour >= 17 &&
                           widget.datetime.hour < 21) {
-                        Utils.showWithSingleButton(
-                            context, "You can't customize today's meal between 5pm to 9pm",
+                        Utils.showWithSingleButton(context,
+                            "You can't customize today's meal between 5pm to 9pm",
                             onTap: () {
                           Navigator.pop(context);
                         }, buttonTitle: 'Okay, Got it');
                       } else {
-                        await value.updateMealCustomization(
+                        await mealCustomizationProvider.updateMealCustomization(
                             userprovider.user.userId,
                             userprovider.user.pgNumber,
                             userprovider.user.fname,
-                            userprovider.user.dietaryPreference,
-                            morningmealcustomization.toJson(),
-                            eveningmealcustomization.toJson(),
+                            morningmealcustomization[_dayselectedIndex]
+                                .toJson(),
+                            eveningmealcustomization[_dayselectedIndex]
+                                .toJson(),
                             _sameformorning,
                             _sameforevening,
-                            _dayselectedIndex,
+                            _dayselectedIndex + 1,
                             userprovider.user.breakfast,
                             userprovider.user.lunch,
                             userprovider.user.dinner,
                             widget.datetime);
-                        userprovider.setOldmealcustomization(
+                        mealCustomizationProvider.setoldMealCustomization(
                             morningmealcustomization, eveningmealcustomization);
                         if (!context.mounted) return;
                         Navigator.pop(context);
@@ -485,12 +532,12 @@ class _MenuCustomizationScreenState extends State<MenuCustomizationScreen> {
                       }
                     }
                   },
-                );
-              }),
+                ),
+              ),
             ),
           ),
         ),
-      ),
-    );
+      );
+    });
   }
 }

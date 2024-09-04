@@ -3,16 +3,17 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:gap/gap.dart';
-import 'package:gester/firebase_methods/firestore_methods.dart';
 import 'package:gester/main.dart';
 import 'package:gester/provider/home_screen_provider.dart';
 import 'package:gester/provider/user_provider.dart';
 import 'package:gester/resources/color.dart';
 import 'package:gester/resources/dimensions.dart';
+import 'package:gester/utils/app_constants.dart';
 import 'package:gester/utils/utilities.dart';
 import 'package:gester/utils/widgets/activebutton.dart';
 import 'package:gester/view/home/screens/QuickAcessScreens/MenuCustomizationScreen.dart';
 import 'package:gester/view/home/screens/QuickAcessScreens/meal_history_screen.dart';
+import 'package:gester/view/meal_subscription/meal_subscription_screen.dart';
 import 'package:gester/view/profile/aboutUs.dart';
 import 'package:gester/view/profile/profilesetting.dart';
 import 'package:gester/view/profile/widgets/Container_with_padding.dart';
@@ -106,8 +107,8 @@ class ProfileScreen extends StatelessWidget {
                                 style: Theme.of(context).textTheme.titleMedium,
                               ),
                               ActiveButton(
-                                isactive: user.subscription.subscriptionCode ==
-                                    "P004",
+                                  color: Appconstants.subscriptionStatusColor[user.subscription.status]!,
+                              title: user.subscription.status,
                                 onTap: () {
                                   
                                 },
@@ -127,14 +128,19 @@ class ProfileScreen extends StatelessWidget {
                   ),
                   child: Column(
                     children: [
-                      // ContainerWithPadding(
-                      //     onTap: () {},
-                      //     content: "Your meal subscription",
-                      //     image: "assets/images/profile/meal subscription.svg"),
-                      // const Divider(
-                      //   color: AppColor.BG_COLOR,
-                      //   height: 1,
-                      // ),
+                      ContainerWithPadding(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) => const MealSubscriptionScreen()));
+                          },
+                          content: "Your meal subscription",
+                          image: "assets/images/profile/meal subscription.svg"),
+                      const Divider(
+                        color: AppColor.BG_COLOR,
+                        height: 1,
+                      ),
                       ContainerWithPadding(
                           onTap: () {
                             Navigator.push(

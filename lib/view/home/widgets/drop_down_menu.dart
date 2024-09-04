@@ -1,21 +1,18 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
 import 'package:gester/resources/color.dart';
 import 'package:gester/resources/dimensions.dart';
 
 class DropDownMenuWidget extends StatefulWidget {
   final ValueChanged<String> choosenvalue;
   final String title;
-  final String initialvalue;
+  final String value;
   final List<String> list;
   const DropDownMenuWidget({
     super.key,
     required this.choosenvalue,
     required this.title,
     required this.list,
-    required this.initialvalue,
+    required this.value,
   });
   @override
   State<DropDownMenuWidget> createState() => _DropDownMenuWidgetState();
@@ -27,12 +24,14 @@ class _DropDownMenuWidgetState extends State<DropDownMenuWidget> {
   @override
   void initState() {
     // TODO: implement initState
-    _value = widget.initialvalue;
     super.initState();
   }
 
+
   @override
   Widget build(BuildContext context) {
+    // var logger = Logger();
+    // logger.d(_value);
     return Container(
       padding: const EdgeInsets.symmetric(
           horizontal: Dimensions.paddingSizeDefault,
@@ -54,26 +53,22 @@ class _DropDownMenuWidgetState extends State<DropDownMenuWidget> {
             padding: const EdgeInsets.symmetric(
                 horizontal: Dimensions.paddingSizeSmall),
             child: DropdownButton<String>(
-              value: _value,
+              value: widget.value,
               icon: Transform.rotate(
-                angle: 1.5708,
-                child: const Icon(
-                  Icons.chevron_right,
-                  size: 16,
-                )),
+                  angle: 1.5708,
+                  child: const Icon(
+                    Icons.chevron_right,
+                    size: 16,
+                  )),
               underline: Container(
                 height: 0,
               ),
               isExpanded: true,
               style: const TextStyle(color: AppColor.BLACK),
               onChanged: (String? value) {
-                setState(() {
-                  _value = value!;
-                });
-                widget.choosenvalue(_value);
+                widget.choosenvalue(value!);
               },
-              items:
-                  widget.list.map<DropdownMenuItem<String>>((String value) {
+              items: widget.list.map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(
                   value: value,
                   child: Text(value),

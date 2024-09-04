@@ -1,5 +1,4 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:convert';
 
 import 'package:gester/models/all_meal_details.dart';
 
@@ -22,11 +21,11 @@ class UserData {
   int breakfast;
   int lunch;
   int dinner;
+  String note;
   final String pgNumber;
-  final MealCustomizationData morning;
-  final MealCustomizationData evening;
 
   UserData({
+    required this.note,
     required this.accomodation,
     required this.subscription,
     required this.userType,
@@ -45,33 +44,14 @@ class UserData {
     this.breakfast = 0,
     this.lunch = 0,
     this.dinner = 0,
-    MealCustomizationData? morning,
-    MealCustomizationData? evening,
-  })  : morning = morning ??
-            MealCustomizationData(
-              numberofRoti: 3,
-              riceQuantity: 0.5,
-              daal: true,
-              salad: false,
-              sukhiSabji: true,
-              raita: false,
-            ),
-        evening = evening ??
-            MealCustomizationData(
-              numberofRoti: 3,
-              riceQuantity: 0.5,
-              daal: true,
-              salad: false,
-              sukhiSabji: true,
-              raita: false,
-            );
+  });
 
   factory UserData.fromjson(
           Map<String, dynamic> json,
           String docId,
           Map<String, dynamic> mealOptjson,
           Map<String, dynamic> kycdatajson,
-          Map<String, dynamic> mealCustomization) =>
+         ) =>
       UserData(
         userId: docId,
         accomodation: Accomodation.fromjson(json["Accommodation"] ?? {}),
@@ -85,19 +65,16 @@ class UserData {
         dateOfbirth: json['DateOfBirth'] ?? "Not Available",
         password: json['Password'] ?? "Not Available",
         phoneNumber: json['phoneNumber'] ?? "Not Defined",
-        dietaryPreference: json["Dietary_preference"] ?? "Not Defined",
+        dietaryPreference: json["Dietary_preference"] ?? "Veg",
         subscription: Subscription.fromjson(json['Subscription'] ??
             {}), //to-do what if the subscription if not present
         breakfast: mealOptjson['breakfast'] ?? 0,
         lunch: mealOptjson['lunch'] ?? 0,
         dinner: mealOptjson['dinner'] ?? 0,
+        note: mealOptjson['note'] ?? "",
         pgNumber: kycdatajson.isEmpty
             ? ""
             : kycdatajson['Accommodation_details']['PG_number'],
-        morning:
-            MealCustomizationData.fromMap(mealCustomization["Morning"] ?? {}),
-        evening:
-            MealCustomizationData.fromMap(mealCustomization["Evening"] ?? {}),
       );
 
   Map<String, dynamic> toJson() => {
@@ -122,7 +99,7 @@ class Subscription {
   final int daysLeft;
   final int numberOfMeals;
   final String planName;
-  final String status;
+  String status;
   final String subscriptionCode;
   Subscription({
     required this.subscriptionCode,
@@ -130,15 +107,15 @@ class Subscription {
     required this.daysLeft,
     required this.numberOfMeals,
     required this.planName,
-    required this.status,
+    this.status = "Away",
   });
 
   factory Subscription.fromjson(Map<String, dynamic> json) => Subscription(
         amount: json['amount'] ?? 0,
         daysLeft: json['daysLeft'] ?? 0,
         numberOfMeals: json['numberOfMeals'] ?? 0,
-        planName: json['planName'] ?? "",
-        status: json['status'] ?? "",
+        planName: json['planName'] ?? "No Plan",
+        status: json['status'] ?? "", //TODO: check if the status is not present
         subscriptionCode: json['subscriptionCode'] ?? "P004",
       );
   Map<String, dynamic> toJson() => {
@@ -180,7 +157,6 @@ class KYCDocuments {
     required this.collegeProof,
     required this.photo,
   });
-  
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
@@ -194,12 +170,11 @@ class KYCDocuments {
 
   factory KYCDocuments.fromMap(Map<String, dynamic> map) {
     return KYCDocuments(
-      adhaarFront: map['Aadhaar_front']??"",
-      adhaarBack: map['Aadhaar_back']??"",
-      workProof: map['Work_proof']??"",
-      collegeProof: map['College_proof']??"",
-      photo: map['Passport_photo']??"",
+      adhaarFront: map['Aadhaar_front'] ?? "",
+      adhaarBack: map['Aadhaar_back'] ?? "",
+      workProof: map['Work_proof'] ?? "",
+      collegeProof: map['College_proof'] ?? "",
+      photo: map['Passport_photo'] ?? "",
     );
   }
-
 }

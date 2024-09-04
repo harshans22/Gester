@@ -31,7 +31,7 @@ class _MyDocumentsState extends State<MyDocuments> {
           .getKYCDocuments(widget.userId);
     } catch (e) {
       logger.e(e.toString());
-    }finally {
+    } finally {
       if (mounted) {
         setState(() {
           isloading = false;
@@ -177,7 +177,7 @@ class _MyDocumentsState extends State<MyDocuments> {
   @override
   Widget build(BuildContext context) {
     final documents =
-        Provider.of<UserKYCDocumentsProvider>(context, listen: true)
+        Provider.of<UserKYCDocumentsProvider>(context, listen: false)
             .kycDocuments;
 
     return Center(
@@ -195,153 +195,158 @@ class _MyDocumentsState extends State<MyDocuments> {
             centerTitle: true,
             elevation: 5,
           ),
-          body:isloading?const SpinKitFadingCircle(color: AppColor.PRIMARY,) :Padding(
-            padding: const EdgeInsets.symmetric(
-                horizontal: Dimensions.paddingSizeSmall),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Gap(10),
-                Text("Aadhaar",
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyLarge!
-                        .copyWith(fontWeight: FontWeight.w700)),
-                const Gap(10),
-                Row(
-                  children: [
-                    FileUpload(
-                        line1: "Upload Adhaar Front",
-                        line2: "",
-                        currentImage: _adhaarFront,
-                        oldImage: documents!.adhaarFront,
-                        onedit: () {
-                          selectImage(context, 1);
-                        },
-                        ondelete: () {
-                          setState(() {
-                            _adhaarFront = null;
-                          });
-                        },
-                        onUpload: () async {
-                          try {
-                            await selectImage(context, 1);
-                          } catch (e) {
-                            logger.e(e.toString());
-                          }
-                        }),
-                    const Gap(5),
-                    FileUpload(
-                        line1: "Upload Adhaar Back",
-                        line2: "",
-                        currentImage: _adhaarBack,
-                        oldImage: documents.adhaarBack,
-                        onedit: () {
-                          selectImage(context, 2);
-                        },
-                        ondelete: () {
-                          setState(() {
-                            _adhaarBack = null;
-                          });
-                        },
-                        onUpload: () async {
-                          try {
-                            await selectImage(context, 2);
-                          } catch (e) {
-                            logger.e(e.toString());
-                          }
-                        }),
-                  ],
+          body: isloading
+              ? const SpinKitFadingCircle(
+                  color: AppColor.PRIMARY,
+                )
+              : Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: Dimensions.paddingSizeSmall),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Gap(10),
+                      Text("Aadhaar",
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyLarge!
+                              .copyWith(fontWeight: FontWeight.w700)),
+                      const Gap(10),
+                      Row(
+                        children: [
+                          FileUpload(
+                              line1: "Upload Adhaar Front",
+                              line2: "",
+                              currentImage: _adhaarFront,
+                              oldImage: documents.adhaarFront,
+                              onedit: () {
+                                selectImage(context, 1);
+                              },
+                              ondelete: () {
+                                setState(() {
+                                  _adhaarFront = null;
+                                });
+                              },
+                              onUpload: () async {
+                                try {
+                                  await selectImage(context, 1);
+                                } catch (e) {
+                                  logger.e(e.toString());
+                                }
+                              }),
+                          const Gap(5),
+                          FileUpload(
+                              line1: "Upload Adhaar Back",
+                              line2: "",
+                              currentImage: _adhaarBack,
+                              oldImage: documents.adhaarBack,
+                              onedit: () {
+                                selectImage(context, 2);
+                              },
+                              ondelete: () {
+                                setState(() {
+                                  _adhaarBack = null;
+                                });
+                              },
+                              onUpload: () async {
+                                try {
+                                  await selectImage(context, 2);
+                                } catch (e) {
+                                  logger.e(e.toString());
+                                }
+                              }),
+                        ],
+                      ),
+                      const Gap(20),
+                      Text("Proof",
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyLarge!
+                              .copyWith(fontWeight: FontWeight.w700)),
+                      const Gap(20),
+                      Row(
+                        children: [
+                          FileUpload(
+                              line1: "Upload work proof",
+                              line2:
+                                  "Offer letter, internship letter and salary slip",
+                              currentImage: _workProof,
+                              oldImage: documents.workProof,
+                              onedit: () {
+                                selectImage(context, 3);
+                              },
+                              ondelete: () {
+                                setState(() {
+                                  _workProof = null;
+                                });
+                              },
+                              onUpload: () async {
+                                try {
+                                  await selectImage(context, 3);
+                                } catch (e) {
+                                  logger.e(e.toString());
+                                }
+                              }),
+                          const Gap(5),
+                          FileUpload(
+                              line1: "Upload College proof",
+                              line2:
+                                  "Admission letter, Collge ID or enrollment recipt",
+                              currentImage: _collegeProof,
+                              oldImage: documents.collegeProof,
+                              onedit: () {
+                                selectImage(context, 4);
+                              },
+                              ondelete: () {
+                                setState(() {
+                                  _collegeProof = null;
+                                });
+                              },
+                              onUpload: () async {
+                                try {
+                                  await selectImage(context, 4);
+                                } catch (e) {
+                                  logger.e(e.toString());
+                                }
+                              }),
+                        ],
+                      ),
+                      const Gap(20),
+                      Text("Photo",
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyLarge!
+                              .copyWith(fontWeight: FontWeight.w700)),
+                      const Gap(20),
+                      Row(
+                        children: [
+                          FileUpload(
+                              line1: "Upload passport size photo",
+                              line2:
+                                  "file format should be .jpeg, .jpg and png",
+                              currentImage: _photo,
+                              oldImage: documents.photo,
+                              onedit: () {
+                                selectImage(context, 5);
+                              },
+                              ondelete: () {
+                                setState(() {
+                                  _photo = null;
+                                });
+                              },
+                              onUpload: () async {
+                                try {
+                                  await selectImage(context, 5);
+                                } catch (e) {
+                                  logger.e(e.toString());
+                                }
+                              }),
+                          Flexible(child: Container())
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-                const Gap(20),
-                Text("Proof",
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyLarge!
-                        .copyWith(fontWeight: FontWeight.w700)),
-                const Gap(20),
-                Row(
-                  children: [
-                    FileUpload(
-                        line1: "Upload work proof",
-                        line2:
-                            "Offer letter, internship letter and salary slip",
-                        currentImage: _workProof,
-                        oldImage: documents.workProof,
-                        onedit: () {
-                          selectImage(context, 3);
-                        },
-                        ondelete: () {
-                          setState(() {
-                            _workProof = null;
-                          });
-                        },
-                        onUpload: () async {
-                          try {
-                            await selectImage(context, 3);
-                          } catch (e) {
-                            logger.e(e.toString());
-                          }
-                        }),
-                    const Gap(5),
-                    FileUpload(
-                        line1: "Upload College proof",
-                        line2:
-                            "Admission letter, Collge ID or enrollment recipt",
-                        currentImage: _collegeProof,
-                        oldImage: documents.collegeProof,
-                        onedit: () {
-                          selectImage(context, 4);
-                        },
-                        ondelete: () {
-                          setState(() {
-                            _collegeProof = null;
-                          });
-                        },
-                        onUpload: () async {
-                          try {
-                            await selectImage(context, 4);
-                          } catch (e) {
-                            logger.e(e.toString());
-                          }
-                        }),
-                  ],
-                ),
-                const Gap(20),
-                Text("Photo",
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyLarge!
-                        .copyWith(fontWeight: FontWeight.w700)),
-                const Gap(20),
-                Row(
-                  children: [
-                    FileUpload(
-                        line1: "Upload passport size photo",
-                        line2: "file format should be .jpeg, .jpg and png",
-                        currentImage: _photo,
-                        oldImage: documents.photo,
-                        onedit: () {
-                          selectImage(context, 5);
-                        },
-                        ondelete: () {
-                          setState(() {
-                            _photo = null;
-                          });
-                        },
-                        onUpload: () async {
-                          try {
-                            await selectImage(context, 5);
-                          } catch (e) {
-                            logger.e(e.toString());
-                          }
-                        }),
-                    Flexible(child: Container())
-                  ],
-                ),
-              ],
-            ),
-          ),
           bottomNavigationBar: IntrinsicHeight(
             child: Container(
               padding: const EdgeInsets.symmetric(
@@ -361,14 +366,20 @@ class _MyDocumentsState extends State<MyDocuments> {
               child: Consumer<UserKYCDocumentsProvider>(
                   builder: (context, value, child) {
                 return TextCommonButton(
-                  title: "Save & continue",
+                  title:value.isLoading? "${value.percentageUploaded}% uploaded":"Save & continue",
                   color: AppColor.PRIMARY,
                   textColor: AppColor.WHITE,
-                  isloader: value.isLoading,
+                 // isloader: value.isLoading,
                   onTap: () async {
                     try {
-                      await value.uploadKYCDocuments(_adhaarFront, _adhaarBack,
-                          _workProof, _collegeProof, _photo, widget.userId);
+                      await value.uploadKYCDocuments(
+                          _adhaarFront,
+                          _adhaarBack,
+                          _workProof,
+                          _collegeProof,
+                          _photo,
+                          widget.userId,
+                          context);
                     } catch (e) {
                       logger.e(e.toString());
                     }

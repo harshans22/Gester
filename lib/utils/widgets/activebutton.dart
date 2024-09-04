@@ -2,9 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:gester/resources/color.dart';
 
 class ActiveButton extends StatelessWidget {
-  final bool isactive;
+  final Color color;
+  final String title;
   final VoidCallback onTap;
-  const ActiveButton({super.key, required this.isactive, required this.onTap});
+  const ActiveButton(
+      {super.key,
+      required this.color,
+      required this.onTap,
+      required this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -15,10 +20,9 @@ class ActiveButton extends StatelessWidget {
           horizontal: 10,
         ),
         decoration: BoxDecoration(
-            color: isactive ? AppColor.GREEN_COLOR : AppColor.RED_COLOR,
-            borderRadius: BorderRadius.circular(10)),
+            color: color, borderRadius: BorderRadius.circular(10)),
         child: Text(
-          isactive ? "Active" : "Inactive",
+          title,
           style: Theme.of(context)
               .textTheme
               .titleMedium!

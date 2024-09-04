@@ -11,7 +11,7 @@ class MenuWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<String> todaysMenu =
+    final  todaysMenu =
         Provider.of<MenuProvider>(context, listen: true).getTodaysMenu(dateTime);
     return Container(
       padding: const EdgeInsets.symmetric(

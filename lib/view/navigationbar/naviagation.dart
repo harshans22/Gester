@@ -46,16 +46,16 @@ class _NavgationScreenState extends State<NavigationScreen> {
   Future<void> updateProvider() async {
     try {
       await Future.delayed(const Duration(seconds: 2));
+       if (!mounted) return;
+      await Provider.of<MenuProvider>(context, listen: false).getMenu();//fetching menu first so that we can assign dietary prefrence to user
       if (!mounted) return;
-      await Provider.of<UserDataProvider>(context, listen: false).updateUser();
+      await Provider.of<UserDataProvider>(context, listen: false).updateUser(context);
       if (!mounted) return;
       await Provider.of<UserDataProvider>(context, listen: false)
           .getStayDetails();
       if (!mounted) return;
       await Provider.of<UserDataProvider>(context, listen: false)
           .getPGDetails();
-      if (!mounted) return;
-      await Provider.of<MenuProvider>(context, listen: false).getMenu();
       if (!mounted) return;
       await Provider.of<HomeScreenProvider>(context, listen: false)
           .fetchTimeFromServer();

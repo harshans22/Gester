@@ -15,6 +15,13 @@ class UserKYCDocumentsProvider with ChangeNotifier {
   bool get isLoading => _isLoading;
   UserDocumentsInFile? _documentsInFile;
   UserDocumentsInFile? get documentsInFile => _documentsInFile;
+  int  _percentageUploaded=0;
+  int get percentageUploaded => _percentageUploaded;
+
+   percentageUpload(int value) {
+    _percentageUploaded = value;
+    notifyListeners();
+  }
 
   bool checkDocumentsChanged() {
     if (_documentsInFile!.adhaarback != null &&
@@ -36,7 +43,7 @@ class UserKYCDocumentsProvider with ChangeNotifier {
       Uint8List? workProof,
       Uint8List? collegeProof,
       Uint8List? passportPhoto,
-      String userId) async {
+      String userId,context) async {
     setisLoading(true);
     try {
     
@@ -52,6 +59,7 @@ class UserKYCDocumentsProvider with ChangeNotifier {
           oldworkProof: kycDocuments.workProof,
           oldcollegeProof: kycDocuments.collegeProof,
           oldphoto: kycDocuments.photo,
+          context: context
           );
            await getKYCDocuments(userId);
     } catch (e) {

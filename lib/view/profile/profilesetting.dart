@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
@@ -81,8 +80,8 @@ class _ProfileSettingState extends State<ProfileSetting> {
 
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<UserDataProvider>(context,listen: false).user;
-    
+    final user = Provider.of<UserDataProvider>(context, listen: false).user;
+
     selectImage(BuildContext context) async {
       return showDialog(
           context: context,
@@ -170,8 +169,8 @@ class _ProfileSettingState extends State<ProfileSetting> {
             centerTitle: true,
           ),
           body: Padding(
-            padding:
-                const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeSmall),
+            padding: const EdgeInsets.symmetric(
+                horizontal: Dimensions.paddingSizeSmall),
             child: SingleChildScrollView(
               child: Column(
                 //mainAxisSize: MainAxisSize.min,
@@ -181,20 +180,28 @@ class _ProfileSettingState extends State<ProfileSetting> {
                   Center(
                     child: Stack(
                       children: [
-                        user.photoUrl.isNotEmpty?CircleAvatar(
-                          backgroundImage: _file == null
-                              ? NetworkImage(user.photoUrl)
-                              : MemoryImage(_file!) as ImageProvider,
-                          radius: 40,
-                        ):_file==null?Container(
-                          decoration: BoxDecoration(
-                            color: Colors.grey,
-                            borderRadius: BorderRadius.circular(50)
-                          ),
-                          child: const Icon(Icons.person,size: 80,)):CircleAvatar(
-                          backgroundImage: MemoryImage(_file!) as ImageProvider,
-                          radius: 40,
-                        ),
+                        user.photoUrl.isNotEmpty
+                            ? CircleAvatar(
+                                backgroundImage: _file == null
+                                    ? NetworkImage(user.photoUrl)
+                                    : MemoryImage(_file!) as ImageProvider,
+                                radius: 40,
+                              )
+                            : _file == null
+                                ? Container(
+                                    decoration: BoxDecoration(
+                                        color: Colors.grey,
+                                        borderRadius:
+                                            BorderRadius.circular(50)),
+                                    child: const Icon(
+                                      Icons.person,
+                                      size: 80,
+                                    ))
+                                : CircleAvatar(
+                                    backgroundImage:
+                                        MemoryImage(_file!) as ImageProvider,
+                                    radius: 40,
+                                  ),
                         Positioned(
                           bottom: 0,
                           right: 0,
@@ -267,26 +274,39 @@ class _ProfileSettingState extends State<ProfileSetting> {
                     valueListenable: isChanged,
                     builder: (context, value, child) {
                       return Consumer<ProfileProvider>(
-                        builder: (context, profileprovider, child) => 
-                         TextCommonButton(
-                           //isloader: false,
-                           isloader: profileprovider.loading,
-                           title: "Save & continue",
-                           color: value
-                               ? AppColor.PRIMARY
-                               : AppColor.GREY.withOpacity(0.2),
-                           textColor:  AppColor.WHITE, onTap: () async{ 
-                              if (value) {
-                            await profileprovider.uploadChangedData(_file,user.userId,user.photoUrl,_firstname.text,_lastname.text,_dateofBirth.text,_phonenumber.text,_username.text,_email.text,_password.text,_gender.text);
-                             Provider.of<UserDataProvider>(context, listen: false)
-                                 .updateUser();
-                           } else {
-                             Utils.toastMessage(
-                                 "Please make some changes", Colors.red);
-                           }
-                            } ,
-                         )
-                      );
+                          builder: (context, profileprovider, child) =>
+                              TextCommonButton(
+                                //isloader: false,
+                                isloader: profileprovider.loading,
+                                title: "Save & continue",
+                                color: value
+                                    ? AppColor.PRIMARY
+                                    : AppColor.GREY.withOpacity(0.2),
+                                textColor: AppColor.WHITE,
+                                onTap: () async {
+                                  if (value) {
+                                    await profileprovider.uploadChangedData(
+                                        _file,
+                                        user.userId,
+                                        user.photoUrl,
+                                        _firstname.text,
+                                        _lastname.text,
+                                        _dateofBirth.text,
+                                        _phonenumber.text,
+                                        _username.text,
+                                        _email.text,
+                                        _password.text,
+                                        _gender.text);
+                                    if (!context.mounted) return;
+                                    Provider.of<UserDataProvider>(context,
+                                            listen: false)
+                                        .updateUser(context);
+                                  } else {
+                                    Utils.toastMessage(
+                                        "Please make some changes", Colors.red);
+                                  }
+                                },
+                              ));
                     },
                   ),
                 ],

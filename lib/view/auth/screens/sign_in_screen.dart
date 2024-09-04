@@ -63,6 +63,7 @@ class _SignInScreenState extends State<SignInScreen> {
                       }
                     } catch (e) {
                       var logger = Logger();
+                      logger.e(e.toString());
                       Utils.toastMessage(e.toString(), Colors.red);
                     }
 

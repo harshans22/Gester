@@ -1,7 +1,7 @@
 
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 class Menu {
-  final Map<String, List<String>> weeklyMenu;
+  final Map<String, List<dynamic>> weeklyMenu;
   final String weekPeriod;
   Menu({
     required this.weeklyMenu,
@@ -16,6 +16,7 @@ class MealCustomizationData {
    bool salad;
    bool sukhiSabji;
    bool raita;
+   String dietaryPrefrence;
   MealCustomizationData({
     this.numberofRoti=3,
     this.riceQuantity=0.5,
@@ -23,6 +24,7 @@ class MealCustomizationData {
     this.salad=true,
     this.sukhiSabji=true,
     this.raita=false,
+    this.dietaryPrefrence="",
   });
 
 
@@ -34,6 +36,7 @@ class MealCustomizationData {
     bool? sukhiSabji,
     bool? raita,
     bool? salad,
+    String? dietaryPrefrence,
   }) {
     return MealCustomizationData(
       numberofRoti: numberofRoti ?? this.numberofRoti,
@@ -42,6 +45,7 @@ class MealCustomizationData {
       sukhiSabji: sukhiSabji ?? this.sukhiSabji,
       raita: raita ?? this.raita,
       salad: salad ?? this.salad,
+      dietaryPrefrence: dietaryPrefrence ?? this.dietaryPrefrence,
     );
   }
 
@@ -56,7 +60,8 @@ class MealCustomizationData {
         other.daal == daal &&
         other.sukhiSabji == sukhiSabji &&
         other.raita == raita &&
-        other.salad == salad;
+        other.salad == salad&&
+        other.dietaryPrefrence==dietaryPrefrence;
   }
 
   @override
@@ -66,7 +71,8 @@ class MealCustomizationData {
         daal.hashCode ^
         sukhiSabji.hashCode ^
         raita.hashCode ^
-        salad.hashCode;
+        salad.hashCode^
+        dietaryPrefrence.hashCode;
   }
 
 
@@ -78,6 +84,7 @@ class MealCustomizationData {
       'salad': salad,
       'sukhiSabji': sukhiSabji,
       'raita': raita,
+      'Dietary_preference': dietaryPrefrence,
     };
   }
 
@@ -91,6 +98,7 @@ class MealCustomizationData {
       salad: map['salad']??false,
       sukhiSabji: map['sukhiSabji']??true,
       raita: map['raita']??false,
+      dietaryPrefrence: map['Dietary_preference']??"",
     );
   }
 

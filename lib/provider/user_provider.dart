@@ -5,7 +5,11 @@ import 'package:gester/firebase_methods/firestore_methods.dart';
 import 'package:gester/models/all_meal_details.dart';
 import 'package:gester/models/stay_model.dart';
 import 'package:gester/models/usermodel.dart';
+import 'package:gester/provider/home_screen_provider.dart';
+import 'package:gester/provider/meal_customization_provider.dart';
+import 'package:gester/utils/app_constants.dart';
 import 'package:logger/logger.dart';
+import 'package:provider/provider.dart';
 
 class UserDataProvider with ChangeNotifier {
   var logger = Logger();
@@ -23,17 +27,19 @@ class UserDataProvider with ChangeNotifier {
   int get olddinner => _olddinner;
   int _totalMealopt = 0;
   int get totalMealopt => _totalMealopt;
-  MealCustomizationData _oldmorningData = MealCustomizationData();
-  MealCustomizationData get oldmorningData => _oldmorningData;
-  MealCustomizationData _oldeveningData = MealCustomizationData();
-  MealCustomizationData get oldeveningData => _oldeveningData;
+  
 
-  setOldmealcustomization(
-      MealCustomizationData morning, MealCustomizationData evening) {
-    _oldmorningData = morning.copyWith();
-    _oldeveningData = evening.copyWith();
-    notifyListeners();
-  }
+
+
+
+  // setOldmealcustomization(
+  //     MealCustomizationData morning, MealCustomizationData evening) {
+  //   _oldmorningData = morning.copyWith(); //because dietary prefrence in users are not set intitally mtlab unke mealCustomization mein dietary prefrecne nhi tha ek baar sab mein add ho jaye tab bhale hi hta do ya phir mt htao by chance user ka dietart prefrecne na fetch ho mealCustomization to uske form fill krte waqt le lega
+  //   _oldeveningData = evening.copyWith();
+  //   morningdietaryPrefrenceIndex = Appconstants.dietaryPrefrence.indexOf(_oldmorningData.dietaryPrefrence);
+  //   eveningdietaryPrefrenceIndex = Appconstants.dietaryPrefrence.indexOf(_oldeveningData.dietaryPrefrence);//to change the color and imageIcon in App constants
+  //   notifyListeners();
+  // }
 
   setoldMealtype(int breakfast, int lunch, int dinner) {
     _totalMealopt = breakfast + lunch + dinner;
@@ -48,14 +54,18 @@ class UserDataProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> updateUser() async {
+  Future<void> updateUser(BuildContext context) async {
     try {
       _user = await FireStoreMethods().getuserdata();
       if (_user!.userType == "PGUser") {
         await FireStoreMethods().checkMealOptexists(_user!.userId);
       }
       setoldMealtype(_user!.breakfast, _user!.lunch, _user!.dinner);
-      setOldmealcustomization(_user!.morning, _user!.evening);
+      if (!context.mounted) return;
+      await context.read<MealCustomizationProvider>().fetchMealCustomizationData(_user!.userId, context);  
+      if (!context.mounted) return;
+      await context.read<HomeScreenProvider>().updateUserData(
+          _user!); //update the user data in home screen provider
       notifyListeners();
     } catch (e) {
       throw Exception(e);
@@ -132,6 +142,11 @@ class UserDataProvider with ChangeNotifier {
     _user!.lunch = _oldlunch;
     _user!.dinner = _olddinner;
     _totalMealopt = _oldbreakfast + _oldlunch + _olddinner;
+    notifyListeners();
+  }
+
+  void setsubscriptionstatus(String status) {
+    _user!.subscription.status = status;
     notifyListeners();
   }
 }

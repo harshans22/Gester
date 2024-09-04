@@ -5,10 +5,14 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gap/gap.dart';
 import 'package:gester/resources/color.dart';
 import 'package:gester/resources/dimensions.dart';
+import 'package:gester/utils/app_constants.dart';
 import 'package:gester/utils/widgets/textbutton.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:logger/logger.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:uuid/uuid.dart';
+
+var logger = Logger();
 
 class Utils {
   static pickImage(ImageSource source) async {
@@ -17,7 +21,7 @@ class Utils {
     if (file != null) {
       return await file.readAsBytes();
     }
-   // print("No Image selected");
+    // print("No Image selected");
   }
 
   static void fieldFocusChange(
@@ -36,7 +40,7 @@ class Utils {
         timeInSecForIosWeb: 4);
   }
 
-  static String generateUserId(){
+  static String generateUserId() {
     return const Uuid().v1();
   }
 
@@ -124,12 +128,11 @@ class Utils {
   static String getTimeinMinSec(DateTime now) {
     //write a string to calculate minute and second in reverrse order like a stopwatch
     String minute =
-        (60 - now.minute) < 10 ? "0${(60 - now.minute)}" : "${60 - now.minute}";
+        (59 - now.minute) < 10 ? "0${(59 - now.minute)}" : "${59 - now.minute}";
     String second =
-        (60 - now.second) < 10 ? "0${(60 - now.second)}" : "${60 - now.second}";
+        (59 - now.second) < 10 ? "0${(59 - now.second)}" : "${59 - now.second}";
     return "$minute:$second";
   }
-
 
   static showWithDoubleButton(
       BuildContext context, String title, String content,
@@ -250,7 +253,7 @@ class Utils {
                                     color: AppColor.GREY_COLOR_LIGHT,
                                     fontWeight: FontWeight.w400,
                                   ),
-                                  textAlign: TextAlign.center,
+                              textAlign: TextAlign.center,
                             ),
                             const Gap(20),
                             SizedBox(
@@ -262,7 +265,6 @@ class Utils {
                                 textColor: AppColor.WHITE,
                                 onTap: onTap,
                                 fontWeight: FontWeight.w300,
-                        
                               ),
                             )
                           ],
@@ -273,9 +275,10 @@ class Utils {
             ));
   }
 
-
   //popUp with no button
-  static showWithNoButton(BuildContext context,{required String title}) {
+  static showWithNoButton(BuildContext context,
+      {required String title,
+      String imagePath = "assets/images/homepage/checkIconGreen.svg"}) {
     showDialog(
         context: context,
         builder: (context) => Dialog(
@@ -291,7 +294,7 @@ class Utils {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  SvgPicture.asset("assets/images/homepage/checkIconGreen.svg"),
+                  SvgPicture.asset(imagePath),
                   const Gap(10),
                   Text(
                     title,
@@ -314,5 +317,12 @@ class Utils {
     DateTime parsedDate = DateTime.parse(dateString);
 
     return parsedDate;
+  }
+
+  static bool isTiffinuser(String subscriptionCode) {
+    return subscriptionCode==
+        (Appconstants.subsciptionCode0) ||
+          subscriptionCode==  (Appconstants.subsciptionCode1) ||
+          subscriptionCode==  (Appconstants.subsciptionCode2);
   }
 }

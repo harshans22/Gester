@@ -6,12 +6,14 @@ import 'package:logger/logger.dart';
 
 class MenuProvider with ChangeNotifier {
   var logger = Logger();
-  Menu? _menu;
+  Menu? _menu;//TODO: convert menu to a class of each day
   Menu? get menu => _menu;
 
   Future<void> getMenu() async {
     try {
       _menu = await FireStoreMethods().getdailymenu();
+  
+
       notifyListeners();
     } catch (e) {
       logger.e(e.toString());
@@ -19,7 +21,7 @@ class MenuProvider with ChangeNotifier {
     }
   }
 
-  List<String> getTodaysMenu(DateTime dateTime) {
+  List<dynamic> getTodaysMenu(DateTime dateTime) {
     int weekday = dateTime.weekday;
     String day = Utils.getDayName(weekday);
     return menu!.weeklyMenu[day]!;

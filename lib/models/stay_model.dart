@@ -4,7 +4,7 @@ import 'package:logger/logger.dart';
 
 import 'package:gester/utils/utilities.dart';
 
-var logger = Logger();
+
 
 class StayModel {
   int rent=0;

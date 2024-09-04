@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:gester/provider/meal_customization_provider.dart';
 import 'package:gester/provider/user_provider.dart';
 import 'package:gester/resources/color.dart';
 import 'package:gester/resources/dimensions.dart';
+import 'package:gester/utils/app_constants.dart';
 import 'package:gester/utils/utilities.dart';
 import 'package:gester/provider/home_screen_provider.dart';
 import 'package:provider/provider.dart';
@@ -28,8 +30,13 @@ class CounterBox extends StatefulWidget {
 class _CheckBoxWigdetState extends State<CounterBox> {
   @override
   Widget build(BuildContext context) {
-    DateTime dateTime = Provider.of<HomeScreenProvider>(context).dateTime;
+    DateTime dateTime = Provider.of<HomeScreenProvider>(context)
+        .dateTime; //TODO: make date time such that u don't need always check the condition of after 9
+
     return Consumer<UserDataProvider>(builder: (context, userprovider, child) {
+      bool isactive =
+          userprovider.user.subscription.status == Appconstants.statusActive;
+
       bool isPGUser = userprovider.user.subscription.subscriptionCode == "P004";
       bool canbeAddedPGUser = ((userprovider.totalMealopt >= 3) ? false : true);
       bool canbeChanged = (widget.isbrekfast || widget.islunch)
@@ -73,16 +80,39 @@ class _CheckBoxWigdetState extends State<CounterBox> {
                       : "assets/images/homepage/checkIcon.svg")
                   : "assets/images/homepage/checkIcon.svg"),
               const Gap(5),
-              Text(
-                widget.name,
-                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                    color: isPGUser
-                        ? (canbeChanged
-                            ? (containsMeal ? AppColor.bluecolor : Colors.grey)
-                            : Colors.grey)
-                        : Colors.grey,
-                    fontWeight: FontWeight.w500,
-                    fontSize: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    widget.name,
+                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                        color: isPGUser
+                            ? (canbeChanged
+                                ? (containsMeal
+                                    ? AppColor.bluecolor
+                                    : Colors.grey)
+                                : Colors.grey)
+                            : Colors.grey,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 15),
+                  ),
+                  Gap(4),
+                  SvgPicture.asset(
+                    widget.isbrekfast || widget.islunch
+                        ? Appconstants.dietaryPrefrenceImageIcon[context
+                            .read<MealCustomizationProvider>()
+                            .oldmorningData[dateTime.hour >= 21
+                                ? dateTime.weekday
+                                : dateTime.weekday - 1]
+                            .dietaryPrefrence]
+                        : Appconstants.dietaryPrefrenceImageIcon[context
+                            .read<MealCustomizationProvider>()
+                            .oldeveningData[dateTime.hour >= 21
+                                ? dateTime.weekday
+                                : dateTime.weekday - 1]
+                            .dietaryPrefrence],
+                  )
+                ],
               ),
               const Gap(5),
               Container(
@@ -107,14 +137,13 @@ class _CheckBoxWigdetState extends State<CounterBox> {
                         children: [
                           InkWell(
                               onTap: () {
-                                 if (!canbeChanged) {
+                                if (!canbeChanged) {
                                   Utils.showWithSingleButton(context,
                                       "Your ${widget.name} is Locked. Cannot be changed after ${(widget.isbrekfast || widget.islunch) ? '5 AM' : '5 PM'}",
                                       buttonTitle: "Okay, Got it!", onTap: () {
                                     Navigator.pop(context);
                                   });
-                                }
-                                else if (currentValue == 1) {
+                                } else if (currentValue == 1) {
                                   Utils.showWithDoubleButton(
                                       context,
                                       "You are about to cancel a meal",
@@ -129,7 +158,11 @@ class _CheckBoxWigdetState extends State<CounterBox> {
                                         true);
                                     Navigator.pop(context);
                                   });
-                                }  else {
+                                } else {
+                                  if(userprovider.user.subscription.status == Appconstants.statusAway){
+                                    userprovider.setsubscriptionstatus("Active");
+                                  }
+                                  
                                   userprovider.updateMealOpt(
                                       currentValue - 1,
                                       widget.isbrekfast,
@@ -157,6 +190,9 @@ class _CheckBoxWigdetState extends State<CounterBox> {
                           InkWell(
                               onTap: () {
                                 if (canbeAddedPGUser && canbeChanged) {
+                                   if(userprovider.user.subscription.status == Appconstants.statusAway){
+                                    userprovider.setsubscriptionstatus("Active");
+                                  }
                                   userprovider.updateMealOpt(
                                       currentValue + 1,
                                       widget.isbrekfast,
@@ -191,8 +227,10 @@ class _CheckBoxWigdetState extends State<CounterBox> {
                                 onTap: () {
                               Navigator.pop(context);
                             }, buttonTitle: 'Okay, Got it');
-                          }
-                          else if (canbeChanged && canbeAddedPGUser) {
+                          } else if (canbeChanged && canbeAddedPGUser) {
+                             if(userprovider.user.subscription.status == Appconstants.statusAway){
+                                    userprovider.setsubscriptionstatus("Active");
+                                  }
                             userprovider.updateMealOpt(
                                 currentValue + 1,
                                 widget.isbrekfast,

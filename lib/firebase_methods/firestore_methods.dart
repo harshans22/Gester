@@ -3,12 +3,15 @@ import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:gester/firebase_methods/index.dart';
 import 'package:gester/models/all_meal_details.dart';
 import 'package:gester/models/stay_model.dart';
 import 'package:gester/models/usermodel.dart';
+import 'package:gester/provider/user_documents_provider.dart';
 import 'package:gester/utils/utilities.dart';
 import 'package:logger/logger.dart';
+import 'package:provider/provider.dart';
 
 class FireStoreMethods {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -41,6 +44,8 @@ class FireStoreMethods {
           "photourl": photourl,
           "Usertype": "AppUser",
           "Username": username,
+          "fname": username!.split(" ")[0],
+          "lname": username.split(" ")[1],
           "Subscription": Subscription(
                   subscriptionCode: "P000",
                   amount: 0,
@@ -177,6 +182,7 @@ class FireStoreMethods {
           "breakfast": 0,
           "lunch": 0,
           "dinner": 0,
+          "note": "",
         });
       }
     } catch (e) {
@@ -185,9 +191,45 @@ class FireStoreMethods {
     }
   }
 
-  // Future<void>  generateMealOpt() async{
+  //update note in kitchen and user meal opt
+  Future<void> updateNoteUserData(
+      String userdocid, String note, DateTime dateTime) async {
+    try {
+      int hour = dateTime.hour;
+      if (hour >= 21) {
+        dateTime =
+            dateTime.add(const Duration(days: 1)); //adding date after 9 PM
+      }
+      String date =
+          "${dateTime.day < 10 ? '0${dateTime.day}' : dateTime.day}-${dateTime.month < 10 ? '0${dateTime.month}' : dateTime.month}-${dateTime.year}";
+     
+    } catch (e) {
+      throw Exception("Error while updating note in kitchen data $e");
+    }
+  }
 
-  // }
+
+  Future<void> updateNoteInKitchenData(String userdocid, String note, DateTime dateTime)async{
+    try{
+    int hour = dateTime.hour;
+      if (hour >= 21) {
+        dateTime =
+            dateTime.add(const Duration(days: 1)); //adding date after 9 PM
+      }
+      String date =
+          "${dateTime.day < 10 ? '0${dateTime.day}' : dateTime.day}-${dateTime.month < 10 ? '0${dateTime.month}' : dateTime.month}-${dateTime.year}";
+     await _firestore
+          .collection("Kitchen")
+          .doc(date)
+          .collection("MealOpt")
+          .doc(userdocid)
+          .set({
+        "note": note,
+      }, SetOptions(merge: true));
+    }catch(e){
+      throw Exception("Error while updating note in kitchen data $e");
+    }
+  }
 
   //updating user meal
   Future<void> updateMealOpt(int breakfast, int lunch, int dinner,
@@ -219,6 +261,34 @@ class FireStoreMethods {
     }
   }
 
+  //fetch user mealCustomization
+  Future<List<Map<String,MealCustomizationData>>> fetchUserMealCustomization(
+      String userdocid) async {
+    List<Map<String,MealCustomizationData>> mealCustomizationData = [];
+
+    try {
+      CollectionReference reference =  _firestore
+          .collection("User")
+          .doc(userdocid)
+          .collection("MealCustomization");
+      for (int i = 1; i <= 7; i++) {
+        String day = Utils.getDayName(i);
+        DocumentSnapshot snapshot = await reference.doc(day).get();
+        if (snapshot.exists) {
+          
+          Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
+          mealCustomizationData.add({"Morning":MealCustomizationData.fromMap(data["Morning"]),
+          "Evening":MealCustomizationData.fromMap(data["Evening"])});
+        } else {
+          mealCustomizationData.add({"Morning":MealCustomizationData(),"Evening":MealCustomizationData()});
+        }
+      }
+    } catch (e) {
+      throw Exception("Error while fetching meal customization data $e");
+    }
+    return mealCustomizationData;
+  }
+
   Future<UserData> getuserdata() async {
     String docId = await getUserDocId();
     try {
@@ -235,13 +305,6 @@ class FireStoreMethods {
           await _firestore.collection("User").doc(docId).get();
 
       if ((snapshot.data() as Map)["Usertype"] == "PGUser") {
-        DocumentSnapshot mealcustomization = await _firestore
-            .collection("User")
-            .doc(docId)
-            .collection("MealCustomization")
-            .doc(Utils.getDayName(dateTime.weekday))
-            .get();
-
         DocumentSnapshot mealoptSnapshot = await _firestore
             .collection("User")
             .doc(docId)
@@ -262,14 +325,11 @@ class FireStoreMethods {
             (mealoptSnapshot.exists)
                 ? mealoptSnapshot.data() as Map<String, dynamic>
                 : {},
-            (!kycdata.exists) ? {} : kycdata.data() as Map<String, dynamic>,
-            (!mealcustomization.exists)
-                ? {}
-                : mealcustomization.data() as Map<String, dynamic>);
+            (!kycdata.exists) ? {} : kycdata.data() as Map<String, dynamic>);
         return user;
       } else {
         UserData user = UserData.fromjson(
-            snapshot.data() as Map<String, dynamic>, docId, {}, {}, {});
+            snapshot.data() as Map<String, dynamic>, docId, {}, {});
         return user;
       }
     } catch (e) {
@@ -282,7 +342,6 @@ class FireStoreMethods {
       String userid,
       String pgNumber,
       String fname,
-      String dietaryPrefrence,
       int newbreakfast,
       int newlunch,
       int newdinner,
@@ -306,9 +365,7 @@ class FireStoreMethods {
       if (snapshot.exists) {
         Map<String, dynamic> mealoptData =
             snapshot.data() as Map<String, dynamic>;
-        int oldBreakfast = 0;
-        int oldLunch = 0;
-        int oldDinner = 0;
+
         bool oldMorningdaal = mealoptData['Morning']['daal'];
         bool oldMorningsalad = mealoptData['Morning']['salad'];
         bool oldMorningraita = mealoptData['Morning']['raita'];
@@ -321,9 +378,9 @@ class FireStoreMethods {
         double oldmorningRice = mealoptData['Morning']['riceQuantity'];
         int oldeveningRoti = mealoptData['Evening']['numberofRoti'];
         double oldeveningRice = mealoptData['Evening']['riceQuantity'];
-        oldBreakfast = mealoptData["breakfast"];
-        oldLunch = mealoptData["lunch"];
-        oldDinner = mealoptData["dinner"];
+        int oldBreakfast = mealoptData["breakfast"];
+        int oldLunch = mealoptData["lunch"];
+        int oldDinner = mealoptData["dinner"];
         await _firestore
             .collection("Kitchen")
             .doc(date)
@@ -334,7 +391,10 @@ class FireStoreMethods {
           "lunch": newlunch,
           "dinner": newdinner,
           "Morning": morning,
-          "Evening": evening
+          "Evening": evening,
+          "timeMealAdded": FieldValue.arrayUnion([
+            "$newbreakfast, $newlunch, $newdinner, ${DateTime.now().hour}:${DateTime.now().minute}:${DateTime.now().second}"
+          ]),
         }, SetOptions(merge: true));
         DocumentSnapshot totalmealOptsnapshot =
             await _firestore.collection("Kitchen").doc(date).get();
@@ -460,10 +520,11 @@ class FireStoreMethods {
           "dropname": pgNumber,
           "Morning": morning,
           "Evening": evening,
-          "Dietary_preference":
-              dietaryPrefrence, //TODO-change the hard core data
           "morningStatus": "Meal opted",
           "eveningStatus": "Meal opted",
+          "timeMealAdded": FieldValue.arrayUnion([
+            "$newbreakfast, $newlunch, $newdinner, ${DateTime.now().hour}:${DateTime.now().minute}:${DateTime.now().second}"
+          ]),
         });
         DocumentSnapshot totalmealOptsnapshot =
             await _firestore.collection("Kitchen").doc(date).get();
@@ -547,19 +608,23 @@ class FireStoreMethods {
 
   Future<Menu> getdailymenu() async {
     try {
-      Map<String, List<String>> weeklymenu = {};
+      Map<String, List<dynamic>> weeklymenu = {};
       for (int i = 1; i <= 7; i++) {
         String day = Utils.getDayName(i);
         DocumentSnapshot snapshot =
             await _firestore.collection("Menu").doc(day).get();
         Map<String, dynamic> dailyMenusnapshot =
             snapshot.data() as Map<String, dynamic>;
-        List<String> dailyMenu = [];
-        dailyMenu.add(dailyMenusnapshot["breakfast"]??"");
-        dailyMenu.add(dailyMenusnapshot["lunch"]??"");
-        dailyMenu.add(dailyMenusnapshot["dinner"]??"");
-        dailyMenu.add(dailyMenusnapshot["desert"]??"");
-        weeklymenu[day] = dailyMenu;
+        List<dynamic> dailyMenu = [];
+        dailyMenu.add(dailyMenusnapshot["breakfast"] ?? "");//TODO: change this into proper objects of class not list
+        dailyMenu.add(dailyMenusnapshot["lunch"] ?? "");
+        dailyMenu.add(dailyMenusnapshot["dinner"] ?? "");
+        dailyMenu.add(dailyMenusnapshot["desert"] ?? "");
+        dailyMenu.add(dailyMenusnapshot["dietaryOption"] ?? {
+          "lunch":["Veg"],
+          "dinner":["Veg"]
+        });
+        weeklymenu[day] = dailyMenu;//add data to map
       }
       DocumentSnapshot weekperiodsnapshot =
           await _firestore.collection("Menu").doc("Data").get();
@@ -696,7 +761,6 @@ class FireStoreMethods {
       String userdocid,
       String pgNumber,
       String fname,
-      String dietaryPrefrence,
       Map<String, dynamic> morning,
       Map<String, dynamic> evening,
       bool sameforEvening,
@@ -708,11 +772,10 @@ class FireStoreMethods {
       DateTime dateTime) async {
     try {
       if (currentbreakfast > 0 || currentLunch > 0 || currrentDinner > 0) {
-        updatekitchendata(
+        await updatekitchendata(
             userdocid,
             pgNumber,
             fname,
-            dietaryPrefrence,
             currentbreakfast,
             currentLunch,
             currrentDinner,
@@ -826,27 +889,54 @@ class FireStoreMethods {
     required String oldworkProof,
     required String oldphoto,
     required String oldcollegeProof,
+    required BuildContext context,
   }) async {
+    int totalphotos = [
+      adhaarFront,
+      adhaarBack,
+      workProof,
+      photo,
+      collegeProof,
+    ].where((item) => item != null).length;
+    int photosuploaded = 0;
+
     try {
+      final provider = context.read<UserKYCDocumentsProvider>();
       if (adhaarFront != null) {
         oldadhaarfront = await StoargeMethods().uploadImageToStorage(
             userdocid, adhaarFront, "adhaarfront", "UserDocuments");
+        photosuploaded++;
+        provider
+            .percentageUpload(((photosuploaded / totalphotos) * 100).toInt());
       }
       if (adhaarBack != null) {
         oldadhaarBack = await StoargeMethods().uploadImageToStorage(
             userdocid, adhaarBack, "adhaarback", "UserDocuments");
+        photosuploaded++;
+        provider
+            .percentageUpload(((photosuploaded / totalphotos) * 100).toInt());
       }
       if (workProof != null) {
         oldworkProof = await StoargeMethods().uploadImageToStorage(
             userdocid, workProof, "workProof", "UserDocuments");
+        photosuploaded++;
+        provider
+            .percentageUpload(((photosuploaded / totalphotos) * 100).toInt());
       }
       if (photo != null) {
         oldphoto = await StoargeMethods()
             .uploadImageToStorage(userdocid, photo, "photo", "UserDocuments");
+        photosuploaded++;
+        provider
+            .percentageUpload(((photosuploaded / totalphotos) * 100).toInt());
+        ;
       }
       if (collegeProof != null) {
         oldcollegeProof = await StoargeMethods().uploadImageToStorage(
             userdocid, collegeProof, "collegeProof", "UserDocuments");
+        photosuploaded++;
+        provider
+            .percentageUpload(((photosuploaded / totalphotos) * 100).toInt());
       }
       await _firestore
           .collection("User")
@@ -885,33 +975,15 @@ class FireStoreMethods {
   }
 
   //write all temp
-  Future<void> func() async {
+  Future<String> changemealSubscriptionStatus(
+      String userId, Subscription subscription) async {
     try {
-      await _firestore
-          .collection("User")
-          .doc("807c545b-80a0-4fe3-f934-6a2a83ff8f53")
-          .collection("MealCustomization")
-          .doc()
-          .update({
-        "Morning": {
-          "numberofRoti": 3,
-          "riceQuantity": 0.5,
-          "salad": false,
-          "raita": false,
-          "sukhiSabji": true,
-          "daal": true
-        },
-        "Evening": {
-          "numberofRoti": 3,
-          "riceQuantity": 0.5,
-          "salad": false,
-          "raita": false,
-          "sukhiSabji": true,
-          "daal": true
-        }
-      });
+      await _firestore.collection("User").doc(userId).set({
+        "Subscription": subscription.toJson(),
+      }, SetOptions(merge: true));
+      return "success";
     } catch (e) {
-      logger.e(e.toString());
+      throw Exception("Error while fetching meal subscription status : $e");
     }
   }
 }
