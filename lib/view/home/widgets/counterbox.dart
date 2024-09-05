@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:gester/firebase_methods/firestore_methods.dart';
 import 'package:gester/provider/meal_customization_provider.dart';
 import 'package:gester/provider/user_provider.dart';
 import 'package:gester/resources/color.dart';
@@ -161,7 +162,12 @@ class _CheckBoxWigdetState extends State<CounterBox> {
                                 } else {
                                   if(userprovider.user.subscription.status == Appconstants.statusAway){
                                     userprovider.setsubscriptionstatus("Active");
-                                  }
+                                    //update subsription in database
+                                    FireStoreMethods()
+                                   .changemealSubscriptionStatus(
+                                    userprovider.user.userId,
+                                    userprovider.user.subscription);
+                                    }
                                   
                                   userprovider.updateMealOpt(
                                       currentValue - 1,
@@ -192,6 +198,10 @@ class _CheckBoxWigdetState extends State<CounterBox> {
                                 if (canbeAddedPGUser && canbeChanged) {
                                    if(userprovider.user.subscription.status == Appconstants.statusAway){
                                     userprovider.setsubscriptionstatus("Active");
+                                    FireStoreMethods()
+                                   .changemealSubscriptionStatus(
+                                    userprovider.user.userId,
+                                    userprovider.user.subscription);
                                   }
                                   userprovider.updateMealOpt(
                                       currentValue + 1,
@@ -230,7 +240,12 @@ class _CheckBoxWigdetState extends State<CounterBox> {
                           } else if (canbeChanged && canbeAddedPGUser) {
                              if(userprovider.user.subscription.status == Appconstants.statusAway){
                                     userprovider.setsubscriptionstatus("Active");
+                                    FireStoreMethods()
+                                   .changemealSubscriptionStatus(
+                                    userprovider.user.userId,
+                                    userprovider.user.subscription);
                                   }
+                                  
                             userprovider.updateMealOpt(
                                 currentValue + 1,
                                 widget.isbrekfast,
