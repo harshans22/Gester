@@ -30,6 +30,8 @@ jobs:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_GESTER_AE70F }}
           channelId: live
+          target: live
+          channel: live
           projectId: gester-ae70f
       - name: Deploy to Firebase Hosting (Working)
         if: github.ref == 'refs/heads/working'
@@ -37,5 +39,7 @@ jobs:
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_GESTER_AE70F }}
+          target: working
+          channel: working
           channelId: working
           projectId: gester-ae70f
