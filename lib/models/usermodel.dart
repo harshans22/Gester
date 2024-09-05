@@ -25,7 +25,6 @@ class UserData {
   final String pgNumber;
 
   UserData({
-    required this.note,
     required this.accomodation,
     required this.subscription,
     required this.userType,
@@ -44,6 +43,7 @@ class UserData {
     this.breakfast = 0,
     this.lunch = 0,
     this.dinner = 0,
+    required this.note,
   });
 
   factory UserData.fromjson(

@@ -234,20 +234,23 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         : datetime.weekday - 1]
                                                 .toJson());
 
-                                                if(homescreenprovider.noteController!.text.isNotEmpty){
-                                                  await homescreenprovider.updateNoteKitchenData(homescreenprovider.noteController!.text);//TODO this is jugaad not usefull when kitchen data also exists only usefull when kitchen data is not there mean all mealopt are zero and you add note and mealopt together
-                                                }
-
-                                        userprovider.setoldMealtype(
+                                            userprovider.setoldMealtype(
                                             userprovider.user.breakfast,
                                             userprovider.user.lunch,
                                             userprovider.user.dinner);
-                                        if (!homescreenprovider.loader) {
+                                             if (!homescreenprovider.loader) {
                                           if (!context.mounted) return;
                                           Utils.showWithNoButton(context,
                                               title:
                                                   "Your meal has been opted!");
                                         }
+
+                                                if(homescreenprovider.userDataModel.note.isNotEmpty){
+                                                  await homescreenprovider.updateNoteKitchenData(homescreenprovider.userDataModel.note);//TODO this is jugaad not usefull when kitchen data also exists only usefull when kitchen data is not there mean all mealopt are zero and you add note and mealopt together
+                                                }
+
+                                       
+                                       
                                       },
                                       paddingvertical:
                                           Dimensions.paddingSizeSmall,

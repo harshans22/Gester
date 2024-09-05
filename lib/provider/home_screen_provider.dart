@@ -20,7 +20,7 @@ class HomeScreenProvider with ChangeNotifier {
   int get oldlunch => _userDataModel!.lunch;
   int get olddinner => _userDataModel!.dinner;
   late Color counterBoxBorder;
-  TextEditingController? noteController;
+  TextEditingController? noteController;//TODO assign value from user mealOpt
   bool _loader = false;
   bool get loader => _loader;
   
@@ -96,7 +96,6 @@ class HomeScreenProvider with ChangeNotifier {
 
   //update note in kitchen data
   Future<void> updateNoteKitchenData(String note) async {//update note in kitchen Collection
-    setloader(true);
     try {
       await FireStoreMethods().updateNoteInKitchenData(
           _userDataModel!.userId, note, _dateTime!);
@@ -104,7 +103,6 @@ class HomeScreenProvider with ChangeNotifier {
     } catch (e) {
       logger.e(e.toString());
     }
-    setloader(false);
   }
 
 

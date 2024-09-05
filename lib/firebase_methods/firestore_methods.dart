@@ -81,9 +81,11 @@ class FireStoreMethods {
       DocumentSnapshot snapshot = await _firestore
           .collection("User")
           .doc(userdocid)
-          .collection("MealCustomization").doc("Monday").get();
-      if(snapshot.exists){
-        return;//don't create meal customization if already exists
+          .collection("MealCustomization")
+          .doc("Monday")
+          .get();
+      if (snapshot.exists) {
+        return; //don't create meal customization if already exists
       }
       final batch = _firestore.batch();
 
@@ -175,7 +177,7 @@ class FireStoreMethods {
           .doc(date)
           .get();
       if (snapshot.exists) {
-        //To-do check whether breakfast,lunch and dinner exists
+        //TODO check whether breakfast,lunch and dinner exists
         return;
       } else {
         await _firestore
@@ -209,6 +211,15 @@ class FireStoreMethods {
       }
       String date =
           "${dateTime.day < 10 ? '0${dateTime.day}' : dateTime.day}-${dateTime.month < 10 ? '0${dateTime.month}' : dateTime.month}-${dateTime.year}";
+       await _firestore
+            .collection("User")
+            .doc(userdocid)
+            .collection("MealOpt")
+            .doc(dateTime.year.toString())
+            .collection(Utils.getMonthName(dateTime.month))
+            .doc(date).set({
+              "note":note
+            },SetOptions(merge: true));
     } catch (e) {
       throw Exception("Error while updating note in kitchen data $e");
     }
@@ -229,7 +240,7 @@ class FireStoreMethods {
           .doc(date)
           .collection("MealOpt")
           .doc(userdocid)
-          .get();//TODO change this use some logic to check whether note can be written or not
+          .get(); //TODO change this use some logic to check whether note can be written or not
       if (snapshot.exists) {
         await _firestore
             .collection("Kitchen")
@@ -359,16 +370,16 @@ class FireStoreMethods {
 
   //updating kitchen data
   Future<void> updatekitchendata(
-      String userid,
-      String pgNumber,
-      String fname,
-      int newbreakfast,
-      int newlunch,
-      int newdinner,
-      DateTime dateTime,
-      Map<String, dynamic> morning,
-      Map<String, dynamic> evening,
-      ) async {
+    String userid,
+    String pgNumber,
+    String fname,
+    int newbreakfast,
+    int newlunch,
+    int newdinner,
+    DateTime dateTime,
+    Map<String, dynamic> morning,
+    Map<String, dynamic> evening,
+  ) async {
     try {
       int hour = dateTime.hour;
       if (hour >= 21) {
@@ -415,7 +426,6 @@ class FireStoreMethods {
           "timeMealAdded": FieldValue.arrayUnion([
             "$newbreakfast, $newlunch, $newdinner, ${DateTime.now().hour}:${DateTime.now().minute}:${DateTime.now().second}",
           ]),
-          
         }, SetOptions(merge: true));
         DocumentSnapshot totalmealOptsnapshot =
             await _firestore.collection("Kitchen").doc(date).get();
@@ -546,7 +556,6 @@ class FireStoreMethods {
           "timeMealAdded": FieldValue.arrayUnion([
             "$newbreakfast, $newlunch, $newdinner, ${DateTime.now().hour}:${DateTime.now().minute}:${DateTime.now().second}"
           ]),
-          
         });
         DocumentSnapshot totalmealOptsnapshot =
             await _firestore.collection("Kitchen").doc(date).get();

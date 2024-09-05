@@ -78,7 +78,7 @@ class _NavgationScreenState extends State<NavigationScreen> {
   Widget build(BuildContext context) {
     return Center(
       child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 400),
+        constraints: const BoxConstraints(maxWidth: 360),
         child: Scaffold(
           body: _isloading
               ? const SkeletonHome()

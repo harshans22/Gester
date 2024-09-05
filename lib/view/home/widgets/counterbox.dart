@@ -54,7 +54,7 @@ class _CheckBoxWigdetState extends State<CounterBox> {
               : userprovider.user.dinner;
       return Expanded(
         child: Container(
-          padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
+          padding: const EdgeInsets.symmetric(vertical:Dimensions.paddingSizeExtraSmall,horizontal: Dimensions.paddingSizeExtraSmall),
           // margin:const EdgeInsets.only(left: Dimensions.paddingSizeSmall),
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
@@ -85,7 +85,7 @@ class _CheckBoxWigdetState extends State<CounterBox> {
                 children: [
                   Text(
                     widget.name,
-                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                    style: Theme.of(context).textTheme.titleLarge!.copyWith(
                         color: isPGUser
                             ? (canbeChanged
                                 ? (containsMeal
@@ -94,7 +94,7 @@ class _CheckBoxWigdetState extends State<CounterBox> {
                                 : Colors.grey)
                             : Colors.grey,
                         fontWeight: FontWeight.w500,
-                        fontSize: 15),
+                        ),
                   ),
                   Gap(4),
                   SvgPicture.asset(
