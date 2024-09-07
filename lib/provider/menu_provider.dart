@@ -12,8 +12,6 @@ class MenuProvider with ChangeNotifier {
   Future<void> getMenu() async {
     try {
       _menu = await FireStoreMethods().getdailymenu();
-  
-
       notifyListeners();
     } catch (e) {
       logger.e(e.toString());

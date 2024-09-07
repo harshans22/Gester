@@ -206,6 +206,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   Expanded(
                                     child: TextCommonButton(
                                       onTap: () async {
+                                        
                                         await homescreenprovider.updatemealOpt(
                                             userprovider.user.breakfast,
                                             userprovider.user.lunch,
@@ -220,7 +221,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     homescreenprovider.dateTime
                                                                 .hour >=
                                                             21
-                                                        ? datetime.weekday
+                                                        ? (datetime.weekday==7)?0:datetime.weekday
                                                         : datetime.weekday - 1]
                                                 .toJson(),
                                             context
@@ -230,27 +231,22 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     homescreenprovider.dateTime
                                                                 .hour >=
                                                             21
-                                                        ? datetime.weekday
+                                                        ? (datetime.weekday==7)?0:datetime.weekday
                                                         : datetime.weekday - 1]
                                                 .toJson());
-
                                             userprovider.setoldMealtype(
                                             userprovider.user.breakfast,
                                             userprovider.user.lunch,
                                             userprovider.user.dinner);
-                                             if (!homescreenprovider.loader) {
+                                          if (!homescreenprovider.loader) {
                                           if (!context.mounted) return;
                                           Utils.showWithNoButton(context,
                                               title:
                                                   "Your meal has been opted!");
                                         }
-
-                                                if(homescreenprovider.userDataModel.note.isNotEmpty){
-                                                  await homescreenprovider.updateNoteKitchenData(homescreenprovider.userDataModel.note);//TODO this is jugaad not usefull when kitchen data also exists only usefull when kitchen data is not there mean all mealopt are zero and you add note and mealopt together
-                                                }
-
-                                       
-                                       
+                                        if(homescreenprovider.userDataModel.note.isNotEmpty){
+                                          await homescreenprovider.updateNoteKitchenData(homescreenprovider.userDataModel.note);//TODO this is jugaad not usefull when kitchen data also exists only usefull when kitchen data is not there mean all mealopt are zero and you add note and mealopt together
+                                        }
                                       },
                                       paddingvertical:
                                           Dimensions.paddingSizeSmall,
