@@ -53,7 +53,7 @@ class _MenuCustomizationScreenState extends State<MenuCustomizationScreen> {
   void initState() {
     super.initState();
     if (widget.datetime.hour >= 21) {
-      _dayselectedIndex = widget.datetime.weekday;
+      _dayselectedIndex = widget.datetime.weekday==7?0:widget.datetime.weekday;
     } else {
       _dayselectedIndex = widget.datetime.weekday - 1;
     }
