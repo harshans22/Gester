@@ -103,13 +103,13 @@ class _CheckBoxWigdetState extends State<CounterBox> {
                         ? Appconstants.dietaryPrefrenceImageIcon[context
                             .read<MealCustomizationProvider>()
                             .oldmorningData[dateTime.hour >= 21
-                                ? dateTime.weekday
+                                ? ((dateTime.weekday==7)?0:dateTime.weekday)
                                 : dateTime.weekday - 1]
                             .dietaryPrefrence]
                         : Appconstants.dietaryPrefrenceImageIcon[context
                             .read<MealCustomizationProvider>()
                             .oldeveningData[dateTime.hour >= 21
-                                ? dateTime.weekday
+                                ? ((dateTime.weekday==7)?0:dateTime.weekday)
                                 : dateTime.weekday - 1]
                             .dietaryPrefrence],
                   )
