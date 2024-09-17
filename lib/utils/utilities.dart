@@ -3,6 +3,7 @@ import 'package:another_flushbar/flushbar_route.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gap/gap.dart';
+import 'package:gester/models/all_meal_details.dart';
 import 'package:gester/resources/color.dart';
 import 'package:gester/resources/dimensions.dart';
 import 'package:gester/utils/app_constants.dart';
@@ -320,9 +321,25 @@ class Utils {
   }
 
   static bool isTiffinuser(String subscriptionCode) {
-    return subscriptionCode==
-        (Appconstants.subsciptionCode0) ||
-          subscriptionCode==  (Appconstants.subsciptionCode1) ||
-          subscriptionCode==  (Appconstants.subsciptionCode2);
+    return subscriptionCode == (Appconstants.subsciptionCode0) ||
+        subscriptionCode == (Appconstants.subsciptionCode1) ||
+        subscriptionCode == (Appconstants.subsciptionCode2);
+  }
+
+  static String getRiceQuantityString(double riceQuantity) {
+    final Map<double, String> ricequantity = { 
+    0: "No rice",
+    0.2: "Bohot kam",
+    0.5: "Half",
+    0.8: "Full",
+    1: "Extra full",
+  };
+    return ricequantity[riceQuantity]!;
+
+  }
+
+  static String convertMealCustomizationToStatement(
+      MealCustomizationData mealCustomizationData) {
+    return "${mealCustomizationData.numberofRoti} Roti, ${getRiceQuantityString(mealCustomizationData.riceQuantity)} Rice${mealCustomizationData.daal?", daal":""}${mealCustomizationData.sukhiSabji?" & sukhi sabji":""}";
   }
 }

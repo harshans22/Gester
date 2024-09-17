@@ -1,3 +1,4 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:gester/provider/home_screen_provider.dart';
@@ -15,6 +16,7 @@ import 'package:gester/view/home/screens/QuickAcessScreens/meal_history_screen.d
 import 'package:gester/view/home/screens/QuickAcessScreens/menu.dart';
 import 'package:gester/view/home/widgets/QuickAccessContainer.dart';
 import 'package:gester/view/home/widgets/add_note_dialog.dart';
+import 'package:gester/view/home/widgets/carosuel_image_container.dart';
 import 'package:gester/view/home/widgets/counterbox.dart';
 import 'package:gester/view/home/widgets/menuwidget.dart';
 import 'package:provider/provider.dart';
@@ -73,6 +75,19 @@ class _HomeScreenState extends State<HomeScreen> {
                 //  mainAxisSize: MainAxisSize.max,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  CarouselSlider(
+                    options: CarouselOptions(
+                      autoPlayCurve: Curves.linear, //TODO: change animation
+                      autoPlayInterval: const Duration(seconds: 5),
+                      autoPlay: true,
+                      enlargeCenterPage: true,
+                      enlargeFactor: 0,
+                      viewportFraction: 0.88,
+                      height: 125,
+                    ),
+                    items:List.generate(Appconstants.carosuelSliderImage.length, (index) => CarouselImageSlider(image: Appconstants.carosuelSliderImage[index])), 
+                  ),
+                  const Gap(20),
                   Container(
                     padding: const EdgeInsets.symmetric(
                         vertical: Dimensions.paddingSizeDefault,
@@ -149,25 +164,22 @@ class _HomeScreenState extends State<HomeScreen> {
                               )
                             : Container(),
                         const Gap(10),
-                        const Row(
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            CounterBox(
-                              name: "Breakfast",
-                              isbrekfast: true,
-                            ),
-                            Gap(10),
-                            CounterBox(
-                              name: "Lunch",
-                              islunch: true,
-                            ),
-                            Gap(10),
-                            CounterBox(
-                              name: "Dinner",
-                              isdinner: true,
-                            ),
-                          ],
+
+                        const CounterBox(
+                          name: "Breakfast",
+                          isbrekfast: true,
                         ),
+                        const Gap(10),
+                        const CounterBox(
+                          name: "Lunch",
+                          islunch: true,
+                        ),
+                        const Gap(10),
+                        const CounterBox(
+                          name: "Dinner",
+                          isdinner: true,
+                        ),
+
                         const Gap(10),
 
                         //to show add note
@@ -206,7 +218,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                   Expanded(
                                     child: TextCommonButton(
                                       onTap: () async {
-                                        
                                         await homescreenprovider.updatemealOpt(
                                             userprovider.user.breakfast,
                                             userprovider.user.lunch,
@@ -221,7 +232,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     homescreenprovider.dateTime
                                                                 .hour >=
                                                             21
-                                                        ? (datetime.weekday==7)?0:datetime.weekday
+                                                        ? (datetime.weekday ==
+                                                                7)
+                                                            ? 0
+                                                            : datetime.weekday
                                                         : datetime.weekday - 1]
                                                 .toJson(),
                                             context
@@ -231,21 +245,29 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     homescreenprovider.dateTime
                                                                 .hour >=
                                                             21
-                                                        ? (datetime.weekday==7)?0:datetime.weekday
+                                                        ? (datetime.weekday ==
+                                                                7)
+                                                            ? 0
+                                                            : datetime.weekday
                                                         : datetime.weekday - 1]
                                                 .toJson());
-                                            userprovider.setoldMealtype(
+                                        userprovider.setoldMealtype(
                                             userprovider.user.breakfast,
                                             userprovider.user.lunch,
                                             userprovider.user.dinner);
-                                          if (!homescreenprovider.loader) {
+                                        if (!homescreenprovider.loader) {
                                           if (!context.mounted) return;
                                           Utils.showWithNoButton(context,
                                               title:
                                                   "Your meal has been opted!");
                                         }
-                                        if(homescreenprovider.userDataModel.note.isNotEmpty){
-                                          await homescreenprovider.updateNoteKitchenData(homescreenprovider.userDataModel.note);//TODO this is jugaad not usefull when kitchen data also exists only usefull when kitchen data is not there mean all mealopt are zero and you add note and mealopt together
+                                        if (homescreenprovider
+                                            .userDataModel.note.isNotEmpty) {
+                                          await homescreenprovider
+                                              .updateNoteKitchenData(
+                                                  homescreenprovider
+                                                      .userDataModel
+                                                      .note); //TODO this is jugaad not usefull when kitchen data also exists only usefull when kitchen data is not there mean all mealopt are zero and you add note and mealopt together
                                         }
                                       },
                                       paddingvertical:

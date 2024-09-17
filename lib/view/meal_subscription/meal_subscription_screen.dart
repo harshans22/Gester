@@ -165,7 +165,7 @@ class MealSubscriptionScreen extends StatelessWidget {
                     onTap: () {
                       Utils.showWithNoButton(context,
                           title: "Contact Us",
-                          imagePath: "assets/images/whatsapp_5968841 1.svg");
+                          imagePath: "assets/images/meal subscription/whatsapp.svg");
                     },
                     child: const ContainerWithPaddingMealSubscription(
                       content: 'Change or end subscription plan',

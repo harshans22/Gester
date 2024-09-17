@@ -9,7 +9,6 @@ import 'package:gester/view/home/screens/homescreen.dart';
 import 'package:gester/view/home/screens/skeleton_home.dart';
 import 'package:gester/view/stay/StayScreen.dart';
 import 'package:logger/logger.dart';
-
 import 'package:provider/provider.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:svg_flutter/svg_flutter.dart';

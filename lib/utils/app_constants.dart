@@ -45,4 +45,11 @@ class Appconstants {
     "Non Veg": AppColor.RED_COLOR.withOpacity(0.5),
     "Egg": Colors.yellow.withOpacity(0.5),
   };
+
+  static List<String> carosuelSliderImage = [
+    "assets/images/homepage/SliderImage1.png",
+    "assets/images/homepage/SliderImage2.png",
+    "assets/images/homepage/SliderImage3.png",
+    "assets/images/homepage/SliderImage4.png"
+  ];
 }
