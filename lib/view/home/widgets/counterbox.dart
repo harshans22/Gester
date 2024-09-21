@@ -58,7 +58,7 @@ class _CheckBoxWigdetState extends State<CounterBox> {
 
 
       return Container(
-        padding: const EdgeInsets.symmetric(vertical:Dimensions.paddingSizeExtraSmall,horizontal: Dimensions.paddingSizeDefault),
+        padding: const EdgeInsets.symmetric(vertical:Dimensions.paddingSizeExtraSmall,horizontal: Dimensions.paddingSizeSmall),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
             color: isPGUser
@@ -142,7 +142,7 @@ class _CheckBoxWigdetState extends State<CounterBox> {
                                                             ? 0
                                                             : dateTime.weekday
                                                         : dateTime.weekday - 1]),
-               style: Theme.of(context).textTheme.titleSmall!.copyWith(color:AppColor.BLACK.withOpacity(0.5),fontSize: 11 ), ),
+               style: Theme.of(context).textTheme.titleSmall!.copyWith(color:AppColor.BLACK.withOpacity(0.5),fontSize: 11 ),),
               ]
             ),
             Expanded(child: Container()),

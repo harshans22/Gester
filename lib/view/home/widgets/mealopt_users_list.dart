@@ -10,12 +10,15 @@ class UsersMealOptList extends StatelessWidget {
   final DateTime datetime;
   final String userId;
   const UsersMealOptList(
-      {super.key, required this.pgNumber, required this.datetime,required this.userId});
+      {super.key,
+      required this.pgNumber,
+      required this.datetime,
+      required this.userId});
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height:30,
+      height: 30,
       child: StreamBuilder(
           stream: FirebaseFirestore.instance
               .collection("Kitchen")
@@ -34,7 +37,7 @@ class UsersMealOptList extends StatelessWidget {
                 children: [
                   ...List.generate(
                     snapshot.data!.docs.length,
-                  (index) {
+                    (index) {
                       return Container(
                         margin: const EdgeInsets.only(right: 2),
                         width: 30,
@@ -52,20 +55,49 @@ class UsersMealOptList extends StatelessWidget {
                   ),
                   const Gap(5),
                   ...List.generate(
-                  snapshot.data!.docs.length,
-                   (index) {
-                      return Text(snapshot.data!.docs[index].data()['fname']+", ",style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                    color: AppColor.BLACK.withOpacity(0.8)));
+                    snapshot.data!.docs.length,
+                    (index) {
+                      if (index == 0) {
+                        return Text(snapshot.data!.docs[index].data()['fname'],
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleMedium!
+                                .copyWith(
+                                    color: AppColor.BLACK.withOpacity(0.8)));
+                      } else if (index < snapshot.data!.docs.length - 1) {
+                        return Text(
+                            ", " + snapshot.data!.docs[index].data()['fname'],
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleMedium!
+                                .copyWith(
+                                    color: AppColor.BLACK.withOpacity(0.8)));
+                      } else {
+                        return Text(
+                            " & " + snapshot.data!.docs[index].data()['fname'],
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleMedium!
+                                .copyWith(
+                                    color: AppColor.BLACK.withOpacity(0.8)));
+                      }
                     },
                   ),
-                  Text("have opted their meal",style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                    color: AppColor.BLACK.withOpacity(0.8)
-                  ),)
+                  Text(
+                    " have opted their meal",
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleMedium!
+                        .copyWith(color: AppColor.BLACK.withOpacity(0.8)),
+                  )
                 ],
               );
             }
-            return Text("People are opting their meal 🍛",style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                    color: AppColor.BLACK.withOpacity(0.8)));
+            return Text("People are opting their meal 🍛",
+                style: Theme.of(context)
+                    .textTheme
+                    .titleMedium!
+                    .copyWith(color: AppColor.BLACK.withOpacity(0.8)));
           }),
     );
   }

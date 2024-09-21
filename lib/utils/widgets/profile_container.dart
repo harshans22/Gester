@@ -17,14 +17,14 @@ class ProfileContainer extends StatelessWidget {
           vertical: Dimensions.paddingSizeSmall),
       decoration: BoxDecoration(
         color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.2),
-            spreadRadius: 0,
-            blurRadius: 15,
-            offset: const Offset(0, 4),
-          ),
-        ],
+        // boxShadow: [
+        //   BoxShadow(
+        //     color: Colors.black,
+        //     spreadRadius: 0,
+        //     blurRadius: 15,
+        //     offset: const Offset(0, 4),
+        //   ),
+        // ],
       ),
       child: SafeArea(
         child: Row(
@@ -39,8 +39,8 @@ class ProfileContainer extends StatelessWidget {
                   ? ClipRRect(
                   borderRadius: BorderRadius.circular(30),
                       child: Image.network(user.photoUrl,
-                      height: 60,
-                      width: 60,
+                      height: 40,
+                      width: 40,
                       fit: BoxFit.cover,
                       errorBuilder: (BuildContext context,
                                 Object exception, StackTrace? stackTrace) {
@@ -53,10 +53,10 @@ class ProfileContainer extends StatelessWidget {
                           borderRadius: BorderRadius.circular(50)),
                       child: const Icon(
                         Icons.person,
-                        size: 50,
+                        size: 40,
                       )),
             ),
-            const Gap(15),
+            const Gap(10),
             Row(
               children: [
                 Text(

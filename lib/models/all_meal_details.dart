@@ -93,7 +93,7 @@ class MealCustomizationData {
   factory MealCustomizationData.fromMap(Map<String, dynamic> map) {
     return MealCustomizationData(
       numberofRoti: map['numberofRoti']??3,
-      riceQuantity: map['riceQuantity']??0.5,
+      riceQuantity: map['riceQuantity'] ?? 0.5,
       daal: map['daal']??true,
       salad: map['salad']??false,
       sukhiSabji: map['sukhiSabji']??true,

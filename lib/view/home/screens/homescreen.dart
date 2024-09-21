@@ -68,12 +68,12 @@ class _HomeScreenState extends State<HomeScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const ProfileContainer(),
-        const Gap(10),
+       
         Expanded(
           child: SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.symmetric(
-                  horizontal: Dimensions.paddingSizeDefault),
+                  horizontal: Dimensions.paddingSizeExtraSmall),
               child: Column(
                 //  mainAxisSize: MainAxisSize.max,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -81,11 +81,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   CarouselSlider(
                     options: CarouselOptions(
                       autoPlayCurve: Curves.linear, //TODO: change animation
-                      autoPlayInterval: const Duration(seconds: 5),
+                      autoPlayInterval: const Duration(seconds: 30),
                       autoPlay: true,
                       enlargeCenterPage: true,
                       enlargeFactor: 0,
-                      viewportFraction: 0.88,
+                      viewportFraction: 1,
                       height: 125,
                     ),
                     items: List.generate(
@@ -93,7 +93,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         (index) => CarouselImageSlider(
                             image: Appconstants.carosuelSliderImage[index])),
                   ),
-                  const Gap(20),
+                  const Gap(10),
                   Container(
                     padding: const EdgeInsets.symmetric(
                         vertical: Dimensions.paddingSizeDefault,
@@ -301,8 +301,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ],
                               )
                             : Container(),
+
+
                         //pg users profile
-                         UsersMealOptList(pgNumber: userprovider.user.pgNumber, datetime:DateTime.now(),userId: userprovider.user.userId,)
+                       //  UsersMealOptList(pgNumber: userprovider.user.pgNumber, datetime:DateTime.now(),userId: userprovider.user.userId,)
                       ],
                     ),
                   ),
