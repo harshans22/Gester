@@ -211,15 +211,14 @@ class FireStoreMethods {
       }
       String date =
           "${dateTime.day < 10 ? '0${dateTime.day}' : dateTime.day}-${dateTime.month < 10 ? '0${dateTime.month}' : dateTime.month}-${dateTime.year}";
-       await _firestore
-            .collection("User")
-            .doc(userdocid)
-            .collection("MealOpt")
-            .doc(dateTime.year.toString())
-            .collection(Utils.getMonthName(dateTime.month))
-            .doc(date).set({
-              "note":note
-            },SetOptions(merge: true));
+      await _firestore
+          .collection("User")
+          .doc(userdocid)
+          .collection("MealOpt")
+          .doc(dateTime.year.toString())
+          .collection(Utils.getMonthName(dateTime.month))
+          .doc(date)
+          .set({"note": note}, SetOptions(merge: true));
     } catch (e) {
       throw Exception("Error while updating note in kitchen data $e");
     }
@@ -257,7 +256,6 @@ class FireStoreMethods {
       throw Exception("Error while updating note in kitchen data $e");
     }
   }
-
 
   //updating user meal
   Future<void> updateMealOpt(int breakfast, int lunch, int dinner,
@@ -378,6 +376,7 @@ class FireStoreMethods {
     int newlunch,
     int newdinner,
     DateTime dateTime,
+    String photoUrl,
     Map<String, dynamic> morning,
     Map<String, dynamic> evening,
   ) async {
@@ -554,6 +553,8 @@ class FireStoreMethods {
           "Evening": evening,
           "morningStatus": "Meal opted",
           "eveningStatus": "Meal opted",
+          "photoUrl":photoUrl,
+          "userId":userid,
           "timeMealAdded": FieldValue.arrayUnion([
             "$newbreakfast, $newlunch, $newdinner, ${DateTime.now().hour}:${DateTime.now().minute}:${DateTime.now().second}"
           ]),
@@ -803,11 +804,12 @@ class FireStoreMethods {
       int currentbreakfast,
       int currentLunch,
       int currrentDinner,
-      DateTime dateTime) async {
+      DateTime dateTime,
+      String photoUrl) async {
     try {
       if (currentbreakfast > 0 || currentLunch > 0 || currrentDinner > 0) {
         await updatekitchendata(userdocid, pgNumber, fname, currentbreakfast,
-            currentLunch, currrentDinner, dateTime, morning, evening);
+            currentLunch, currrentDinner, dateTime,photoUrl, morning, evening);
       }
 
       if (sameforMorning && !sameforEvening) {
@@ -1012,4 +1014,49 @@ class FireStoreMethods {
       throw Exception("Error while fetching meal subscription status : $e");
     }
   }
+
+  //updating users in PGUsersMealOpt
+  Future<void> updatePGUsersMealOpt(
+      String pgName,
+      String userid,
+      DateTime dateTime,
+      int totalMealOpt,
+      String photoUrl,
+      String fname) async {
+    try {
+      int hour = dateTime.hour;
+      if (hour >= 21) {
+        dateTime =
+            dateTime.add(const Duration(days: 1)); //adding date after 9 PM
+      }
+      String date =
+            "${dateTime.day < 10 ? '0${dateTime.day}' : dateTime.day}-${dateTime.month < 10 ? '0${dateTime.month}' : dateTime.month}-${dateTime.year}";
+      if (totalMealOpt == 0) {
+        await _firestore
+            .collection("PGUsersMealOpt")
+            .doc(date)
+            .collection(pgName)
+            .doc(userid)
+            .delete();
+      } else {
+        String date =
+            "${dateTime.day < 10 ? '0${dateTime.day}' : dateTime.day}-${dateTime.month < 10 ? '0${dateTime.month}' : dateTime.month}-${dateTime.year}";
+        await _firestore
+            .collection("PGUsersMealOpt")
+            .doc(date)
+            .collection(pgName)
+            .doc(userid)
+            .set({
+          "totalMealOpt": totalMealOpt,
+          "photoUrl": photoUrl,
+          'fname': fname
+        }, SetOptions(merge: true));
+      }
+    } catch (e) {
+      throw Exception("Error while updating PGUsersMealOpt : $e");
+    }
+  }
+
+
+  
 }

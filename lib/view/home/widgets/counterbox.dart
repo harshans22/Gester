@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:gap/gap.dart';
 import 'package:gester/firebase_methods/firestore_methods.dart';
 import 'package:gester/provider/meal_customization_provider.dart';
@@ -45,6 +44,7 @@ class _CheckBoxWigdetState extends State<CounterBox> {
       bool canbeChanged = (widget.isbrekfast || widget.islunch)
           ? ((dateTime.hour < 5 || dateTime.hour >= 21) ? true : false)
           : ((dateTime.hour < 17 || dateTime.hour >= 21) ? true : false);
+          
       bool containsMeal = widget.isbrekfast // to show ADD or (- 1 +)
           ? userprovider.user.breakfast > 0
           : widget.islunch
@@ -58,7 +58,7 @@ class _CheckBoxWigdetState extends State<CounterBox> {
 
 
       return Container(
-        padding: const EdgeInsets.symmetric(vertical:Dimensions.paddingSizeSmall,horizontal: Dimensions.paddingSizeDefault),
+        padding: const EdgeInsets.symmetric(vertical:Dimensions.paddingSizeExtraSmall,horizontal: Dimensions.paddingSizeDefault),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
             color: isPGUser
@@ -70,9 +70,9 @@ class _CheckBoxWigdetState extends State<CounterBox> {
               color: isPGUser
                   ? ((containsMeal && canbeChanged)
                       ? AppColor.bluecolor
-                      : Colors.grey)
-                  : Colors.grey,
-            )),
+                      : Colors.grey.withOpacity(0.5))
+                  : Colors.grey.withOpacity(0.5),
+            ),),
         child: Row(
           children: [
             SvgPicture.asset(isPGUser
@@ -82,7 +82,7 @@ class _CheckBoxWigdetState extends State<CounterBox> {
                             : "assets/images/homepage/checkIcon.svg")
                         : "assets/images/homepage/checkIcon.svg")
                     : "assets/images/homepage/checkIcon.svg"),
-                  Gap(5),
+                 const Gap(5),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -92,6 +92,7 @@ class _CheckBoxWigdetState extends State<CounterBox> {
                     Text(
                       widget.name,
                       style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                        fontSize: 15,
                           // color: isPGUser
                           //     ? (canbeChanged
                           //         ? (containsMeal
@@ -141,7 +142,7 @@ class _CheckBoxWigdetState extends State<CounterBox> {
                                                             ? 0
                                                             : dateTime.weekday
                                                         : dateTime.weekday - 1]),
-               style: Theme.of(context).textTheme.titleMedium!.copyWith(color:AppColor.BLACK.withOpacity(0.5) ), ),
+               style: Theme.of(context).textTheme.titleSmall!.copyWith(color:AppColor.BLACK.withOpacity(0.5),fontSize: 11 ), ),
               ]
             ),
             Expanded(child: Container()),

@@ -56,6 +56,7 @@ class HomeScreenProvider with ChangeNotifier {
       String userId,
       String pgNumber,
       String username,
+      String photoUrl,
       Map<String, dynamic> morning,
       Map<String, dynamic> evening) async {
     setloader(true);
@@ -71,6 +72,7 @@ class HomeScreenProvider with ChangeNotifier {
           lunch,
           dinner,
           _dateTime!,
+          photoUrl,
           morning,
           evening,
           );

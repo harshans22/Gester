@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gester/resources/color.dart';
-import 'package:pdfx/pdfx.dart';
 
 class PoliceVerificationScreen extends StatefulWidget {
   const PoliceVerificationScreen({super.key});

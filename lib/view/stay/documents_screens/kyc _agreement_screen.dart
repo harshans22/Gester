@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
 import 'package:gester/resources/color.dart';
-import 'package:gester/view/stay/widgets/mobile_pdf_view.dart';
-import 'package:pdfx/pdfx.dart';
 
 class KYCAgreementScreen extends StatefulWidget {
   const KYCAgreementScreen({super.key});

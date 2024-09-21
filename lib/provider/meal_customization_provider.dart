@@ -108,7 +108,8 @@ class MealCustomizationProvider with ChangeNotifier {
       int currentbreakfast,
       int currentLunch,
       int currentDinner,
-      DateTime dateTime) async {
+      DateTime dateTime,
+      String photoUrl) async {
     setloader(true);
     try {
       await FireStoreMethods().updateMealCustomization(
@@ -123,7 +124,8 @@ class MealCustomizationProvider with ChangeNotifier {
           currentbreakfast,
           currentLunch,
           currentDinner,
-          dateTime);
+          dateTime,
+          photoUrl);
     } catch (e) {
       logger.i(e.toString());
     }

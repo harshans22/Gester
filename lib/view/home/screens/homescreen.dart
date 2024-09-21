@@ -1,6 +1,8 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:gester/firebase_methods/firestore_methods.dart';
 import 'package:gester/provider/home_screen_provider.dart';
 import 'package:gester/provider/meal_customization_provider.dart';
 import 'package:gester/provider/user_provider.dart';
@@ -18,6 +20,7 @@ import 'package:gester/view/home/widgets/QuickAccessContainer.dart';
 import 'package:gester/view/home/widgets/add_note_dialog.dart';
 import 'package:gester/view/home/widgets/carosuel_image_container.dart';
 import 'package:gester/view/home/widgets/counterbox.dart';
+import 'package:gester/view/home/widgets/mealopt_users_list.dart';
 import 'package:gester/view/home/widgets/menuwidget.dart';
 import 'package:provider/provider.dart';
 import 'package:svg_flutter/svg.dart';
@@ -35,7 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final homescreenprovider =
-        Provider.of<HomeScreenProvider>(context, listen: true);
+        Provider.of<HomeScreenProvider>(context, listen: false);
     final userprovider = Provider.of<UserDataProvider>(context, listen: true);
     DateTime datetime = homescreenprovider.dateTime;
     int hour = datetime.hour;
@@ -85,7 +88,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       viewportFraction: 0.88,
                       height: 125,
                     ),
-                    items:List.generate(Appconstants.carosuelSliderImage.length, (index) => CarouselImageSlider(image: Appconstants.carosuelSliderImage[index])), 
+                    items: List.generate(
+                        Appconstants.carosuelSliderImage.length,
+                        (index) => CarouselImageSlider(
+                            image: Appconstants.carosuelSliderImage[index])),
                   ),
                   const Gap(20),
                   Container(
@@ -218,6 +224,17 @@ class _HomeScreenState extends State<HomeScreen> {
                                   Expanded(
                                     child: TextCommonButton(
                                       onTap: () async {
+                                        // await FireStoreMethods()
+                                        //     .updatePGUsersMealOpt(
+                                        //         userprovider.user.pgNumber,
+                                        //         userprovider.user.userId,
+                                        //         datetime,
+                                        //         (userprovider.user.breakfast +
+                                        //             userprovider.user.lunch +
+                                        //             userprovider.user.dinner),
+                                        //         userprovider.user.photoUrl,
+                                        //         userprovider.user.fname);
+                                        if (!context.mounted) return;
                                         await homescreenprovider.updatemealOpt(
                                             userprovider.user.breakfast,
                                             userprovider.user.lunch,
@@ -225,10 +242,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                             userprovider.user.userId,
                                             userprovider.user.pgNumber,
                                             userprovider.user.fname,
+                                            userprovider.user.photoUrl,
                                             context
                                                 .read<
                                                     MealCustomizationProvider>()
-                                                .oldeveningData[
+                                                .oldmorningData[
                                                     homescreenprovider.dateTime
                                                                 .hour >=
                                                             21
@@ -238,10 +256,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                                             : datetime.weekday
                                                         : datetime.weekday - 1]
                                                 .toJson(),
+
                                             context
                                                 .read<
                                                     MealCustomizationProvider>()
-                                                .oldmorningData[
+                                                .oldeveningData[
                                                     homescreenprovider.dateTime
                                                                 .hour >=
                                                             21
@@ -282,6 +301,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ],
                               )
                             : Container(),
+                        //pg users profile
+                         UsersMealOptList(pgNumber: userprovider.user.pgNumber, datetime:DateTime.now(),userId: userprovider.user.userId,)
                       ],
                     ),
                   ),

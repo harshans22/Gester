@@ -529,7 +529,8 @@ class _MenuCustomizationScreenState extends State<MenuCustomizationScreen> {
                             userprovider.user.breakfast,
                             userprovider.user.lunch,
                             userprovider.user.dinner,
-                            widget.datetime);
+                            widget.datetime,
+                            userprovider.user.photoUrl);
                         mealCustomizationProvider.setoldMealCustomization(
                             morningmealcustomization, eveningmealcustomization);
                         if (!context.mounted) return;
