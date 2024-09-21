@@ -40,8 +40,8 @@ class UsersMealOptList extends StatelessWidget {
                     (index) {
                       return Container(
                         margin: const EdgeInsets.only(right: 2),
-                        width: 30,
-                        height: 30,
+                        width: 18,
+                        height: 18,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           image: DecorationImage(
@@ -53,7 +53,7 @@ class UsersMealOptList extends StatelessWidget {
                       );
                     },
                   ),
-                  const Gap(5),
+                  const Gap(2),
                   ...List.generate(
                     snapshot.data!.docs.length,
                     (index) {

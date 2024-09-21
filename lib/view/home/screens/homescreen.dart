@@ -304,7 +304,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
 
                         //pg users profile
-                       //  UsersMealOptList(pgNumber: userprovider.user.pgNumber, datetime:DateTime.now(),userId: userprovider.user.userId,)
+                        UsersMealOptList(pgNumber: userprovider.user.pgNumber, datetime:DateTime.now(),userId: userprovider.user.userId,)
                       ],
                     ),
                   ),
