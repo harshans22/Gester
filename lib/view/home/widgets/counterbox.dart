@@ -108,7 +108,7 @@ class _CheckBoxWigdetState extends State<CounterBox> {
                     ),
                     Gap(4),
                     SvgPicture.asset(
-                      widget.isbrekfast || widget.islunch
+                      widget.isbrekfast?Appconstants.dietaryPrefrenceImageIcon["Veg"] :widget.islunch
                           ? Appconstants.dietaryPrefrenceImageIcon[context
                               .read<MealCustomizationProvider>()
                               .oldmorningData[dateTime.hour >= 21

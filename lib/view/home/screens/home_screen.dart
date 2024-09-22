@@ -1,6 +1,5 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:gap/gap.dart';
 import 'package:gester/provider/home_screen_provider.dart';
 import 'package:gester/provider/meal_customization_provider.dart';
@@ -18,7 +17,7 @@ import 'package:gester/view/home/screens/QuickAcessScreens/menu.dart';
 import 'package:gester/view/home/widgets/QuickAccessContainer.dart';
 import 'package:gester/view/home/widgets/add_note_dialog.dart';
 import 'package:gester/view/home/widgets/carosuel_image_container.dart';
-import 'package:gester/view/home/widgets/counter_box.dart';
+import 'package:gester/view/home/widgets/counterbox.dart';
 import 'package:gester/view/home/widgets/mealopt_users_list.dart';
 import 'package:gester/view/home/widgets/menuwidget.dart';
 import 'package:provider/provider.dart';
