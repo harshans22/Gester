@@ -20,10 +20,24 @@ class HomeScreenProvider with ChangeNotifier {
   int get oldlunch => _userDataModel!.lunch;
   int get olddinner => _userDataModel!.dinner;
   late Color counterBoxBorder;
-  TextEditingController? noteController;//TODO assign value from user mealOpt
+  TextEditingController? noteController; //TODO assign value from user mealOpt
   bool _loader = false;
   bool get loader => _loader;
-  
+  String _timeRefrence = "Today's";
+  String get timeRefrence => _timeRefrence;
+
+  int _bannerIndex = 0;
+  int get bannerIndex => _bannerIndex;
+
+  setbannerIndex(int value) {
+    _bannerIndex = value;
+    notifyListeners();
+  }
+
+  settimeRefrence(String value) {
+    _timeRefrence = value;
+    notifyListeners();
+  }
 
   updateUserData(UserData userdata) {
     _userDataModel = userdata;
@@ -61,22 +75,22 @@ class HomeScreenProvider with ChangeNotifier {
       Map<String, dynamic> evening) async {
     setloader(true);
     try {
-       logger.i("mealOpt updated");
+      logger.i("mealOpt updated");
       await FireStoreMethods()
           .updateMealOpt(breakfast, lunch, dinner, _dateTime!, userId);
       await FireStoreMethods().updatekitchendata(
-          userId,
-          pgNumber,
-          username,
-          breakfast,
-          lunch,
-          dinner,
-          _dateTime!,
-          photoUrl,
-          morning,
-          evening,
-          );
-         
+        userId,
+        pgNumber,
+        username,
+        breakfast,
+        lunch,
+        dinner,
+        _dateTime!,
+        photoUrl,
+        morning,
+        evening,
+      );
+
       notifyListeners();
     } catch (e) {
       logger.e(e.toString());
@@ -85,11 +99,12 @@ class HomeScreenProvider with ChangeNotifier {
   }
 
   //update note in User data
-  Future<void> updateNoteUserData(String note) async {//update user note in User Collection
+  Future<void> updateNoteUserData(String note) async {
+    //update user note in User Collection
     setloader(true);
     try {
-      await FireStoreMethods().updateNoteUserData(
-          _userDataModel!.userId, note, _dateTime!);
+      await FireStoreMethods()
+          .updateNoteUserData(_userDataModel!.userId, note, _dateTime!);
       notifyListeners();
     } catch (e) {
       logger.e(e.toString());
@@ -97,18 +112,17 @@ class HomeScreenProvider with ChangeNotifier {
     setloader(false);
   }
 
-
   //update note in kitchen data
-  Future<void> updateNoteKitchenData(String note) async {//update note in kitchen Collection
+  Future<void> updateNoteKitchenData(String note) async {
+    //update note in kitchen Collection
     try {
-      await FireStoreMethods().updateNoteInKitchenData(
-          _userDataModel!.userId, note, _dateTime!);
+      await FireStoreMethods()
+          .updateNoteInKitchenData(_userDataModel!.userId, note, _dateTime!);
       notifyListeners();
     } catch (e) {
       logger.e(e.toString());
     }
   }
-
 
   Future<void> fetchTimeFromServer() async {
     try {
@@ -122,6 +136,7 @@ class HomeScreenProvider with ChangeNotifier {
   void startLocalClock() {
     Timer.periodic(const Duration(seconds: 1), (timer) {
       _dateTime = _dateTime!.add(const Duration(seconds: 1));
+
       if (_dateTime!.hour < 5 && _dateTime!.hour >= 4) {
         _showMorningTimer = true;
       } else {

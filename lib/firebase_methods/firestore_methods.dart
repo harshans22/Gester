@@ -421,6 +421,7 @@ class FireStoreMethods {
           "breakfast": newbreakfast,
           "lunch": newlunch,
           "dinner": newdinner,
+          "totalMealOpt": newbreakfast + newlunch + newdinner,
           "Morning": morning,
           "Evening": evening,
           "timeMealAdded": FieldValue.arrayUnion([
@@ -547,6 +548,7 @@ class FireStoreMethods {
           "breakfast": newbreakfast,
           "lunch": newlunch,
           "dinner": newdinner,
+          "totalMealOpt": newbreakfast + newlunch + newdinner,
           "fname": fname,
           "dropname": pgNumber,
           "Morning": morning,

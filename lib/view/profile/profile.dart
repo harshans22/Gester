@@ -11,7 +11,7 @@ import 'package:gester/resources/dimensions.dart';
 import 'package:gester/utils/app_constants.dart';
 import 'package:gester/utils/utilities.dart';
 import 'package:gester/utils/widgets/activebutton.dart';
-import 'package:gester/view/home/screens/QuickAcessScreens/MenuCustomizationScreen.dart';
+import 'package:gester/view/home/screens/QuickAcessScreens/menu_customization_screen.dart';
 import 'package:gester/view/home/screens/QuickAcessScreens/meal_history_screen.dart';
 import 'package:gester/view/meal_subscription/meal_subscription_screen.dart';
 import 'package:gester/view/profile/aboutUs.dart';

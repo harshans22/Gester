@@ -5,7 +5,7 @@ import 'package:gester/resources/color.dart';
 import 'package:gester/resources/dimensions.dart';
 import 'package:gester/provider/home_screen_provider.dart';
 import 'package:gester/utils/utilities.dart';
-import 'package:gester/view/home/screens/homescreen.dart';
+import 'package:gester/view/home/screens/home_screen.dart';
 import 'package:gester/view/home/screens/skeleton_home.dart';
 import 'package:gester/view/stay/StayScreen.dart';
 import 'package:logger/logger.dart';
