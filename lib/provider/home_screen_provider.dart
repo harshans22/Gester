@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:gester/firebase_methods/firestore_methods.dart';
+import 'package:gester/firebase_methods/storage_methods.dart';
 import 'package:gester/models/usermodel.dart';
 import 'package:gester/utils/app_constants.dart';
 import 'package:gester/utils/utilities.dart';
@@ -29,6 +30,7 @@ class HomeScreenProvider with ChangeNotifier {
   int _bannerIndex = 0;
   int get bannerIndex => _bannerIndex;
 
+  List<String> bannerImages = [];
 
   setbannerIndex(int value) {
     _bannerIndex = value;
@@ -36,7 +38,6 @@ class HomeScreenProvider with ChangeNotifier {
 
   settimeRefrence(String value) {
     _timeRefrence = value;
-    notifyListeners();
   }
 
   updateUserData(UserData userdata) {
@@ -61,6 +62,17 @@ class HomeScreenProvider with ChangeNotifier {
   setloader(bool value) {
     _loader = value;
     notifyListeners();
+  }
+
+  //fetch banner Images from storage
+  Future<void> fetchBannerImages() async {
+    try {
+      bannerImages = await StoargeMethods().fetchBannerImagesFromStorage();
+      notifyListeners();
+    } catch (e) {
+      logger.e(e);
+      throw Exception(e);
+    }
   }
 
   Future<void> updatemealOpt(

@@ -6,13 +6,15 @@ class CarouselImageSlider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+  
     return Container(
       margin: const EdgeInsets.all(5.0),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
         image:  DecorationImage(
-          image: AssetImage(
-              image),
+          image: NetworkImage(
+             image ),
           fit: BoxFit.fill,
         ),
       ),

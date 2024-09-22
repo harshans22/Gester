@@ -74,19 +74,16 @@ class HomeScreen extends StatelessWidget {
                             height: 125,
                           ),
                           items: List.generate(
-                              Appconstants.carosuelSliderImage.length,
+                              value.bannerImages.length,
                               (index) => CarouselImageSlider(
-                                  image: Appconstants.carosuelSliderImage[index])),
+                                  image: value.bannerImages[index])),
                         ),
-                    
-                    
-                    
                         //white dots for banner
                         Positioned(
                           bottom: 10,
                           child: Row(
-                                              mainAxisAlignment: MainAxisAlignment.center,
-                                              children: Appconstants.carosuelSliderImage
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: Appconstants.carosuelSliderImage
                             .asMap()
                             .entries
                             .map((entry) {
@@ -94,18 +91,19 @@ class HomeScreen extends StatelessWidget {
                             width:
                                 value.bannerIndex ==
                                         entry.key
-                                    ? 17
-                                    : 8,
-                            height: 8.0,
+                                    ? 12
+                                    : 7,
+                            height: 7.0,
                             margin: const EdgeInsets.symmetric(
                               horizontal: 3.0,
                             ),
                             decoration: BoxDecoration(
+                              border: Border.all(color: Colors.white),
                                 borderRadius: BorderRadius.circular(10),
                                 color:value.bannerIndex ==
                                         entry.key
-                                    ? AppColor.PRIMARY
-                                    : AppColor.PRIMARY.withOpacity(0.2)),
+                                    ? AppColor.GREY_COLOR_LIGHT.withOpacity(0.5)
+                                    : Colors.transparent),
                           );
                                               }).toList(),
                                             ),

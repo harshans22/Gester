@@ -60,6 +60,9 @@ class _NavgationScreenState extends State<NavigationScreen> {
           .fetchTimeFromServer();
       if (!mounted) return;
       Provider.of<HomeScreenProvider>(context, listen: false).startLocalClock();
+      if(!mounted) return;
+       await Provider.of<HomeScreenProvider>(context, listen: false)
+          .fetchBannerImages();
     } catch (e) {
       var logger = Logger();
       logger.e(e.toString());
