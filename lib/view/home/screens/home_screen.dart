@@ -32,6 +32,7 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
    
     final userprovider = Provider.of<UserDataProvider>(context, listen: true);
+    final homeprovider=Provider.of<HomeScreenProvider>(context, listen: false);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -46,6 +47,11 @@ class HomeScreen extends StatelessWidget {
                 //  mainAxisSize: MainAxisSize.max,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+
+
+
+
+                  
                   //carosuel slider for banner
                   Stack(
                     alignment: Alignment.bottomCenter,
@@ -53,9 +59,7 @@ class HomeScreen extends StatelessWidget {
                       CarouselSlider(
                         options: CarouselOptions(
                           onPageChanged: (index, reason) {
-                            context
-                                .read<HomeScreenProvider>()
-                                .setbannerIndex(index);
+                            homeprovider.setbannerIndex(index);
                           },
                           autoPlayCurve: Curves.linear, //TODO: change animation
                           autoPlayInterval: const Duration(seconds: 5),
@@ -84,7 +88,7 @@ class HomeScreen extends StatelessWidget {
                           .map((entry) {
                         return Container(
                           width:
-                              context.watch<HomeScreenProvider>().bannerIndex ==
+                              homeprovider.bannerIndex ==
                                       entry.key
                                   ? 17
                                   : 8,
@@ -94,9 +98,7 @@ class HomeScreen extends StatelessWidget {
                           ),
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),
-                              color: context
-                                          .watch<HomeScreenProvider>()
-                                          .bannerIndex ==
+                              color:homeprovider.bannerIndex ==
                                       entry.key
                                   ? AppColor.PRIMARY
                                   : AppColor.PRIMARY.withOpacity(0.2)),
@@ -112,6 +114,8 @@ class HomeScreen extends StatelessWidget {
 
 
                   //meal Opt Container
+                  //TODO: make it as a widget
+                  //TODO: this container is rebuild every second fix that or optimize that
                   Consumer<HomeScreenProvider>(
                       builder: (context, homescreenprovider, child) {
                     //reset meal opt at 9 PM and 5 AM and 5 PM
@@ -351,19 +355,23 @@ class HomeScreen extends StatelessWidget {
                               : Container(),
 
                           //pg users profile
+                        child!,
+                          
                         ],
                       ),
                     );
-                  }),
+                  },
+                  child:  UsersMealOptList(
+                    pgNumber: userprovider.user.pgNumber,
+                    datetime: DateTime.now(),//TODO: change this to current time
+                    userId: userprovider.user.userId,
+                  ),
+                  ),
 
 
 
                   
-                  UsersMealOptList(
-                    pgNumber: userprovider.user.pgNumber,
-                    datetime: DateTime.now(),
-                    userId: userprovider.user.userId,
-                  ),
+                 
 
                   const Gap(30),
                   Text(

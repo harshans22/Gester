@@ -29,12 +29,12 @@ class UsersMealOptList extends StatelessWidget {
               .snapshots(),
           builder: (context,
               AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
-                 if (snapshot.hasError) {
-                  logger.e("Error: ${snapshot.error}");
-      return Center(
-        child: Text("An error occurred: ${snapshot.error}"),
-      );
-    }
+            if (snapshot.hasError) {
+              logger.e("Error: ${snapshot.error}");
+              return Center(
+                child: Text("An error occurred: ${snapshot.error}"),
+              );
+            }
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Text("Loading...");
             }
@@ -42,10 +42,13 @@ class UsersMealOptList extends StatelessWidget {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("Meal Opted by",style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                    color: AppColor.GREY.withOpacity(0.5),
-                    fontWeight: FontWeight.w700
-                  ),),
+                  Text(
+                    "Meal Opted by",
+                    style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                        color: AppColor.GREY.withOpacity(0.5),
+                        fontWeight: FontWeight.w700),
+                  ),
+                  const Gap(2),
                   Row(
                     children: [
                       ...List.generate(
@@ -58,8 +61,9 @@ class UsersMealOptList extends StatelessWidget {
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               image: DecorationImage(
-                                image: NetworkImage(
-                                    snapshot.data!.docs[index].data()['photoUrl']??"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSWwfGUCDwrZZK12xVpCOqngxSpn0BDpq6ewQ&s"),
+                                image: NetworkImage(snapshot.data!.docs[index]
+                                        .data()['photoUrl'] ??
+                                    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSWwfGUCDwrZZK12xVpCOqngxSpn0BDpq6ewQ&s"),
                                 fit: BoxFit.cover,
                               ),
                             ),
@@ -70,32 +74,38 @@ class UsersMealOptList extends StatelessWidget {
                       ...List.generate(
                         snapshot.data!.docs.length,
                         (index) {
-                          if(index>5){
+                          if (index > 5) {
                             return Container();
                           }
                           if (index == 0) {
-                            return Text(snapshot.data!.docs[index].data()['fname'],
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleMedium!
-                                    .copyWith(
-                                        color: AppColor.BLACK.withOpacity(0.8)));
-                          } else if ( index < snapshot.data!.docs.length - 1) {
                             return Text(
-                                ", " + snapshot.data!.docs[index].data()['fname'],
+                                snapshot.data!.docs[index].data()['fname'],
                                 style: Theme.of(context)
                                     .textTheme
                                     .titleMedium!
                                     .copyWith(
-                                        color: AppColor.BLACK.withOpacity(0.8)));
+                                        color:
+                                            AppColor.BLACK.withOpacity(0.8)));
+                          } else if (index < snapshot.data!.docs.length - 1) {
+                            return Text(
+                                ", " +
+                                    snapshot.data!.docs[index].data()['fname'],
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleMedium!
+                                    .copyWith(
+                                        color:
+                                            AppColor.BLACK.withOpacity(0.8)));
                           } else {
                             return Text(
-                                " & " + snapshot.data!.docs[index].data()['fname'],
+                                " & " +
+                                    snapshot.data!.docs[index].data()['fname'],
                                 style: Theme.of(context)
                                     .textTheme
                                     .titleMedium!
                                     .copyWith(
-                                        color: AppColor.BLACK.withOpacity(0.8)));
+                                        color:
+                                            AppColor.BLACK.withOpacity(0.8)));
                           }
                         },
                       ),
