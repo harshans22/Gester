@@ -32,7 +32,7 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
    
     final userprovider = Provider.of<UserDataProvider>(context, listen: true);
-    final homeprovider=Provider.of<HomeScreenProvider>(context, listen: false);
+
 
 
 

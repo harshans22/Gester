@@ -29,9 +29,9 @@ class HomeScreenProvider with ChangeNotifier {
   int _bannerIndex = 0;
   int get bannerIndex => _bannerIndex;
 
+
   setbannerIndex(int value) {
     _bannerIndex = value;
-    notifyListeners();
   }
 
   settimeRefrence(String value) {
