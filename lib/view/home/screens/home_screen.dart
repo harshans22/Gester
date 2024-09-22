@@ -34,6 +34,8 @@ class HomeScreen extends StatelessWidget {
     final userprovider = Provider.of<UserDataProvider>(context, listen: true);
     final homeprovider=Provider.of<HomeScreenProvider>(context, listen: false);
 
+
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -53,60 +55,63 @@ class HomeScreen extends StatelessWidget {
 
                   
                   //carosuel slider for banner
-                  Stack(
-                    alignment: Alignment.bottomCenter,
-                    children: [
-                      CarouselSlider(
-                        options: CarouselOptions(
-                          onPageChanged: (index, reason) {
-                            homeprovider.setbannerIndex(index);
-                          },
-                          autoPlayCurve: Curves.linear, //TODO: change animation
-                          autoPlayInterval: const Duration(seconds: 5),
-                          autoPlay: true,
-                          enlargeCenterPage: true,
-                          enlargeFactor: 0,
-                          viewportFraction: 1,
-                          height: 125,
-                        ),
-                        items: List.generate(
-                            Appconstants.carosuelSliderImage.length,
-                            (index) => CarouselImageSlider(
-                                image: Appconstants.carosuelSliderImage[index])),
-                      ),
-
-
-
-                      //white dots for banner
-                      Positioned(
-                        bottom: 10,
-                        child: Row(
-                                            mainAxisAlignment: MainAxisAlignment.center,
-                                            children: Appconstants.carosuelSliderImage
-                          .asMap()
-                          .entries
-                          .map((entry) {
-                        return Container(
-                          width:
-                              homeprovider.bannerIndex ==
-                                      entry.key
-                                  ? 17
-                                  : 8,
-                          height: 8.0,
-                          margin: const EdgeInsets.symmetric(
-                            horizontal: 3.0,
+                  Consumer<HomeScreenProvider>(
+                    builder: (context, value, child) => 
+                     Stack(
+                      alignment: Alignment.bottomCenter,
+                      children: [
+                        CarouselSlider(
+                          options: CarouselOptions(
+                            onPageChanged: (index, reason) {
+                              value.setbannerIndex(index);
+                            },
+                            autoPlayCurve: Curves.linear, //TODO: change animation
+                            autoPlayInterval: const Duration(seconds: 5),
+                            autoPlay: true,
+                            enlargeCenterPage: true,
+                            enlargeFactor: 0,
+                            viewportFraction: 1,
+                            height: 125,
                           ),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color:homeprovider.bannerIndex ==
-                                      entry.key
-                                  ? AppColor.PRIMARY
-                                  : AppColor.PRIMARY.withOpacity(0.2)),
-                        );
-                                            }).toList(),
-                                          ),
-                      ),
-                    ],
+                          items: List.generate(
+                              Appconstants.carosuelSliderImage.length,
+                              (index) => CarouselImageSlider(
+                                  image: Appconstants.carosuelSliderImage[index])),
+                        ),
+                    
+                    
+                    
+                        //white dots for banner
+                        Positioned(
+                          bottom: 10,
+                          child: Row(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              children: Appconstants.carosuelSliderImage
+                            .asMap()
+                            .entries
+                            .map((entry) {
+                          return Container(
+                            width:
+                                value.bannerIndex ==
+                                        entry.key
+                                    ? 17
+                                    : 8,
+                            height: 8.0,
+                            margin: const EdgeInsets.symmetric(
+                              horizontal: 3.0,
+                            ),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color:value.bannerIndex ==
+                                        entry.key
+                                    ? AppColor.PRIMARY
+                                    : AppColor.PRIMARY.withOpacity(0.2)),
+                          );
+                                              }).toList(),
+                                            ),
+                        ),
+                      ],
+                    ),
                   ),
                   
                   const Gap(10),
