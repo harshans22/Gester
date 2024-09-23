@@ -43,7 +43,7 @@ class UsersMealOptList extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Meal Opted by",
+                    "Meal opted by",
                     style: Theme.of(context).textTheme.titleSmall!.copyWith(
                         color: AppColor.GREY.withOpacity(0.5),
                         fontWeight: FontWeight.w700),

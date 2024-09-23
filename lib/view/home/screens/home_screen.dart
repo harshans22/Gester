@@ -11,9 +11,9 @@ import 'package:gester/utils/utilities.dart';
 import 'package:gester/utils/widgets/activebutton.dart';
 import 'package:gester/utils/widgets/profile_container.dart';
 import 'package:gester/utils/widgets/textbutton.dart';
-import 'package:gester/view/home/screens/QuickAcessScreens/menu_customization_screen.dart';
 import 'package:gester/view/home/screens/QuickAcessScreens/meal_history_screen.dart';
 import 'package:gester/view/home/screens/QuickAcessScreens/menu.dart';
+import 'package:gester/view/home/screens/QuickAcessScreens/menu_customization_screen.dart';
 import 'package:gester/view/home/widgets/QuickAccessContainer.dart';
 import 'package:gester/view/home/widgets/add_note_dialog.dart';
 import 'package:gester/view/home/widgets/carosuel_image_container.dart';
@@ -29,11 +29,7 @@ class HomeScreen extends StatelessWidget {
 //dialog for success mealopted
   @override
   Widget build(BuildContext context) {
-   
     final userprovider = Provider.of<UserDataProvider>(context, listen: true);
-
-
-
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -48,15 +44,9 @@ class HomeScreen extends StatelessWidget {
                 //  mainAxisSize: MainAxisSize.max,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-
-
-
-
-                  
                   //carosuel slider for banner
                   Consumer<HomeScreenProvider>(
-                    builder: (context, value, child) => 
-                     Stack(
+                    builder: (context, value, child) => Stack(
                       alignment: Alignment.bottomCenter,
                       children: [
                         CarouselSlider(
@@ -64,7 +54,8 @@ class HomeScreen extends StatelessWidget {
                             onPageChanged: (index, reason) {
                               value.setbannerIndex(index);
                             },
-                            autoPlayCurve: Curves.linear, //TODO: change animation
+                            autoPlayCurve:
+                                Curves.linear, //TODO: change animation
                             autoPlayInterval: const Duration(seconds: 5),
                             autoPlay: true,
                             enlargeCenterPage: true,
@@ -81,301 +72,290 @@ class HomeScreen extends StatelessWidget {
                         Positioned(
                           bottom: 10,
                           child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: Appconstants.carosuelSliderImage
-                            .asMap()
-                            .entries
-                            .map((entry) {
-                          return Container(
-                            width:
-                                value.bannerIndex ==
-                                        entry.key
-                                    ? 12
-                                    : 7,
-                            height: 7.0,
-                            margin: const EdgeInsets.symmetric(
-                              horizontal: 3.0,
-                            ),
-                            decoration: BoxDecoration(
-                              border: Border.all(color: Colors.white),
-                                borderRadius: BorderRadius.circular(10),
-                                color:value.bannerIndex ==
-                                        entry.key
-                                    ? AppColor.GREY_COLOR_LIGHT.withOpacity(0.5)
-                                    : Colors.transparent),
-                          );
-                                              }).toList(),
-                                            ),
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: Appconstants.carosuelSliderImage
+                                .asMap()
+                                .entries
+                                .map((entry) {
+                              return Container(
+                                width: value.bannerIndex == entry.key ? 12 : 7,
+                                height: 7.0,
+                                margin: const EdgeInsets.symmetric(
+                                  horizontal: 3.0,
+                                ),
+                                decoration: BoxDecoration(
+                                    border: Border.all(color: Colors.white),
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: value.bannerIndex == entry.key
+                                        ? AppColor.GREY_COLOR_LIGHT
+                                            .withOpacity(0.5)
+                                        : Colors.transparent),
+                              );
+                            }).toList(),
+                          ),
                         ),
                       ],
                     ),
                   ),
-                  
+
                   const Gap(10),
-
-
 
                   //meal Opt Container
                   //TODO: make it as a widget
                   //TODO: this container is rebuild every second fix that or optimize that
                   Consumer<HomeScreenProvider>(
-                      builder: (context, homescreenprovider, child) {
-                    //reset meal opt at 9 PM and 5 AM and 5 PM
-                    if ((homescreenprovider.dateTime.hour == 21 ||
-                            homescreenprovider.dateTime.hour == 17 ||
-                            homescreenprovider.dateTime.hour == 5) &&
-                        homescreenprovider.dateTime.minute == 0 &&
-                        homescreenprovider.dateTime.second == 0) {
-                      userprovider.resetMealOpt();
-                    }
-                    DateTime datetime = homescreenprovider.dateTime;
-                    int hour = datetime.hour;
-                    if (hour >= 21) {
-                      homescreenprovider.settimeRefrence(
-                          "Tomorrow"); //TODO: don't do it here make something else
-                      datetime = datetime.add(const Duration(days: 1));
-                    }
-                    return Container(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: Dimensions.paddingSizeDefault,
-                          horizontal: Dimensions.paddingSizeDefault),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius:
-                            BorderRadius.circular(Dimensions.radiusLarge),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Text(
-                                "Your meal subscription",
-                                style: Theme.of(context).textTheme.displayLarge,
-                              ),
-                              const Gap(10),
-                              ActiveButton(
-                                color: Appconstants.subscriptionStatusColor[
-                                    userprovider.user.subscription.status]!,
-                                title: userprovider.user.subscription.status,
-                                onTap: () {},
-                              ),
-                            ],
-                          ),
-                          const Gap(Dimensions.paddingSizeSmall),
-                          Text(
-                              "Meal opt for ${homescreenprovider.timeRefrence} (${"${Utils.getDayName(datetime.weekday)}, ${datetime.day} ${Utils.getMonthName(datetime.month)}"})",
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleMedium!
-                                  .copyWith(fontWeight: FontWeight.w400)),
-                          const Text("Included in your stay at H2H",
-                              style: TextStyle(
-                                  fontSize: 12, color: Color(0xFFB4B4B4))),
-                          const Gap(4),
-                          homescreenprovider.showEveningTimer
-                              ? Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(
-                                        Dimensions.radiusSmall),
-                                    color: const Color(0xFFFAA139),
-                                  ),
-                                  child: Text(
-                                      "  Meal opt closing at 5 PM. Order within ${Utils.getTimeinMinSec(homescreenprovider.dateTime)} mins  ",
+                    builder: (context, homescreenprovider, child) {
+                      //reset meal opt at 9 PM and 5 AM and 5 PM
+                      if ((homescreenprovider.dateTime.hour == 21 ||
+                              homescreenprovider.dateTime.hour == 17 ||
+                              homescreenprovider.dateTime.hour == 5) &&
+                          homescreenprovider.dateTime.minute == 0 &&
+                          homescreenprovider.dateTime.second == 0) {
+                        userprovider.resetMealOpt();
+                      }
+                      DateTime datetime = homescreenprovider.dateTime;
+                      int hour = datetime.hour;
+                      if (hour >= 21) {
+                        homescreenprovider.settimeRefrence(
+                            "Tomorrow"); //TODO: don't do it here make something else
+                        datetime = datetime.add(const Duration(days: 1));
+                      }
+                      return Container(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: Dimensions.paddingSizeDefault,
+                            horizontal: Dimensions.paddingSizeDefault),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius:
+                              BorderRadius.circular(Dimensions.radiusLarge),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Text(
+                                  "Your meal subscription",
+                                  style:
+                                      Theme.of(context).textTheme.displayLarge,
+                                ),
+                                const Gap(10),
+                                ActiveButton(
+                                  color: Appconstants.subscriptionStatusColor[
+                                      userprovider.user.subscription.status]!,
+                                  title: userprovider.user.subscription.status,
+                                  onTap: () {},
+                                ),
+                              ],
+                            ),
+                            const Gap(Dimensions.paddingSizeSmall),
+                            Text(
+                                "Meal opt for ${homescreenprovider.timeRefrence} (${"${Utils.getDayName(datetime.weekday)}, ${datetime.day} ${Utils.getMonthName(datetime.month)}"})",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleMedium!
+                                    .copyWith(fontWeight: FontWeight.w400)),
+                            const Text("Included in your stay at H2H",
+                                style: TextStyle(
+                                    fontSize: 12, color: Color(0xFFB4B4B4))),
+                            const Gap(4),
+                            homescreenprovider.showEveningTimer
+                                ? Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(
+                                          Dimensions.radiusSmall),
+                                      color: const Color(0xFFFAA139),
+                                    ),
+                                    child: Text(
+                                        "  Meal opt closing at 5 PM. Order within ${Utils.getTimeinMinSec(homescreenprovider.dateTime)} mins  ",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .titleSmall!
+                                            .copyWith(
+                                                color: AppColor.WHITE,
+                                                fontWeight: FontWeight.w400,
+                                                height: 1.5)),
+                                  )
+                                : Container(),
+                            homescreenprovider.showMorningTimer
+                                ? Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(
+                                          Dimensions.radiusSmall),
+                                      color: const Color(0xFFFAA139),
+                                    ),
+                                    child: Text(
+                                      "  Meal opt closing at 5 AM. Order within ${Utils.getTimeinMinSec(homescreenprovider.dateTime)} mins  ",
                                       style: Theme.of(context)
                                           .textTheme
                                           .titleSmall!
                                           .copyWith(
                                               color: AppColor.WHITE,
                                               fontWeight: FontWeight.w400,
-                                              height: 1.5)),
-                                )
-                              : Container(),
-                          homescreenprovider.showMorningTimer
-                              ? Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(
-                                        Dimensions.radiusSmall),
-                                    color: const Color(0xFFFAA139),
-                                  ),
-                                  child: Text(
-                                    "  Meal opt closing at 5 AM. Order within ${Utils.getTimeinMinSec(homescreenprovider.dateTime)} mins  ",
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .titleSmall!
-                                        .copyWith(
-                                            color: AppColor.WHITE,
-                                            fontWeight: FontWeight.w400,
-                                            height: 1.5),
-                                  ),
-                                )
-                              : Container(),
-                          const Gap(10),
-
-                          const CounterBox(
-                            name: "Breakfast",
-                            isbrekfast: true,
-                          ),
-                          const Gap(10),
-                          const CounterBox(
-                            name: "Lunch",
-                            islunch: true,
-                          ),
-                          const Gap(10),
-                          const CounterBox(
-                            name: "Dinner",
-                            isdinner: true,
-                          ),
-
-                          const Gap(10),
-
-                          //to show add note
-                          if (userprovider.user.breakfast > 0 ||
-                              userprovider.user.lunch > 0 ||
-                              userprovider.user.dinner > 0)
-                            const AddNote(),
-                          const Gap(10),
-                          (userprovider.user.breakfast !=
-                                      userprovider.oldbreakfast ||
-                                  userprovider.user.lunch !=
-                                      userprovider.oldlunch ||
-                                  userprovider.user.dinner !=
-                                      userprovider.olddinner)
-                              ? Row(
-                                  children: [
-                                    Expanded(
-                                      child: TextCommonButton(
-                                        onTap: () {
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      MenuCustomizationScreen(
-                                                        datetime:
-                                                            homescreenprovider
-                                                                .dateTime,
-                                                      )));
-                                        },
-                                        paddingvertical:
-                                            Dimensions.paddingSizeSmall,
-                                        title: "Customize meal",
-                                        color: Colors.transparent,
-                                        textColor: AppColor.bluecolor,
-                                        borderColor: AppColor.bluecolor,
-                                        fontWeight: FontWeight.w400,
-                                        isloader: false,
-                                      ),
+                                              height: 1.5),
                                     ),
-                                    const Gap(5),
-                                    Expanded(
-                                      child: TextCommonButton(
-                                        onTap: () async {
-                                          // await FireStoreMethods()
-                                          //     .updatePGUsersMealOpt(
-                                          //         userprovider.user.pgNumber,
-                                          //         userprovider.user.userId,
-                                          //         datetime,
-                                          //         (userprovider.user.breakfast +
-                                          //             userprovider.user.lunch +
-                                          //             userprovider.user.dinner),
-                                          //         userprovider.user.photoUrl,
-                                          //         userprovider.user.fname);
-                                          if (!context.mounted) return;
-                                          await homescreenprovider
-                                              .updatemealOpt(
-                                                  userprovider.user.breakfast,
-                                                  userprovider.user.lunch,
-                                                  userprovider.user.dinner,
-                                                  userprovider.user.userId,
-                                                  userprovider.user.pgNumber,
-                                                  userprovider.user.fname,
-                                                  userprovider.user.photoUrl,
-                                                  context
-                                                      .read<
-                                                          MealCustomizationProvider>()
-                                                      .oldmorningData[
-                                                          homescreenprovider
-                                                                      .dateTime
-                                                                      .hour >=
-                                                                  21
-                                                              ? (datetime.weekday ==
-                                                                      7)
-                                                                  ? 0
-                                                                  : datetime
-                                                                      .weekday
-                                                              : datetime.weekday -
-                                                                  1]
-                                                      .toJson(),
-                                                  context
-                                                      .read<
-                                                          MealCustomizationProvider>()
-                                                      .oldeveningData[
-                                                          homescreenprovider
-                                                                      .dateTime
-                                                                      .hour >=
-                                                                  21
-                                                              ? (datetime.weekday ==
-                                                                      7)
-                                                                  ? 0
-                                                                  : datetime
-                                                                      .weekday
-                                                              : datetime
-                                                                      .weekday -
-                                                                  1]
-                                                      .toJson());
-                                          userprovider.setoldMealtype(
-                                              userprovider.user.breakfast,
-                                              userprovider.user.lunch,
-                                              userprovider.user.dinner);
-                                          if (!homescreenprovider.loader) {
+                                  )
+                                : Container(),
+                            const Gap(10),
+
+                            const CounterBox(
+                              name: "Breakfast",
+                              isbrekfast: true,
+                            ),
+                            const Gap(10),
+                            const CounterBox(
+                              name: "Lunch",
+                              islunch: true,
+                            ),
+                            const Gap(10),
+                            const CounterBox(
+                              name: "Dinner",
+                              isdinner: true,
+                            ),
+
+                            const Gap(10),
+
+                            //to show add note
+                            if (userprovider.user.breakfast > 0 ||
+                                userprovider.user.lunch > 0 ||
+                                userprovider.user.dinner > 0)
+                              const AddNote(),
+                            const Gap(10),
+                            (userprovider.user.breakfast !=
+                                        userprovider.oldbreakfast ||
+                                    userprovider.user.lunch !=
+                                        userprovider.oldlunch ||
+                                    userprovider.user.dinner !=
+                                        userprovider.olddinner)
+                                ? Row(
+                                    children: [
+                                      Expanded(
+                                        child: TextCommonButton(
+                                          onTap: () {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        MenuCustomizationScreen(
+                                                          datetime:
+                                                              homescreenprovider
+                                                                  .dateTime,
+                                                        )));
+                                          },
+                                          paddingvertical:
+                                              Dimensions.paddingSizeSmall,
+                                          title: "Customize meal",
+                                          color: Colors.transparent,
+                                          textColor: AppColor.bluecolor,
+                                          borderColor: AppColor.bluecolor,
+                                          fontWeight: FontWeight.w400,
+                                          isloader: false,
+                                        ),
+                                      ),
+                                      const Gap(5),
+                                      Expanded(
+                                        child: TextCommonButton(
+                                          onTap: () async {
+                                            // await FireStoreMethods()
+                                            //     .updatePGUsersMealOpt(
+                                            //         userprovider.user.pgNumber,
+                                            //         userprovider.user.userId,
+                                            //         datetime,
+                                            //         (userprovider.user.breakfast +
+                                            //             userprovider.user.lunch +
+                                            //             userprovider.user.dinner),
+                                            //         userprovider.user.photoUrl,
+                                            //         userprovider.user.fname);
                                             if (!context.mounted) return;
-                                            Utils.showWithNoButton(context,
-                                                title:
-                                                    "Your meal has been opted!");
-                                          }
-                                          if (homescreenprovider
-                                              .userDataModel.note.isNotEmpty) {
                                             await homescreenprovider
-                                                .updateNoteKitchenData(
-                                                    homescreenprovider
-                                                        .userDataModel
-                                                        .note);
-                                                         //TODO this is jugaad not usefull when kitchen data also exists only usefull when kitchen data is not there mean all mealopt are zero and you add note and mealopt together
-                                          }
-                                        },
-                                        paddingvertical:
-                                            Dimensions.paddingSizeSmall,
-                                        title: "Save changes",
-                                        color: AppColor.bluecolor,
-                                        textColor: AppColor.WHITE,
-                                        fontWeight: FontWeight.w400,
-                                        isloader: homescreenprovider.loader,
+                                                .updatemealOpt(
+                                                    userprovider.user.breakfast,
+                                                    userprovider.user.lunch,
+                                                    userprovider.user.dinner,
+                                                    userprovider.user.userId,
+                                                    userprovider.user.pgNumber,
+                                                    userprovider.user.fname,
+                                                    userprovider.user.photoUrl,
+                                                    context
+                                                        .read<
+                                                            MealCustomizationProvider>()
+                                                        .oldmorningData[
+                                                            homescreenprovider
+                                                                        .dateTime
+                                                                        .hour >=
+                                                                    21
+                                                                ? (datetime.weekday ==
+                                                                        7)
+                                                                    ? 0
+                                                                    : datetime
+                                                                        .weekday
+                                                                : datetime.weekday -
+                                                                    1]
+                                                        .toJson(),
+                                                    context
+                                                        .read<
+                                                            MealCustomizationProvider>()
+                                                        .oldeveningData[
+                                                            homescreenprovider
+                                                                        .dateTime
+                                                                        .hour >=
+                                                                    21
+                                                                ? (datetime.weekday ==
+                                                                        7)
+                                                                    ? 0
+                                                                    : datetime
+                                                                        .weekday
+                                                                : datetime
+                                                                        .weekday -
+                                                                    1]
+                                                        .toJson());
+                                            userprovider.setoldMealtype(
+                                                userprovider.user.breakfast,
+                                                userprovider.user.lunch,
+                                                userprovider.user.dinner);
+                                            if (!homescreenprovider.loader) {
+                                              if (!context.mounted) return;
+                                              Utils.showWithNoButton(context,
+                                                  title:
+                                                      "Your meal has been opted!");
+                                            }
+                                            if (homescreenprovider.userDataModel
+                                                .note.isNotEmpty) {
+                                              await homescreenprovider
+                                                  .updateNoteKitchenData(
+                                                      homescreenprovider
+                                                          .userDataModel.note);
+                                              //TODO this is jugaad not usefull when kitchen data also exists only usefull when kitchen data is not there mean all mealopt are zero and you add note and mealopt together
+                                            }
+                                          },
+                                          paddingvertical:
+                                              Dimensions.paddingSizeSmall,
+                                          title: "Save changes",
+                                          color: AppColor.bluecolor,
+                                          textColor: AppColor.WHITE,
+                                          fontWeight: FontWeight.w400,
+                                          isloader: homescreenprovider.loader,
+                                        ),
                                       ),
-                                    ),
-                                  ],
-                                )
-                              : Container(),
-
-                          //pg users profile
-                        child!,
-                          
-                        ],
-                      ),
-                    );
-                  },
-                  child:  UsersMealOptList(
-                    pgNumber: userprovider.user.pgNumber,
-                    datetime: DateTime.now(),//TODO: change this to current time
-                    userId: userprovider.user.userId,
+                                    ],
+                                  )
+                                : Container(),
+                            const Gap(5),
+                            //pg users profile
+                            child!,
+                          ],
+                        ),
+                      );
+                    },
+                    child: UsersMealOptList(
+                      pgNumber: userprovider.user.pgNumber,
+                      datetime:
+                          DateTime.now(), //TODO: change this to current time
+                      userId: userprovider.user.userId,
+                    ),
                   ),
-                  ),
 
-
-
-                  
-                 
-
-                  const Gap(30),
+                  const Gap(20),
                   Text(
                       " ${context.read<HomeScreenProvider>().timeRefrence} menu",
                       style: const TextStyle(

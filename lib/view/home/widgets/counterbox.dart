@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:gester/firebase_methods/firestore_methods.dart';
+import 'package:gester/provider/home_screen_provider.dart';
 import 'package:gester/provider/meal_customization_provider.dart';
 import 'package:gester/provider/menu_provider.dart';
 import 'package:gester/provider/user_provider.dart';
@@ -8,7 +9,6 @@ import 'package:gester/resources/color.dart';
 import 'package:gester/resources/dimensions.dart';
 import 'package:gester/utils/app_constants.dart';
 import 'package:gester/utils/utilities.dart';
-import 'package:gester/provider/home_screen_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:svg_flutter/svg.dart';
 
@@ -44,7 +44,7 @@ class _CheckBoxWigdetState extends State<CounterBox> {
       bool canbeChanged = (widget.isbrekfast || widget.islunch)
           ? ((dateTime.hour < 5 || dateTime.hour >= 21) ? true : false)
           : ((dateTime.hour < 17 || dateTime.hour >= 21) ? true : false);
-          
+
       bool containsMeal = widget.isbrekfast // to show ADD or (- 1 +)
           ? userprovider.user.breakfast > 0
           : widget.islunch
@@ -56,271 +56,283 @@ class _CheckBoxWigdetState extends State<CounterBox> {
               ? userprovider.user.lunch
               : userprovider.user.dinner;
 
-
       return Container(
-        padding: const EdgeInsets.symmetric(vertical:Dimensions.paddingSizeExtraSmall,horizontal: Dimensions.paddingSizeSmall),
+        padding: const EdgeInsets.symmetric(
+            vertical: Dimensions.paddingSizeExtraSmall,
+            horizontal: Dimensions.paddingSizeSmall),
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
+          borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
+          color: isPGUser
+              ? ((containsMeal && canbeChanged)
+                  ? AppColor.bluecolor.withOpacity(0.3)
+                  : Colors.transparent)
+              : Colors.transparent,
+          border: Border.all(
             color: isPGUser
                 ? ((containsMeal && canbeChanged)
-                    ? AppColor.bluecolor.withOpacity(0.3)
-                    : Colors.transparent)
-                : Colors.transparent,
-            border: Border.all(
-              color: isPGUser
-                  ? ((containsMeal && canbeChanged)
-                      ? AppColor.bluecolor
-                      : Colors.grey.withOpacity(0.5))
-                  : Colors.grey.withOpacity(0.5),
-            ),),
+                    ? AppColor.bluecolor
+                    : Colors.grey.withOpacity(0.5))
+                : Colors.grey.withOpacity(0.5),
+          ),
+        ),
         child: Row(
           children: [
             SvgPicture.asset(isPGUser
-                    ? (canbeChanged
-                        ? (containsMeal
-                            ? "assets/images/homepage/checkIconblue.svg"
-                            : "assets/images/homepage/checkIcon.svg")
+                ? (canbeChanged
+                    ? (containsMeal
+                        ? "assets/images/homepage/checkIconblue.svg"
                         : "assets/images/homepage/checkIcon.svg")
-                    : "assets/images/homepage/checkIcon.svg"),
-                 const Gap(5),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      widget.name,
-                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                    : "assets/images/homepage/checkIcon.svg")
+                : "assets/images/homepage/checkIcon.svg"),
+            const Gap(5),
+            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    widget.name,
+                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                         fontSize: 15,
-                          // color: isPGUser
-                          //     ? (canbeChanged
-                          //         ? (containsMeal
-                          //             ? AppColor.bluecolor
-                          //             : Colors.grey)
-                          //         : Colors.grey)
-                          //     : Colors.grey,
-                          color: AppColor.BLACK.withOpacity(0.9),
-                          fontWeight: FontWeight.w500,
-                          letterSpacing: 0.1
-                          ),
-                          
-                    ),
-                    Gap(4),
-                    SvgPicture.asset(
-                      widget.isbrekfast?Appconstants.dietaryPrefrenceImageIcon["Veg"] :widget.islunch
-                          ? Appconstants.dietaryPrefrenceImageIcon[context
-                              .read<MealCustomizationProvider>()
-                              .oldmorningData[dateTime.hour >= 21
-                                  ? ((dateTime.weekday==7)?0:dateTime.weekday)
-                                  : dateTime.weekday - 1]
-                              .dietaryPrefrence]
-                          : Appconstants.dietaryPrefrenceImageIcon[context
-                              .read<MealCustomizationProvider>()
-                              .oldeveningData[dateTime.hour >= 21
-                                  ? ((dateTime.weekday==7)?0:dateTime.weekday)
-                                  : dateTime.weekday - 1]
-                              .dietaryPrefrence],
-                    )
-                  ],
-                ),
-               
-                Text(widget.isbrekfast?context.read<MenuProvider>().menu!.weeklyMenu[Utils.getDayName(dateTime.weekday)]![0]:
-                widget.islunch?Utils.convertMealCustomizationToStatement(context.read<MealCustomizationProvider>().morningData[dateTime
-                                                                .hour >=
-                                                            21
-                                                        ? (dateTime.weekday ==
-                                                                7)
-                                                            ? 0
-                                                            : dateTime.weekday
-                                                        : dateTime.weekday - 1]):
-                Utils.convertMealCustomizationToStatement(context.read<MealCustomizationProvider>().eveningData[dateTime
-                                                                .hour >=
-                                                            21
-                                                        ? (dateTime.weekday ==
-                                                                7)
-                                                            ? 0
-                                                            : dateTime.weekday
-                                                        : dateTime.weekday - 1]),
-               style: Theme.of(context).textTheme.titleSmall!.copyWith(color:AppColor.BLACK.withOpacity(0.5),fontSize: 11 ),),
-              ]
-            ),
+                        // color: isPGUser
+                        //     ? (canbeChanged
+                        //         ? (containsMeal
+                        //             ? AppColor.bluecolor
+                        //             : Colors.grey)
+                        //         : Colors.grey)
+                        //     : Colors.grey,
+                        color: AppColor.BLACK.withOpacity(0.9),
+                        fontWeight: FontWeight.w500,
+                        letterSpacing: 0.1),
+                  ),
+                  const Gap(4),
+                  SvgPicture.asset(
+                    widget.isbrekfast
+                        ? Appconstants.dietaryPrefrenceImageIcon["Veg"]
+                        : widget.islunch
+                            ? Appconstants.dietaryPrefrenceImageIcon[context
+                                .read<MealCustomizationProvider>()
+                                .oldmorningData[dateTime.hour >= 21
+                                    ? ((dateTime.weekday == 7)
+                                        ? 0
+                                        : dateTime.weekday)
+                                    : dateTime.weekday - 1]
+                                .dietaryPrefrence]
+                            : Appconstants.dietaryPrefrenceImageIcon[context
+                                .read<MealCustomizationProvider>()
+                                .oldeveningData[dateTime.hour >= 21
+                                    ? ((dateTime.weekday == 7)
+                                        ? 0
+                                        : dateTime.weekday)
+                                    : dateTime.weekday - 1]
+                                .dietaryPrefrence],
+                  )
+                ],
+              ),
+              Text(
+                widget.isbrekfast
+                    ? context
+                        .read<MenuProvider>()
+                        .menu!
+                        .weeklyMenu[Utils.getDayName(dateTime.weekday)]![0]
+                    : widget.islunch
+                        ? Utils.convertMealCustomizationToStatement(
+                            context.read<MealCustomizationProvider>().morningData[
+                                dateTime.hour >= 21
+                                    ? (dateTime.weekday == 7)
+                                        ? 0
+                                        : dateTime.weekday
+                                    : dateTime.weekday - 1])
+                        : Utils.convertMealCustomizationToStatement(
+                            context.read<MealCustomizationProvider>().eveningData[
+                                dateTime.hour >= 21
+                                    ? (dateTime.weekday == 7)
+                                        ? 0
+                                        : dateTime.weekday
+                                    : dateTime.weekday - 1]),
+                style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                    color: AppColor.BLACK.withOpacity(0.5), fontSize: 11),
+              ),
+            ]),
             Expanded(child: Container()),
             //- 1 +, ADD button
             Container(
-                  // width: double.infinity,
-                  // padding:const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeExtraSmall),
-                  decoration: BoxDecoration(
-                      color: AppColor.WHITE,
-                      borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
-                      border: Border.all(
-                          color: isPGUser
-                              ? (canbeAddedPGUser
-                                  ? !canbeChanged
-                                      ? AppColor.GREY_COLOR_LIGHT.withOpacity(0.4)
-                                      : AppColor.bluecolor
-                                  : AppColor.GREY_COLOR_LIGHT.withOpacity(0.4))
-                              : AppColor.GREY_COLOR_LIGHT.withOpacity(0.4),
-                          width: 0.8)),
-                  child: containsMeal
-                      ? Row(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            InkWell(
-                                onTap: () {
-                                  if (!canbeChanged) {
-                                    Utils.showWithSingleButton(context,
-                                        "Your ${widget.name} is Locked. Cannot be changed after ${(widget.isbrekfast || widget.islunch) ? '5 AM' : '5 PM'}",
-                                        buttonTitle: "Okay, Got it!", onTap: () {
-                                      Navigator.pop(context);
-                                    });
-                                  } else if (currentValue == 1) {
-                                    Utils.showWithDoubleButton(
-                                        context,
-                                        "You are about to cancel a meal",
-                                        "Are you sure you want to cancel your ${widget.name}. This Action can be undone before ${(widget.isbrekfast || widget.islunch) ? '5 AM' : '5 PM'}",
-                                        onYes: () {
-                                      userprovider.updateMealOpt(
-                                          currentValue - 1,
-                                          widget.isbrekfast,
-                                          widget.islunch,
-                                          widget.isdinner,
-                                          userprovider.user.userType,
-                                          true);
-                                      Navigator.pop(context);
-                                    });
-                                  } else {
-                                    if(userprovider.user.subscription.status == Appconstants.statusAway){
-                                      userprovider.setsubscriptionstatus("Active");
-                                      //update subsription in database
-                                      FireStoreMethods()
-                                     .changemealSubscriptionStatus(
-                                      userprovider.user.userId,
-                                      userprovider.user.subscription);
-                                      }
-                                    userprovider.updateMealOpt(
-                                        currentValue - 1,
-                                        widget.isbrekfast,
-                                        widget.islunch,
-                                        widget.isdinner,
-                                        userprovider.user.userType,
-                                        true);
-                                  }
-                                },
-                                child: Icon(Icons.remove,
-                                                size: 25,                  color: canbeChanged
-                                        ? AppColor.bluecolor
-                                        : AppColor.GREY.withOpacity(0.6))),
-                            Text(
-                              currentValue.toString(),
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleLarge!
-                                  .copyWith(
-                                      color: canbeChanged
-                                          ? AppColor.bluecolor
-                                          : AppColor.GREY.withOpacity(0.6),
-                                      fontSize: 18),
-                            ),
-                            InkWell(
-                                onTap: () {
-                                  if (canbeAddedPGUser && canbeChanged) {
-                                     if(userprovider.user.subscription.status == Appconstants.statusAway){
-                                      userprovider.setsubscriptionstatus("Active");
-                                      FireStoreMethods()
-                                     .changemealSubscriptionStatus(
-                                      userprovider.user.userId,
-                                      userprovider.user.subscription);
-                                    }
-                                    userprovider.updateMealOpt(
-                                        currentValue + 1,
-                                        widget.isbrekfast,
-                                        widget.islunch,
-                                        widget.isdinner,
-                                        userprovider.user.userType);
-                                  } else if (!canbeAddedPGUser && canbeChanged) {
-                                    Utils.showWithSingleButton(context,
-                                        "You cannot opt more than a total of 3 meals in a day",
-                                        onTap: () {
-                                      Navigator.pop(context);
-                                    }, buttonTitle: "Okay, Got it!");
-                                  } else {
-                                    Utils.showWithSingleButton(context,
-                                        "Your ${widget.name} is Locked. Cannot be changed after ${(widget.isbrekfast || widget.islunch) ? '5 AM' : '5 PM'}",
-                                        buttonTitle: "Okay, Got it!", onTap: () {
-                                      Navigator.pop(context);
-                                    });
-                                  }
-                                },
-                                child: Icon(Icons.add,
+              // width: double.infinity,
+              // padding:const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeExtraSmall),
+              decoration: BoxDecoration(
+                  color: AppColor.WHITE,
+                  borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
+                  border: Border.all(
+                      color: isPGUser
+                          ? (canbeAddedPGUser
+                              ? !canbeChanged
+                                  ? AppColor.GREY_COLOR_LIGHT.withOpacity(0.4)
+                                  : AppColor.bluecolor
+                              : AppColor.GREY_COLOR_LIGHT.withOpacity(0.4))
+                          : AppColor.GREY_COLOR_LIGHT.withOpacity(0.4),
+                      width: 0.8)),
+              child: containsMeal
+                  ? Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        InkWell(
+                            onTap: () {
+                              if (!canbeChanged) {
+                                Utils.showWithSingleButton(context,
+                                    "Your ${widget.name} is Locked. Cannot be changed after ${(widget.isbrekfast || widget.islunch) ? '5 AM' : '5 PM'}",
+                                    buttonTitle: "Okay, Got it!", onTap: () {
+                                  Navigator.pop(context);
+                                });
+                              } else if (currentValue == 1) {
+                                Utils.showWithDoubleButton(
+                                    context,
+                                    "You are about to cancel a meal",
+                                    "Are you sure you want to cancel your ${widget.name}. This Action can be undone before ${(widget.isbrekfast || widget.islunch) ? '5 AM' : '5 PM'}",
+                                    onYes: () {
+                                  userprovider.updateMealOpt(
+                                      currentValue - 1,
+                                      widget.isbrekfast,
+                                      widget.islunch,
+                                      widget.isdinner,
+                                      userprovider.user.userType,
+                                      true);
+                                  Navigator.pop(context);
+                                });
+                              } else {
+                                if (userprovider.user.subscription.status ==
+                                    Appconstants.statusAway) {
+                                  userprovider.setsubscriptionstatus("Active");
+                                  //update subsription in database
+                                  FireStoreMethods()
+                                      .changemealSubscriptionStatus(
+                                          userprovider.user.userId,
+                                          userprovider.user.subscription);
+                                }
+                                userprovider.updateMealOpt(
+                                    currentValue - 1,
+                                    widget.isbrekfast,
+                                    widget.islunch,
+                                    widget.isdinner,
+                                    userprovider.user.userType,
+                                    true);
+                              }
+                            },
+                            child: Icon(Icons.remove,
                                 size: 25,
-                                    color: (canbeAddedPGUser && canbeChanged)
-                                        ? AppColor.bluecolor
-                                        : AppColor.GREY.withOpacity(0.6))),
-                          ],
-                        )
-                      : InkWell(
-                          onTap: () {
-                            if (!isPGUser) {
-                              Utils.showWithSingleButton(context,
-                                  "Your currently don't have any Active Plan ",
-                                  onTap: () {
-                                Navigator.pop(context);
-                              }, buttonTitle: 'Okay, Got it');
-                            } else if (canbeChanged && canbeAddedPGUser) {
-                               if(userprovider.user.subscription.status == Appconstants.statusAway){
-                                      userprovider.setsubscriptionstatus("Active");
-                                      FireStoreMethods()
-                                     .changemealSubscriptionStatus(
-                                      userprovider.user.userId,
-                                      userprovider.user.subscription);
-                                    }
-                                    
-                              userprovider.updateMealOpt(
-                                  currentValue + 1,
-                                  widget.isbrekfast,
-                                  widget.islunch,
-                                  widget.isdinner,
-                                  userprovider.user.userType);
-                            } else if (canbeChanged && !canbeAddedPGUser) {
-                              Utils.showWithSingleButton(context,
-                                  "You cannot opt more than a total of 3 meals in a day",
-                                  onTap: () {
-                                Navigator.pop(context);
-                              }, buttonTitle: "Okay, Got it!");
-                            } else {
-                              Utils.showWithSingleButton(context,
-                                  "Your ${widget.name} is Locked. Cannot be changed after ${(widget.isbrekfast || widget.islunch) ? '5 AM' : '5 PM'}",
-                                  buttonTitle: "Okay, Got it!", onTap: () {
-                                Navigator.pop(context);
-                              });
-                            }
-                          },
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(horizontal:Dimensions.paddingSizeDefault),
-                            child: Text(
-                              "ADD",
-                              style:
-                                  Theme.of(context).textTheme.bodyLarge!.copyWith(
-                                        color: isPGUser
-                                            ? (canbeAddedPGUser
-                                                ? !canbeChanged
-                                                    ? AppColor.GREY_COLOR_LIGHT
-                                                        .withOpacity(0.4)
-                                                    : AppColor.bluecolor
-                                                : AppColor.GREY_COLOR_LIGHT
-                                                    .withOpacity(0.4))
-                                            : AppColor.GREY_COLOR_LIGHT
-                                                .withOpacity(0.4),
-                                        fontWeight: FontWeight.w800,
-                                        height: 1.5,
-                                      ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
+                                color: canbeChanged
+                                    ? AppColor.bluecolor
+                                    : AppColor.GREY.withOpacity(0.6))),
+                        Text(
+                          currentValue.toString(),
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleLarge!
+                              .copyWith(
+                                  color: canbeChanged
+                                      ? AppColor.bluecolor
+                                      : AppColor.GREY.withOpacity(0.6),
+                                  fontSize: 18),
                         ),
-                )
+                        InkWell(
+                            onTap: () {
+                              if (canbeAddedPGUser && canbeChanged) {
+                                if (userprovider.user.subscription.status ==
+                                    Appconstants.statusAway) {
+                                  userprovider.setsubscriptionstatus("Active");
+                                  FireStoreMethods()
+                                      .changemealSubscriptionStatus(
+                                          userprovider.user.userId,
+                                          userprovider.user.subscription);
+                                }
+                                userprovider.updateMealOpt(
+                                    currentValue + 1,
+                                    widget.isbrekfast,
+                                    widget.islunch,
+                                    widget.isdinner,
+                                    userprovider.user.userType);
+                              } else if (!canbeAddedPGUser && canbeChanged) {
+                                Utils.showWithSingleButton(context,
+                                    "You cannot opt more than a total of 3 meals in a day",
+                                    onTap: () {
+                                  Navigator.pop(context);
+                                }, buttonTitle: "Okay, Got it!");
+                              } else {
+                                Utils.showWithSingleButton(context,
+                                    "Your ${widget.name} is Locked. Cannot be changed after ${(widget.isbrekfast || widget.islunch) ? '5 AM' : '5 PM'}",
+                                    buttonTitle: "Okay, Got it!", onTap: () {
+                                  Navigator.pop(context);
+                                });
+                              }
+                            },
+                            child: Icon(Icons.add,
+                                size: 25,
+                                color: (canbeAddedPGUser && canbeChanged)
+                                    ? AppColor.bluecolor
+                                    : AppColor.GREY.withOpacity(0.6))),
+                      ],
+                    )
+                  : InkWell(
+                      onTap: () {
+                        if (!isPGUser) {
+                          Utils.showWithSingleButton(context,
+                              "Your currently don't have any Active Plan ",
+                              onTap: () {
+                            Navigator.pop(context);
+                          }, buttonTitle: 'Okay, Got it');
+                        } else if (canbeChanged && canbeAddedPGUser) {
+                          if (userprovider.user.subscription.status ==
+                              Appconstants.statusAway) {
+                            userprovider.setsubscriptionstatus("Active");
+                            FireStoreMethods().changemealSubscriptionStatus(
+                                userprovider.user.userId,
+                                userprovider.user.subscription);
+                          }
+
+                          userprovider.updateMealOpt(
+                              currentValue + 1,
+                              widget.isbrekfast,
+                              widget.islunch,
+                              widget.isdinner,
+                              userprovider.user.userType);
+                        } else if (canbeChanged && !canbeAddedPGUser) {
+                          Utils.showWithSingleButton(context,
+                              "You cannot opt more than a total of 3 meals in a day",
+                              onTap: () {
+                            Navigator.pop(context);
+                          }, buttonTitle: "Okay, Got it!");
+                        } else {
+                          Utils.showWithSingleButton(context,
+                              "Your ${widget.name} is Locked. Cannot be changed after ${(widget.isbrekfast || widget.islunch) ? '5 AM' : '5 PM'}",
+                              buttonTitle: "Okay, Got it!", onTap: () {
+                            Navigator.pop(context);
+                          });
+                        }
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: Dimensions.paddingSizeDefault),
+                        child: Text(
+                          "ADD",
+                          style:
+                              Theme.of(context).textTheme.bodyLarge!.copyWith(
+                                    color: isPGUser
+                                        ? (canbeAddedPGUser
+                                            ? !canbeChanged
+                                                ? AppColor.GREY_COLOR_LIGHT
+                                                    .withOpacity(0.4)
+                                                : AppColor.bluecolor
+                                            : AppColor.GREY_COLOR_LIGHT
+                                                .withOpacity(0.4))
+                                        : AppColor.GREY_COLOR_LIGHT
+                                            .withOpacity(0.4),
+                                    fontWeight: FontWeight.w800,
+                                    height: 1.5,
+                                  ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+            )
           ],
         ),
       );

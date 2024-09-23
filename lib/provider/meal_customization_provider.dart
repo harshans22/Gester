@@ -48,20 +48,20 @@ class MealCustomizationProvider with ChangeNotifier {
       for (int i = 0; i < mealCustomiation.length; i++) {
         if (!context.mounted) return;
         //updating dietary prefrence according to available mealOpt
-        mealCustomiation[i]["Morning"]!.dietaryPrefrence = getDietaryPrefrence(
-            context
-                .read<MenuProvider>()
-                .menu!
-                .weeklyMenu[Utils.getDayName(i + 1)]![4]["lunch"]
-                .cast<String>(),
-            context.read<UserDataProvider>().user.dietaryPreference);
-        mealCustomiation[i]["Evening"]!.dietaryPrefrence = getDietaryPrefrence(
-            context
-                .read<MenuProvider>()
-                .menu!
-                .weeklyMenu[Utils.getDayName(i + 1)]![4]["dinner"]
-                .cast<String>(),
-            context.read<UserDataProvider>().user.dietaryPreference);
+        // mealCustomiation[i]["Morning"]!.dietaryPrefrence = getDietaryPrefrence(
+        //     context
+        //         .read<MenuProvider>()
+        //         .menu!
+        //         .weeklyMenu[Utils.getDayName(i + 1)]![4]["lunch"]
+        //         .cast<String>(),
+        //     context.read<UserDataProvider>().user.dietaryPreference);
+        // mealCustomiation[i]["Evening"]!.dietaryPrefrence = getDietaryPrefrence(
+        //     context
+        //         .read<MenuProvider>()
+        //         .menu!
+        //         .weeklyMenu[Utils.getDayName(i + 1)]![4]["dinner"]
+        //         .cast<String>(),
+        //     context.read<UserDataProvider>().user.dietaryPreference);
         tempmorningData.add(mealCustomiation[i]["Morning"]!.copyWith());
         tempeveningData.add(mealCustomiation[i]["Evening"]!.copyWith());
       }
