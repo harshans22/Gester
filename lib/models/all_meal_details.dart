@@ -24,7 +24,7 @@ class MealCustomizationData {
     this.salad=true,
     this.sukhiSabji=true,
     this.raita=false,
-    this.dietaryPrefrence="",
+    this.dietaryPrefrence="Veg",
   });
 
 
@@ -98,7 +98,7 @@ class MealCustomizationData {
       salad: map['salad']??false,
       sukhiSabji: map['sukhiSabji']??true,
       raita: map['raita']??false,
-      dietaryPrefrence: map['Dietary_preference']??"",
+      dietaryPrefrence: map['Dietary_preference']??"Veg",
     );
   }
 
