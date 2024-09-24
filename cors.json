@@ -1,6 +1,6 @@
 [
     {
-      "origin": ["http://localhost:51176", "https://app.gester.in"],
+      "origin": ["*"],
       "method": ["GET"],
       "maxAgeSeconds": 3600,
       "responseHeader": ["Content-Type"]

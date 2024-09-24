@@ -56,7 +56,7 @@ class HomeScreen extends StatelessWidget {
                             },
                             autoPlayCurve:
                                 Curves.linear, //TODO: change animation
-                            autoPlayInterval: const Duration(seconds: 5),
+                            autoPlayInterval: const Duration(seconds: 30),
                             autoPlay: true,
                             enlargeCenterPage: true,
                             enlargeFactor: 0,
