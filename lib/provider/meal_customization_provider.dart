@@ -47,7 +47,7 @@ class MealCustomizationProvider with ChangeNotifier {
       List<MealCustomizationData> tempeveningData = [];
       for (int i = 0; i < mealCustomiation.length; i++) {
         if (!context.mounted) return;
-        // updating dietary prefrence according to available mealOpt
+        //updating dietary prefrence according to available mealOpt
         mealCustomiation[i]["Morning"]!.dietaryPrefrence = getDietaryPrefrence(
             context
                 .read<MenuProvider>()

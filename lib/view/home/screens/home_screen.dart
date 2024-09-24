@@ -117,7 +117,7 @@ class HomeScreen extends StatelessWidget {
                       int hour = datetime.hour;
                       if (hour >= 21) {
                         homescreenprovider.settimeRefrence(
-                            "Tomorrow"); //TODO: don't do it here make something else
+                            "Tomorrow's"); //TODO: don't do it here make something else
                         datetime = datetime.add(const Duration(days: 1));
                       }
                       return Container(
@@ -150,7 +150,7 @@ class HomeScreen extends StatelessWidget {
                             ),
                             const Gap(Dimensions.paddingSizeSmall),
                             Text(
-                                "Meal opt for ${homescreenprovider.timeRefrence} (${"${Utils.getDayName(datetime.weekday)}, ${datetime.day} ${Utils.getMonthName(datetime.month)}"})",
+                                "Meal opt for ${homescreenprovider.dateTime.hour>=21?"today":"tomorrow"} (${"${Utils.getDayName(datetime.weekday)}, ${datetime.day} ${Utils.getMonthName(datetime.month)}"})",
                                 style: Theme.of(context)
                                     .textTheme
                                     .titleMedium!
