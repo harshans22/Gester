@@ -73,7 +73,7 @@ class HomeScreen extends StatelessWidget {
                           bottom: 10,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
-                            children: Appconstants.carosuelSliderImage
+                            children: value.bannerImages
                                 .asMap()
                                 .entries
                                 .map((entry) {
