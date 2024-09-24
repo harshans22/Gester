@@ -150,7 +150,7 @@ class HomeScreen extends StatelessWidget {
                             ),
                             const Gap(Dimensions.paddingSizeSmall),
                             Text(
-                                "Meal opt for ${homescreenprovider.dateTime.hour>=21?"today":"tomorrow"} (${"${Utils.getDayName(datetime.weekday)}, ${datetime.day} ${Utils.getMonthName(datetime.month)}"})",
+                                "Meal opt for ${homescreenprovider.dateTime.hour>=21?"tomorrow":"today"} (${"${Utils.getDayName(datetime.weekday)}, ${datetime.day} ${Utils.getMonthName(datetime.month)}"})",
                                 style: Theme.of(context)
                                     .textTheme
                                     .titleMedium!
