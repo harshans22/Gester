@@ -150,7 +150,7 @@ class HomeScreen extends StatelessWidget {
                             ),
                             const Gap(Dimensions.paddingSizeSmall),
                             Text(
-                                "Meal opt for ${homescreenprovider.dateTime.hour>=21?"tomorrow":"today"} (${"${Utils.getDayName(datetime.weekday)}, ${datetime.day} ${Utils.getMonthName(datetime.month)}"})",
+                                "Meal opt for ${homescreenprovider.dateTime.hour >= 21 ? "tomorrow" : "today"} (${"${Utils.getDayName(datetime.weekday)}, ${datetime.day} ${Utils.getMonthName(datetime.month)}"})",
                                 style: Theme.of(context)
                                     .textTheme
                                     .titleMedium!
@@ -315,9 +315,9 @@ class HomeScreen extends StatelessWidget {
                                                 userprovider.user.dinner);
                                             if (!homescreenprovider.loader) {
                                               if (!context.mounted) return;
-                                              Utils.showWithNoButton(context,
-                                                  title:
-                                                      "Your meal has been opted!");
+
+                                              Utils.flushbarErrorMessage(
+                                                  "Your meal has been opted!",context);
                                             }
                                             if (homescreenprovider.userDataModel
                                                 .note.isNotEmpty) {
@@ -350,7 +350,12 @@ class HomeScreen extends StatelessWidget {
                     child: UsersMealOptList(
                       pgNumber: userprovider.user.pgNumber,
                       datetime:
-                          DateTime.now(), //TODO: change this to current time
+                          context.read<HomeScreenProvider>().dateTime.hour >= 21
+                              ? context
+                                  .read<HomeScreenProvider>()
+                                  .dateTime
+                                  .add(const Duration(days: 1))
+                              : context.read<HomeScreenProvider>().dateTime,
                       userId: userprovider.user.userId,
                     ),
                   ),

@@ -50,7 +50,7 @@ class Utils {
     showFlushbar(
       context: context,
       flushbar: Flushbar(
-        backgroundColor: Colors.red,
+        backgroundColor: AppColor.bluecolor,
         message: message,
         duration: const Duration(seconds: 2),
       )..show(context),
