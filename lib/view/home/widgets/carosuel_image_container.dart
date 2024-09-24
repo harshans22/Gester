@@ -15,7 +15,7 @@ class CarouselImageSlider extends StatelessWidget {
         image:  DecorationImage(
           image: NetworkImage(
              image ),
-          fit: BoxFit.fill,
+          fit: BoxFit.cover,
         ),
       ),
     );
